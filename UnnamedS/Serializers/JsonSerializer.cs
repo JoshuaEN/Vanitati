@@ -1,0 +1,52 @@
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace UnnamedStrategyGame.Serializers
+{
+    public class JsonSerializer : BaseSerializer
+    {
+        public static readonly Newtonsoft.Json.JsonSerializer SERIALIZER;
+
+        static JsonSerializer()
+        {
+            SERIALIZER = new Newtonsoft.Json.JsonSerializer();
+            SERIALIZER.Converters.Add(new JsonConverters.XTypeJsonConverter());
+            SERIALIZER.Converters.Add(new JsonConverters.IAttributeJsonConverter());
+            SERIALIZER.Converters.Add(new JsonConverters.IAttributeDefinitionJsonConverter());
+            SERIALIZER.Converters.Add(new JsonConverters.MessageWrapperConverter());
+
+            //SERIALIZER.ReferenceLoopHandling = ReferenceLoopHandling.Serialize;
+            //SERIALIZER.PreserveReferencesHandling = PreserveReferencesHandling.All;
+
+#if DEBUG
+            SERIALIZER.Formatting = Formatting.Indented;
+#else
+            serializer.Formatting = Formatting.None;
+#endif
+        }
+
+        public override T Deserialize<T>(string str)
+        {
+            using (StringReader sr = new StringReader(str))
+            using (JsonReader reader = new JsonTextReader(sr))
+            {
+                return SERIALIZER.Deserialize<T>(reader);
+            }
+        }
+
+        public override string Serialize(object obj)
+        {
+            using (StringWriter sw = new StringWriter())
+            using (JsonWriter writer = new JsonTextWriter(sw))
+            {
+                SERIALIZER.Serialize(writer, obj);
+                return sw.ToString();
+            }
+        }
+    }
+}

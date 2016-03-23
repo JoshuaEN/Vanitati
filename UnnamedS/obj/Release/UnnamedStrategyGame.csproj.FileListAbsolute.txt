@@ -1,0 +1,14 @@
+e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedS\bin\Release\UnnamedSstrategyGame.exe.config
+e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedS\bin\Release\UnnamedSstrategyGame.exe
+e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedS\bin\Release\UnnamedSstrategyGame.pdb
+e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedS\obj\Release\UnnamedStrategyGame.csprojResolveAssemblyReference.cache
+e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedS\obj\Release\MainWindow.g.cs
+e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedS\obj\Release\App.g.cs
+e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedS\obj\Release\UnnamedSstrategyGame_MarkupCompile.cache
+e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedS\obj\Release\UnnamedSstrategyGame_MarkupCompile.lref
+e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedS\obj\Release\MainWindow.baml
+e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedS\obj\Release\UnnamedSstrategyGame.g.resources
+e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedS\obj\Release\UnnamedStrategyGame.Properties.Resources.resources
+e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedS\obj\Release\UnnamedStrategyGame.csproj.GenerateResource.Cache
+e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedS\obj\Release\UnnamedSstrategyGame.exe
+e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedS\obj\Release\UnnamedSstrategyGame.pdb

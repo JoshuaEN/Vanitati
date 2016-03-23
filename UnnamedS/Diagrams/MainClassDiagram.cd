@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="UnnamedStrategyGame.Game.BaseType" Collapsed="true">
+    <Position X="6" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAAAAAQAAAAAAAAAAAAGAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Game\BaseType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.ActionType" Collapsed="true">
+    <Position X="8.25" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAAAAAAABAAAGKAAAAEBBIAAggAAAQEA=</HashCode>
+      <FileName>Game\ActionType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.Action.AttackBase" Collapsed="true">
+    <Position X="9.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Game\Action\AttackBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.Action.AttackRifle" Collapsed="true">
+    <Position X="9.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQAAAAAAAAEA=</HashCode>
+      <FileName>Game\Action\AttackRifle.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.UnitType" Collapsed="true">
+    <Position X="5.25" Y="2.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Properties" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+      <Compartment Name="Events" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAACSoCABAAAICAMQAAQYgAAAAEMBIAAAgIAAAAA=</HashCode>
+      <FileName>Game\UnitType.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.GameLogic" Collapsed="true">
+    <Position X="1" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAABAACAAAAAAIAAAAAAgABAAAAAA=</HashCode>
+      <FileName>Game\GameLogic.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.GameState" Collapsed="true">
+    <Position X="0.5" Y="2.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Properties" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>ARAAAAgAhAAAAAAAAAAEAEAAAAAAAAAAAAAAQgAAAAA=</HashCode>
+      <FileName>Game\GameState.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.Unit" Collapsed="true">
+    <Position X="0.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQACAAAAAACAAAAAAQgAAAAAMAAAAAAIAAAAA=</HashCode>
+      <FileName>Game\Unit.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

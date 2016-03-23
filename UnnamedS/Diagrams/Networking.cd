@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="UnnamedStrategyGame.Network.Server" Collapsed="true">
+    <Position X="2.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAECAEAQACAAAAAAAAAAgAAAACBAIAAAIAA=</HashCode>
+      <FileName>Network\Server.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Network.ServerClient" Collapsed="true">
+    <Position X="4.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAAAAQAACAACAAAAEAAAAAEAAEIAAAAAAA=</HashCode>
+      <FileName>Network\ServerClient.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Network.Client" Collapsed="true">
+    <Position X="4.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAQAAEIAQAAAAEAAAEAAACAAAAAAAAAAQABAAgGAAgA=</HashCode>
+      <FileName>Network\Client.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.NetworkedGameLogic" Collapsed="true">
+    <Position X="8.5" Y="2.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAEEAAAQAADAAQAAAAFAoAAAECAkIAQAAMAQ=</HashCode>
+      <FileName>Game\NetworkedGameLogic.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.LocalGameLogic" Collapsed="true">
+    <Position X="6" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgAAAAAAAAABABAAAAAAAIAAAAAAgAAAAAAAA=</HashCode>
+      <FileName>Game\LocalGameLogic.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.GameLogic" Collapsed="true">
+    <Position X="7.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAABAACAAAAAAIAAAAAAgABAAAAAA=</HashCode>
+      <FileName>Game\GameLogic.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
