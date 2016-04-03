@@ -8,10 +8,14 @@ namespace UnnamedStrategyGame.Game.StateChanges
 {
     public class PlayerStateChange : StateChange
     {
-        public uint PlayerId { get; }
-        public PlayerStateChange(uint playerId, List<IAttribute> updatedAttributes) : base(updatedAttributes)
+        public int PlayerId { get; }
+        public Cause ChangeCause { get; }
+        public PlayerStateChange(int playerId, List<IAttribute> updatedAttributes, Cause cause = Cause.Changed) : base(updatedAttributes)
         {
             PlayerId = playerId;
+            ChangeCause = cause;
         }
+
+        public enum Cause { Added, Removed, Changed }
     }
 }

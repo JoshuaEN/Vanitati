@@ -12,7 +12,7 @@ namespace UnnamedStrategyGame.Network
     public class ServerClient : Client, IPlayerLogic
     {
         public LocalGameLogic GameLogic { get; }
-        public uint PlayerId { get; }
+        public int PlayerId { get; }
         public ServerClient(NetworkStream networkStream, LocalGameLogic gameLogic) : base(networkStream)
         {
             GameLogic = gameLogic;
@@ -55,14 +55,19 @@ namespace UnnamedStrategyGame.Network
             Send(new MessageWrappers.OnTerrainChangedNotifyWrapper(e));
         }
 
-        public void OnGameStateChanged(object sender, OnGameStateChangedArgs e)
+        public void OnGameStateChanged(object sender, GameStateChangedArgs e)
         {
             Send(new MessageWrappers.OnGameStateChangedNotifyWrapper(e));
         }
 
-        public void OnThisPlayerAdded(object sender, OnThisPlayerAddedArgs e)
+        public void OnThisPlayerAdded(object sender, ThisPlayerAddedArgs e)
         {
             Send(new MessageWrappers.OnThisPlayerAddedNotifyWrapper(e));
+        }
+
+        public void OnGameStart(object sender, GameStartEventArgs e)
+        {
+            Send(new MessageWrappers.OnGameStartNotifyWrapper(e));
         }
     }
 }

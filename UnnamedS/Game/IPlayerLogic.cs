@@ -33,18 +33,20 @@ namespace UnnamedStrategyGame.Game
         void OnUnitChanged(object sender, Event.UnitChangedEventArgs e);
 
         /// <summary>
-        /// When a terrian's state changes.
+        /// When a terrain's state changes.
         /// </summary>
         void OnTerrainChanged(object sender, Event.TerrainChangedEventArgs e);
 
         /// <summary>
         /// When the game's state changes.
         /// </summary>
-        void OnGameStateChanged(object sender, Event.OnGameStateChangedArgs e);
+        void OnGameStateChanged(object sender, Event.GameStateChangedArgs e);
 
         /// <summary>
         /// 
         /// </summary>
-        void OnThisPlayerAdded(object sender, Event.OnThisPlayerAddedArgs e);
+        void OnThisPlayerAdded(object sender, Event.ThisPlayerAddedArgs e);
+
+        void OnGameStart(object sender, Event.GameStartEventArgs e);
     }
 }

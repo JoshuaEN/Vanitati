@@ -12,14 +12,14 @@ namespace UnnamedStrategyGame.Game
     {
         public Network.Client Client { get; }
 
-        private uint _playerId;
-        public uint PlayerId
+        private int _playerID;
+        public int PlayerID
         {
-            get { return _playerId; }
+            get { return _playerID; }
             protected set
             {
-                Contract.Requires<InvalidOperationException>(true == PlayerIdKnown, "Player ID has already been set");
-                _playerId = value;
+                Contract.Requires<InvalidOperationException>(false == PlayerIdKnown, "Player ID has already been set");
+                _playerID = value;
                 PlayerIdKnown = true;
             }
         }
@@ -27,8 +27,15 @@ namespace UnnamedStrategyGame.Game
         private Task clientListern;
         private IReadOnlyList<IPlayerLogic> thisPlayerLogic;
 
+        public NetworkedGameLogic(System.Net.IPEndPoint remoteEP, IReadOnlyList<IPlayerLogic> logic) : this(new Network.Client(remoteEP), logic)
+        {
+            Contract.Requires<ArgumentNullException>(null != remoteEP);
+        }
+
         public NetworkedGameLogic(Network.Client client, IReadOnlyList<IPlayerLogic> logic) : base()
         {
+            Contract.Requires<ArgumentNullException>(null != client);
+
             thisPlayerLogic = logic;
             Client = client;
             Client.Disconnected += Client_Disconnected;
@@ -51,7 +58,7 @@ namespace UnnamedStrategyGame.Game
                 {
                     throw new Network.Exceptions.InvalidMessageOrderException(
                         String.Format(
-                            "{0} message must be recieved before ANY {1} messages", 
+                            "{0} message must be received before ANY {1} messages", 
                             typeof(Network.MessageWrappers.ClientInfoPacketProtocolWrapper).Name, 
                             typeof(Network.MessageWrappers.NotifyMessageWrapper).Name
                         )
@@ -87,9 +94,25 @@ namespace UnnamedStrategyGame.Game
             throw new NotImplementedException();
         }
 
-        public override void DoActions(uint playerId, List<ActionInfo> actions)
+        public override void DoActions(int playerID, List<ActionInfo> actions)
         {
             Client.Send(new Network.MessageWrappers.DoActionsCallWrapper(actions));
+        }
+
+        public override void DoAction(int playerID, ActionInfo action)
+        {
+            DoActions(playerID, new List<ActionInfo>() { action });
+        }
+
+        public override void StartGame(int height, int width, Terrain[] terrain, Unit[] units, Player[] players, Dictionary<string, object> gameStateAttributes)
+        {
+            Client.Send(
+                new Network.MessageWrappers.OnGameStartNotifyWrapper(
+                    new GameStartEventArgs(
+                        new StateChanges.GameStarted(height, width, terrain, units, players, gameStateAttributes)
+                    )
+                )
+            );
         }
 
         public readonly Queue<IReadOnlyList<IPlayerLogic>> pendingPlayerList = new Queue<IReadOnlyList<IPlayerLogic>>();
@@ -97,17 +120,17 @@ namespace UnnamedStrategyGame.Game
         public override void AddPlayer(IReadOnlyList<IPlayerLogic> logic)
         {
             throw new InvalidOperationException("Not supported for remote games");
-            pendingPlayerList.Enqueue(logic);
+            //pendingPlayerList.Enqueue(logic);
         }
 
-        public override void RemovePlayer(uint id)
+        public override void RemovePlayer(int playerID)
         {
             throw new NotImplementedException();
         }
 
         public void ClientInfoPacketRecieved(Network.Protocol.ClientInfo clientInfo)
         {
-            PlayerId = clientInfo.PlayerId;
+            PlayerID = clientInfo.PlayerId;
         }
 
         public void OnActionsTaken(object sender, ActionsTakenEventArgs e)
@@ -130,14 +153,20 @@ namespace UnnamedStrategyGame.Game
             State.UpdateTerrain(e.ChangeInfo);
         }
 
-        public void OnGameStateChanged(object sender, OnGameStateChangedArgs e)
+        public void OnGameStateChanged(object sender, GameStateChangedArgs e)
         {
             throw new NotImplementedException();
         }
 
-        public void OnThisPlayerAdded(object sender, OnThisPlayerAddedArgs e)
+        public void OnThisPlayerAdded(object sender, ThisPlayerAddedArgs e)
         {
             throw new NotImplementedException();
+        }
+
+        public void OnGameStart(object sender, GameStartEventArgs e)
+        {
+            var info = e.ChangeInfo;
+            State.StartGame(info.Height, info.Width, info.Terrain, info.Units, info.Players, info.GameStateAttributes);
         }
     }
 }

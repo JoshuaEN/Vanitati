@@ -21,10 +21,13 @@ namespace UnnamedStrategyGame.Game
         {
             Contract.Requires<ArgumentNullException>(definitions != null);
             Contract.Requires<ArgumentException>(definitions.Length > 0, "Must provide at least one Attribute Definition");
+            Contract.Ensures(Definitions != null);
+            Contract.Ensures(Definitions.Count == definitions.Length);
 
             var defs = new Dictionary<string, IAttributeDefinition>(definitions.Length);
+            Contract.Assume(defs != null);
 
-            foreach(var def in definitions)
+            foreach (var def in definitions)
             {
                 defs.Add(def.Key, def);
             }

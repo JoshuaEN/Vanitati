@@ -16,7 +16,7 @@ namespace UnnamedStrategyGame.Network.MessageWrappers
             Actions = actions;
         }
 
-        public override void Call(uint playerId, LocalGameLogic logic)
+        public override void Call(int playerId, LocalGameLogic logic)
         {
             logic.DoActions(playerId, Actions);
         }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace UnnamedStrategyGame.Network
 {
-    public class Client
+    public class Client : IClientNotifier
     {
         private NetworkStream NetworkStream { get; }
         public bool IsDisconnected { get; private set; }
@@ -49,6 +49,13 @@ namespace UnnamedStrategyGame.Network
         {
             NetworkStream = networkStream;
             
+        }
+
+        public Client(System.Net.IPEndPoint remoteEP)
+        {
+            var tcpClient = new TcpClient();
+            tcpClient.Connect(remoteEP);
+            NetworkStream = tcpClient.GetStream();
         }
 
         private bool _reading = false;
@@ -113,8 +120,10 @@ namespace UnnamedStrategyGame.Network
 
             try
             {
-                var buffer = Encoding.Unicode.GetBytes(message);
-                NetworkStream.Write(buffer, 0, buffer.Length);
+                var messageBuffer = Encoding.Unicode.GetBytes(message);
+                var lengthBuffer = BitConverter.GetBytes(messageBuffer.Length);
+                NetworkStream.Write(lengthBuffer, 0, lengthBuffer.Length);
+                NetworkStream.Write(messageBuffer, 0, messageBuffer.Length);
             }
             catch(Exception e)
             {

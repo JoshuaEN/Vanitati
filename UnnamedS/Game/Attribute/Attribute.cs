@@ -80,5 +80,10 @@ namespace UnnamedStrategyGame.Game
         {
             ReadOnly = true;
         }
+
+        public DefinitionType GetValue<DefinitionType>()
+        {
+            return (DefinitionType)GetValue();
+        }
     }
 }

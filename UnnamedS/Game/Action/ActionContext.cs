@@ -8,17 +8,19 @@ namespace UnnamedStrategyGame.Game.Action
 {
     public class ActionContext
     {
+        public int PlayerID { get; }
         public ActionType.ActionTriggers Trigger { get; }
         public bool ManuallyActivated { get { return Trigger == ActionType.ActionTriggers.None; } }
 
-        public ActionContext(ActionType.ActionTriggers trigger)
+        public ActionContext(int playerID, ActionType.ActionTriggers trigger)
         {
+            PlayerID = playerID;
             Trigger = trigger;
         }
 
-        public ActionContext()
+        public ActionContext(int playerID) : this(playerID, ActionType.ActionTriggers.None)
         {
-            Trigger = ActionType.ActionTriggers.None;
+
         }
     }
 }

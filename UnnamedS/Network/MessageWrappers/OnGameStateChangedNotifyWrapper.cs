@@ -9,9 +9,9 @@ namespace UnnamedStrategyGame.Network.MessageWrappers
 {
     public class OnGameStateChangedNotifyWrapper : NotifyMessageWrapper
     {
-        public Game.Event.OnGameStateChangedArgs Args { get; }
+        public Game.Event.GameStateChangedArgs Args { get; }
 
-        public OnGameStateChangedNotifyWrapper(Game.Event.OnGameStateChangedArgs args)
+        public OnGameStateChangedNotifyWrapper(Game.Event.GameStateChangedArgs args)
         {
             Args = args;
         }

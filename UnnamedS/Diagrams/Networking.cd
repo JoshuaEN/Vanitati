@@ -3,9 +3,10 @@
   <Class Name="UnnamedStrategyGame.Network.Server" Collapsed="true">
     <Position X="2.5" Y="2.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAQAECAEAQACAAAAAAAAAAgAAAACBAIAAAIAA=</HashCode>
+      <HashCode>AAEIAAAAQAECAEAQACAAAAAAAAAAgAAAICBABgAAIAA=</HashCode>
       <FileName>Network\Server.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
   <Class Name="UnnamedStrategyGame.Network.ServerClient" Collapsed="true">
     <Position X="4.25" Y="2.75" Width="1.5" />
@@ -20,6 +21,7 @@
       <HashCode>gAQAAEIAQAAAAEAAAEAAACAAAAAAAAAAQABAAgGAAgA=</HashCode>
       <FileName>Network\Client.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
   <Class Name="UnnamedStrategyGame.Game.NetworkedGameLogic" Collapsed="true">
     <Position X="8.5" Y="2.75" Width="1.75" />
@@ -27,6 +29,7 @@
       <HashCode>AEAAAAAAAEEAAAQAADAAQAAAAFAoAAAECAkIAQAAMAQ=</HashCode>
       <FileName>Game\NetworkedGameLogic.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
   <Class Name="UnnamedStrategyGame.Game.LocalGameLogic" Collapsed="true">
     <Position X="6" Y="2.75" Width="1.5" />

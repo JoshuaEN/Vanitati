@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace UnnamedStrategyGame.Network
 {
-    public class Server
+    public class Server : IClientNotifier
     {
         private TcpListener _listener;
 
@@ -20,33 +20,71 @@ namespace UnnamedStrategyGame.Network
 
         public event EventHandler<MessageReceivedEventArgs> MessageReceived;
         public event EventHandler<ExceptionEventArgs> Exception;
-        public event EventHandler<DisconnectedEventArgs> ClientDisconnected;
+        public event EventHandler<DisconnectedEventArgs> Disconnected;
 
         public Server(TcpListener listener)
         {
             Contract.Requires<ArgumentNullException>(null != listener);
             _listener = listener;
+            _listener.Start();
         }
 
+        private bool _stop = false;
+
         private bool _listening = false;
-        public async Task Listen()
+        private Task _listernTask;
+
+        public void Listen()
         {
             if (_listening)
             {
                 throw new InvalidOperationException("Already Listening");
             }
+            _listening = true;
 
-            while (true)
+            _listernTask = _listen();
+        }
+
+        private async Task _listen()
+        {
+            try
             {
-                var tcpClient = await _listener.AcceptSocketAsync().ConfigureAwait(false);
-                var client = new ServerClient(new NetworkStream(tcpClient), Logic);
-                client.Disconnected += Client_Disconnected;
-                client.Exception += Client_Exception;
+                while (_stop == false)
+                {
+                    var tcpClient = await _listener.AcceptSocketAsync().ConfigureAwait(false);
+
+                    if (_stop == true)
+                    {
+                        break;
+                    }
+
+                    var client = new ServerClient(new NetworkStream(tcpClient), Logic);
+                    client.Disconnected += Client_Disconnected;
+                    client.Exception += Client_Exception;
 #if DEBUG
-                client.MessageReceived += Client_MessageReceived;
+                    client.MessageReceived += Client_MessageReceived;
 #endif
-                ConnectedClients.Add(client, client.Listen());
+                    ConnectedClients.Add(client, client.Listen());
+                }
             }
+            catch(Exception e)
+            {
+                Client_Exception(this, new ExceptionEventArgs(e));
+            }
+            finally
+            {
+                Stop();
+            }
+        }
+
+        public void Stop()
+        {
+            if (_stop == true)
+                return;
+
+            _stop = true;
+
+            _listener.Stop();
         }
 
         private void Client_MessageReceived(object sender, MessageReceivedEventArgs e)
@@ -69,11 +107,16 @@ namespace UnnamedStrategyGame.Network
 
         private void Client_Disconnected(object sender, DisconnectedEventArgs e)
         {
-            var handler = ClientDisconnected;
+            var handler = Disconnected;
             if (handler != null)
             {
                 handler(sender, e);
             }
+        }
+
+        ~Server()
+        {
+            _listener.Stop();
         }
     }
 }

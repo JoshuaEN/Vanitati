@@ -10,7 +10,7 @@ namespace UnnamedStrategyGame.Game
 {
     public class Player : IAttributeContainer
     {
-        public uint UniqueId { get; }
+        public int UniqueId { get; }
 
         public IReadOnlyList<IAttribute> Attributes
         {
@@ -34,7 +34,7 @@ namespace UnnamedStrategyGame.Game
             remove { attributeContainer.AttributeChanged -= value; }
         }
 
-        public Player(uint uniqueId)
+        public Player(int uniqueId)
         {
             UniqueId = uniqueId;
             attributeContainer = new AttributeContainer(ATTRIBUTES_BUILDER.BuildFullAttributeList(new Dictionary<string, object>()
@@ -69,7 +69,7 @@ namespace UnnamedStrategyGame.Game
         protected const string CREDITS = "credits";
         protected const string UNIQUE_ID = "player_id";
 
-        protected static readonly AttributeDefinition<uint> UNIQUE_ID_DEF = new AttributeDefinition<uint>(UNIQUE_ID);
+        protected static readonly AttributeDefinition<int> UNIQUE_ID_DEF = new AttributeDefinition<int>(UNIQUE_ID);
         protected static readonly AttributeDefinition<int> CREDITS_DEF = new AttributeDefinition<int>(CREDITS, 0);
 
         public static readonly AttributeBuilder ATTRIBUTES_BUILDER = new AttributeBuilder(UNIQUE_ID_DEF, CREDITS_DEF);

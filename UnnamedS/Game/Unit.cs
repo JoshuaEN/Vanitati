@@ -11,6 +11,12 @@ namespace UnnamedStrategyGame.Game
 {
     public sealed class Unit : IAttributeContainer
     {
+        [Newtonsoft.Json.JsonIgnore]
+        public int UniqueId
+        {
+            get;
+        }
+
         public IReadOnlyList<IAttribute> Attributes
         {
             get
@@ -54,12 +60,12 @@ namespace UnnamedStrategyGame.Game
             attributeContainer.SetAttributes(values);
         }
 
-        public Unit(string unitTypeKey, uint player_id) : this(UnitType.TYPES[unitTypeKey], player_id)
+        public Unit(int unitId, string unitTypeKey, int player_id) : this(unitId, UnitType.TYPES[unitTypeKey], player_id)
         {
             Contract.Requires<ArgumentNullException>(unitTypeKey != null);
         }
 
-        private Unit(UnitType type, uint player_id)
+        private Unit(int unitId, UnitType type, int player_id)
         {
             Contract.Requires<ArgumentNullException>(type != null);
 
@@ -69,15 +75,34 @@ namespace UnnamedStrategyGame.Game
             foreach(var attr in type.Attributes)
             {
                 object value;
-                if (attr.Key == "player_id")
-                    value = player_id;
-                else
-                    value = attr.GetValue();
+                bool readOnly = false;
 
-                attributes[i++] = attr.Definition.GetAttribute(value, false);
+                if (attr.Key == UnitType.PLAYER_ID)
+                {
+                    value = player_id;
+                }
+                else if (attr.Key == UnitType.UNIT_ID)
+                {
+                    value = unitId;
+                    readOnly = true;
+                }
+                else
+                {
+                    value = attr.GetValue();
+                }
+
+                attributes[i++] = attr.Definition.GetAttribute(value, readOnly);
             }
 
+            UniqueId = unitId;
             attributeContainer = new AttributeContainer(attributes);
+        }
+
+        public Unit(IReadOnlyList<IAttribute> attributes)
+        {
+            attributeContainer = new AttributeContainer(UnitType.UNIT_ATTRIBUTES_BUILDER.BuildFullAttributeList(attributes.ToArray(), false));
+
+            UniqueId = (int)GetAttribute(UnitType.UNIT_ID).GetValue();
         }
 
     }

@@ -54,9 +54,9 @@ namespace UnnamedStrategyGame.Game
         }
 
         protected const string PREFIX = "terrain_attr_";
-        protected const string CAPTURE_POINTS = PREFIX + "capture_points";
-        protected const string TYPE = PREFIX + "type";
-        protected const string LOCATION = PREFIX + "location";
+        public const string CAPTURE_POINTS = PREFIX + "capture_points";
+        public const string TYPE = PREFIX + "type";
+        public const string LOCATION = PREFIX + "location";
 
         protected static readonly AttributeDefinition<TerrainType> TYPE_DEF = new AttributeDefinition<TerrainType>(TYPE);
         protected static readonly AttributeDefinition<int> CAPTURE_POINTS_DEF = new AttributeDefinition<int>(CAPTURE_POINTS, 10, new List<AttributeValidator>()

@@ -2,9 +2,9 @@
 {
     public class OnThisPlayerAddedArgs
     {
-        public uint YourPlayerId { get; }
+        public int YourPlayerId { get; }
 
-        public OnThisPlayerAddedArgs(uint yourPlayerId)
+        public OnThisPlayerAddedArgs(int yourPlayerId)
         {
             YourPlayerId = yourPlayerId;
         }

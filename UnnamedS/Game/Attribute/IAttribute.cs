@@ -29,6 +29,8 @@ namespace UnnamedStrategyGame.Game
         void SetValue(IAttribute source);
 
         object GetValue();
+        T GetValue<T>();
+
         void MakeReadOnly();
     }
 
@@ -44,11 +46,19 @@ namespace UnnamedStrategyGame.Game
         public abstract event PropertyChangedEventHandler PropertyChanged;
 
         public abstract object GetValue();
+
+        public T GetValue<T>()
+        {
+            Contract.Requires<InvalidCastException>(Definition.Type == typeof(T), "Given type does not match Definition Type.");
+            Contract.Ensures(Contract.Result<T>() != null);
+            return default(T);
+        }
+
         public abstract void MakeReadOnly();
 
         public void SetValue(IAttribute source)
         {
-            Contract.Requires<Exceptions.IncompatableAttributeException>(Definition.CheckAttribute(source), "Incompatable Attribute");
+            Contract.Requires<Exceptions.IncompatableAttributeException>(Definition.CheckAttribute(source), "Incompatible Attribute");
             Contract.Requires(Definition.ValidateAttributeValue(source));
         }
     }

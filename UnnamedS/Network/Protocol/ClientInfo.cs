@@ -8,10 +8,10 @@ namespace UnnamedStrategyGame.Network.Protocol
 {
     public class ClientInfo
     {
-        public uint PlayerId { get; }
+        public int PlayerId { get; }
         public bool IsHost { get; }
 
-        public ClientInfo(uint playerId, bool isHost)
+        public ClientInfo(int playerId, bool isHost)
         {
             PlayerId = playerId;
             IsHost = isHost;

@@ -9,7 +9,7 @@ namespace UnnamedStrategyGame.Network.MessageWrappers
 {
     public class AddPlayerCallWrapper : CallMessageWrapper
     {
-        public override void Call(uint playerId, LocalGameLogic logic)
+        public override void Call(int playerId, LocalGameLogic logic)
         {
             logic.AddPlayer(null);
         }

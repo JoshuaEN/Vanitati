@@ -13,15 +13,17 @@ namespace UnnamedStrategyGame.Game
 {
     public abstract class UnitType : BaseType, IAttributeContainer
     {
-        protected const string PREFIX = "unit_attr_";
-        protected const string TYPE = PREFIX + "type";
-        protected const string PLAYER_ID = PREFIX + "player_id";
-        protected const string LOCATION = PREFIX + "location";
-        protected const string MOVEMENT = PREFIX + "movement";
-        protected const string HEALTH = PREFIX + "health";
+        public const string PREFIX = "unit_attr_";
+        public const string TYPE = PREFIX + "type";
+        public const string UNIT_ID = PREFIX + "unit_id";
+        public const string PLAYER_ID = PREFIX + "player_id";
+        public const string LOCATION = PREFIX + "location";
+        public const string MOVEMENT = PREFIX + "movement";
+        public const string HEALTH = PREFIX + "health";
 
         protected static readonly AttributeDefinition<UnitType> TYPE_DEF = new AttributeDefinition<UnitType>(TYPE);
-        protected static readonly AttributeDefinition<uint> PLAYER_ID_DEF = new AttributeDefinition<uint>(PLAYER_ID, Globals.UNIQUE_PLAYER_ID_NONE);
+        protected static readonly AttributeDefinition<int> UNIT_ID_DEF = new AttributeDefinition<int>(UNIT_ID, -1);
+        protected static readonly AttributeDefinition<int> PLAYER_ID_DEF = new AttributeDefinition<int>(PLAYER_ID, Globals.UNIQUE_PLAYER_ID_NONE);
         protected static readonly AttributeDefinition<Location> LOCATION_DEF = new AttributeDefinition<Location>(LOCATION, new Location());
         protected static readonly AttributeDefinition<int> MOVEMENT_DEF = new AttributeDefinition<int>(MOVEMENT);
         protected static readonly AttributeDefinition<int> HEALTH_DEF = new AttributeDefinition<int>(HEALTH, 10, new List<AttributeValidator>()

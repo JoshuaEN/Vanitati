@@ -1,10 +1,10 @@
 ﻿namespace UnnamedStrategyGame.Game.Event
 {
-    public class OnGameStateChangedArgs : System.EventArgs
+    public class GameStateChangedArgs : System.EventArgs
     {
         public StateChanges.GameStateChange ChangeInfo { get; }
 
-        public OnGameStateChangedArgs(StateChanges.GameStateChange changeInfo)
+        public GameStateChangedArgs(StateChanges.GameStateChange changeInfo)
         {
             ChangeInfo = changeInfo;
         }

@@ -9,6 +9,6 @@ namespace UnnamedStrategyGame.Network.MessageWrappers
 {
     public abstract class CallMessageWrapper : MessageWrapper
     {
-        public abstract void Call(uint playerId, LocalGameLogic logic);
+        public abstract void Call(int playerId, LocalGameLogic logic);
     }
 }

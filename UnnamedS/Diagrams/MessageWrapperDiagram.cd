@@ -3,7 +3,7 @@
   <Class Name="UnnamedStrategyGame.Network.MessageWrappers.MessageWrapper" Collapsed="true">
     <Position X="6.5" Y="1.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <HashCode>AAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
       <FileName>Network\MessageWrappers\MessageWrapper.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -15,14 +15,14 @@
     </TypeIdentifier>
   </Class>
   <Class Name="UnnamedStrategyGame.Network.MessageWrappers.NotifyMessageWrapper">
-    <Position X="8" Y="2.5" Width="2" />
+    <Position X="7.25" Y="2.5" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAA=</HashCode>
       <FileName>Network\MessageWrappers\NotifyMessageWrapper.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="UnnamedStrategyGame.Network.MessageWrappers.DoActionsCallWrapper" Collapsed="true">
-    <Position X="5" Y="4.25" Width="2" />
+    <Position X="5" Y="6" Width="2.25" />
     <Members>
       <Method Name="DoActionsCallWrapper" Hidden="true" />
     </Members>
@@ -31,8 +31,29 @@
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAAQAAAIgAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAQAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Network\MessageWrappers\DoActionsCallWrapper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Network.MessageWrappers.ProtocolMessageWrapper" Collapsed="true">
+    <Position X="9.5" Y="2.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Network\MessageWrappers\ProtocolMessageWrapper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Network.MessageWrappers.ServerToClientProtocolMessageWrapper">
+    <Position X="7.5" Y="4.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>Network\MessageWrappers\ServerToClientProtocolMessageWrapper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Network.MessageWrappers.ClientToServerProtocolMessageWrapper">
+    <Position X="10.5" Y="4.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>Network\MessageWrappers\ClientToServerProtocolMessageWrapper.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />

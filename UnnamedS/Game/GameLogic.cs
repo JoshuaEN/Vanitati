@@ -38,25 +38,29 @@ namespace UnnamedStrategyGame.Game
 
         public abstract void AddPlayer(IReadOnlyList<IPlayerLogic> logic);
 
-        public abstract void RemovePlayer(uint id);
+        public abstract void RemovePlayer(int playerID);
 
-        public abstract void DoActions(uint playerId, List<ActionInfo> actions);
-
-        public virtual void DoAction(uint playerId, ActionInfo action)
+        public virtual void DoActions(int playerID, List<ActionInfo> actions)
         {
-            DoActions(playerId, new List<ActionInfo>() { action });
+            foreach(var action in actions)
+            {
+                DoAction(playerID, action);
+            }
         }
 
-        public virtual void DoAction(uint playerId, Location source, Location target, ActionType action)
+        public abstract void DoAction(int playerID, ActionInfo action);
+
+        public virtual void DoAction(int playerID, Location source, Location target, ActionType action)
         {
-            DoAction(playerId, new ActionInfo(action, source, target));
+            DoAction(playerID, new ActionInfo(action, source, target));
         }
 
-        public virtual void DoAction(uint playerId, Location source, ActionType action)
+        public virtual void DoAction(int playerID, Location source, ActionType action)
         {
-            DoAction(playerId, source, null, action);
+            DoAction(playerID, source, source, action);
         }
 
+        public abstract void StartGame(int height, int width, Terrain[] terrain, Unit[] units, Player[] players, Dictionary<string, object> gameStateAttributes);
 
         protected class PlayerSet
         {

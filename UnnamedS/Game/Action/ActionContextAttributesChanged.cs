@@ -9,7 +9,7 @@ namespace UnnamedStrategyGame.Game.Action
     public class ActionContextAttributesChanged : ActionContext
     {
         public IReadOnlyList<IAttribute> ChangedAttributes { get; }
-        public ActionContextAttributesChanged(List<IAttribute> changedAttributes) : base(ActionType.ActionTriggers.AttributeChange)
+        public ActionContextAttributesChanged(int playerID, List<IAttribute> changedAttributes) : base(playerID, ActionType.ActionTriggers.AttributeChange)
         {
             ChangedAttributes = changedAttributes;
         }
