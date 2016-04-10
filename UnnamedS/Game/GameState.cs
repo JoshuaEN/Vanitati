@@ -76,29 +76,29 @@ namespace UnnamedStrategyGame.Game
     {
         public override Terrain GetTerrain(int x, int y)
         {
-            Contract.Requires<ArgumentOutOfRangeException>(x > 0);
-            Contract.Requires<ArgumentOutOfRangeException>(y > 0);
+            Contract.Requires<ArgumentOutOfRangeException>(x >= 0);
+            Contract.Requires<ArgumentOutOfRangeException>(y >= 0);
             return null;
         }
 
         public override Unit GetUnit(int x, int y)
         {
-            Contract.Requires<ArgumentOutOfRangeException>(x > 0);
-            Contract.Requires<ArgumentOutOfRangeException>(y > 0);
+            Contract.Requires<ArgumentOutOfRangeException>(x >= 0);
+            Contract.Requires<ArgumentOutOfRangeException>(y >= 0);
             return null;
         }
 
         public override void SetTerrain(int x, int y, Terrain value)
         {
-            Contract.Requires<ArgumentOutOfRangeException>(x > 0);
-            Contract.Requires<ArgumentOutOfRangeException>(y > 0);
+            Contract.Requires<ArgumentOutOfRangeException>(x >= 0);
+            Contract.Requires<ArgumentOutOfRangeException>(y >= 0);
             Contract.Requires<ArgumentNullException>(value != null);
         }
 
         public override void SetUnit(int x, int y, Unit value)
         {
-            Contract.Requires<ArgumentOutOfRangeException>(x > 0);
-            Contract.Requires<ArgumentOutOfRangeException>(y > 0);
+            Contract.Requires<ArgumentOutOfRangeException>(x >= 0);
+            Contract.Requires<ArgumentOutOfRangeException>(y >= 0);
             Contract.Requires<ArgumentNullException>(value != null);
         }
     }

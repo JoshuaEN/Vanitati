@@ -11,12 +11,16 @@ namespace UnnamedStrategyGame.Game
         public ActionType Type { get; }
         public Location Source { get; }
         public Location Target { get; }
+        public int CommanderID { get; }
+        public ActionType.ActionTriggers Trigger { get; }
 
-        public ActionInfo(ActionType type, Location source, Location target = null)
+        public ActionInfo(int commanderID, ActionType type, Location source, Location target, ActionType.ActionTriggers trigger)
         {
             Type = type;
             Source = source;
             Target = target;
+            CommanderID = commanderID;
+            Trigger = trigger;
         }
     }
 }

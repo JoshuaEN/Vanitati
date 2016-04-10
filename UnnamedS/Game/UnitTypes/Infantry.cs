@@ -12,14 +12,11 @@ namespace UnnamedStrategyGame.Game.UnitTypes
             key:
                 "infantry",
 
-            attributeDefaults:
-                new Dictionary<string, object>()
-                {
-                    { MOVEMENT, 2 },
-                },
-
             movementType:
                 MovementTypes.Boots.Instance,
+
+            maxMovement:
+                3,
 
             actions:
                 new List<ActionType>()
@@ -34,7 +31,7 @@ namespace UnnamedStrategyGame.Game.UnitTypes
                     {SupplyTypes.RifleRounds.Instance, 10 }
                 }
         )
-        { /*SetDefaultType(this);*/ }
+        { }
 
         public static Infantry Instance { get; } = new Infantry();
     }

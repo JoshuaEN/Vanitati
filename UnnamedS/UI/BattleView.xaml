@@ -1,4 +1,5 @@
-﻿<Page x:Class="UnnamedStrategyGame.UI.BattleView"
+﻿<Page x:Name="page"
+      x:Class="UnnamedStrategyGame.UI.BattleView"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -6,12 +7,19 @@
       xmlns:local="clr-namespace:UnnamedStrategyGame.UI"
       mc:Ignorable="d" 
       d:DesignHeight="300" d:DesignWidth="300"
-      Title="BattleView">
+      Title="BattleView" SnapsToDevicePixels="True" Loaded="Page_Loaded">
 
     <Grid>
-        <Canvas x:Name="canvas" SnapsToDevicePixels="True">
+        <Canvas x:Name="canvas" SnapsToDevicePixels="True" ContextMenuOpening="canvasContextMenu_ContextMenuOpening">
+            <Canvas.ContextMenu>
+                <ContextMenu x:Name="canvasContextMenu" />
+            </Canvas.ContextMenu>
 
         </Canvas>
 
+        <local:PropView x:Name="gameStatePropView" HorizontalAlignment="Right" VerticalAlignment="Top" IsHitTestVisible="False" Background="White"></local:PropView>
+        <local:PropView x:Name="unitStatePropView" HorizontalAlignment="Right" VerticalAlignment="Bottom" IsHitTestVisible="False" Background="White"></local:PropView>
+        <Button x:Name="endTurnButton" Content="End Turn" Click="endTurnButton_Click" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+        <TextBox x:Name="debugText" HorizontalAlignment="Left" VerticalAlignment="Top" />
     </Grid>
 </Page>

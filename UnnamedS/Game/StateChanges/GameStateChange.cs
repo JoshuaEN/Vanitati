@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace UnnamedStrategyGame.Game.StateChanges
 {
-    public class GameStateChange : StateChange
+    public class GameStateChange : UpdateStateChange
     {
-        public GameStateChange(List<IAttribute> updatedAttributes) : base(updatedAttributes) { }
+        public GameStateChange(IDictionary<string, object> updatedProperties) : base(updatedProperties) { }
     }
 }

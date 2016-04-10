@@ -35,47 +35,46 @@ namespace UnnamedStrategyGame
             {
                 object v;
 
-                v = ActionType.TYPES;
-                v = MovementType.TYPES;
                 v = SupplyType.TYPES;
+                v = MovementType.TYPES;
+                v = ActionType.TYPES;
                 v = UnitType.TYPES;
 
                 v = TerrainType.TYPES;
 
-                BaseType.BuildAttributeDefinitionsListing();
             }
 
             Content = new UI.BattleView();
             return;
 
-            var view = new UI.NetworkLogViewer();
+            //var view = new UI.NetworkLogViewer();
 
-            var endpoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), Globals.DEFAULT_PORT);
+            //var endpoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), Globals.DEFAULT_PORT);
 
-            sv = new Network.Server( new TcpListener(endpoint));
+            //sv = new Network.Server( new TcpListener(endpoint));
 
-            view.AddSource("Server", sv);
+            //view.AddSource("Server", sv);
 
-            sv.Listen();
+            //sv.Listen();
 
-            var endpoint2 = new IPEndPoint(IPAddress.Parse("127.0.0.1"), endpoint.Port);
-            var endpoint3 = new IPEndPoint(IPAddress.Parse("127.0.0.1"), endpoint.Port);
+            //var endpoint2 = new IPEndPoint(IPAddress.Parse("127.0.0.1"), endpoint.Port);
+            //var endpoint3 = new IPEndPoint(IPAddress.Parse("127.0.0.1"), endpoint.Port);
 
-            var cc1 = new Network.Client(endpoint2);
-            var cc2 = new Network.Client(endpoint3);
+            //var cc1 = new Network.Client(endpoint2);
+            //var cc2 = new Network.Client(endpoint3);
 
-            view.AddSource("Client A", cc1);
-            view.AddSource("Client B", cc2);
+            //view.AddSource("Client A", cc1);
+            //view.AddSource("Client B", cc2);
 
-            c1 = new Game.NetworkedGameLogic(cc1, new List<IPlayerLogic>());
-            c2 = new Game.NetworkedGameLogic(cc2, new List<IPlayerLogic>());
+            //c1 = new Game.NetworkedGameLogic(cc1, new List<IPlayerLogic>());
+            //c2 = new Game.NetworkedGameLogic(cc2, new List<IPlayerLogic>());
 
-            view.Show();
-            
+            //view.Show();
+
 
             //var s = Serializers.Serializer.Instance;
 
-            //var m = new Network.MessageWrappers.DoActionsCallWrapper(new Location(1, 1), new Location(2, 2), new List<ActionType>() { Game.ActionTypes.AttackRifle.Instance });
+            //var m = new Network.MessageWrappers.DoActionsCallWrapper(0, new List<ActionInfo>() { new ActionInfo(Game.ActionTypes.AttackRifle.Instance, new Location(1, 1), new Location(2, 2)) });
             //var res = s.Serialize(m);
 
 
@@ -94,6 +93,12 @@ namespace UnnamedStrategyGame
             //MessageBox.Show(UnitType.TYPES.Count.ToString());
 
             //Console.WriteLine();
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            Application.Current.Shutdown(0);
+            Environment.Exit(0);
         }
     }
 

@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:UnnamedStrategyGame.UI"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
+    <Grid x:Name="contentGrid">
 
     </Grid>
 </UserControl>

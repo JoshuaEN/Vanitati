@@ -35,3 +35,7 @@ e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\Unname
 e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedS\bin\Debug\Resources\vanilla\images\terrain_missing.png
 e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedS\bin\Debug\Resources\vanilla\images\terrain_hit_reference.png
 e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedS\bin\Debug\Resources\vanilla\images\unit_infantry.png
+e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedS\bin\Debug\Resources\vanilla\images\unit_none.png
+e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedS\obj\Debug\UI\PropView.g.cs
+e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedS\obj\Debug\UI\PropView.baml
+e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedS\obj\Debug\GeneratedInternalTypeHelper.g.cs

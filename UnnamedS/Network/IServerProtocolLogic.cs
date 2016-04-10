@@ -8,6 +8,6 @@ namespace UnnamedStrategyGame.Network
 {
     public interface IServerProtocolLogic : IProtocolLogic
     {
-
+        void ClientHelloReceived(Protocol.ClientHelloData clientHello);
     }
 }

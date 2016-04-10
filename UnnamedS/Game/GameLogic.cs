@@ -11,63 +11,46 @@ namespace UnnamedStrategyGame.Game
 {
     public abstract class GameLogic
     {
-        private BattleGameState _state;
-        public BattleGameState State
-        {
-            get
-            {
-                return _state;
-            }
-            protected set
-            {
-                Contract.Requires<ArgumentNullException>(null != value);
-                _state = value;
-            }
-        }
 
-        public GameLogic(BattleGameState state)
-        {
-            Contract.Requires<ArgumentNullException>(null != state);
-            State = state;
-        }
+        public abstract IReadOnlyBattleGameState State { get; }
 
-        protected GameLogic()
-        {
-            _state = null;
-        }
+        public abstract IReadOnlyDictionary<int, int?> CommanderAssignments { get; }
 
-        public abstract void AddPlayer(IReadOnlyList<IPlayerLogic> logic);
+        public int LastSyncID { get; protected set; } = 0;
 
-        public abstract void RemovePlayer(int playerID);
+        public abstract void AddUser(User user, IReadOnlyList<IUserLogic> logic);
 
-        public virtual void DoActions(int playerID, List<ActionInfo> actions)
+        public abstract void RemoveUser(int userID);
+
+        public abstract void AssignUserToCommander(int? userID, int CommanderID);
+
+        public virtual void DoActions(List<ActionInfo> actions)
         {
             foreach(var action in actions)
             {
-                DoAction(playerID, action);
+                DoAction(action);
             }
         }
 
-        public abstract void DoAction(int playerID, ActionInfo action);
+        public abstract void DoAction(ActionInfo action);
 
-        public virtual void DoAction(int playerID, Location source, Location target, ActionType action)
+        public virtual void Sync()
         {
-            DoAction(playerID, new ActionInfo(action, source, target));
+            Sync(++LastSyncID);
         }
 
-        public virtual void DoAction(int playerID, Location source, ActionType action)
+        public abstract void Sync(int syncID);
+
+        public abstract void StartGame(BattleGameState.Fields fields);
+
+        public abstract void EndTurn(int commanderID);
+
+        protected class UserSet
         {
-            DoAction(playerID, source, source, action);
-        }
+            public IReadOnlyList<IUserLogic> Logic { get; }
+            public User State { get; }
 
-        public abstract void StartGame(int height, int width, Terrain[] terrain, Unit[] units, Player[] players, Dictionary<string, object> gameStateAttributes);
-
-        protected class PlayerSet
-        {
-            public IReadOnlyList<IPlayerLogic> Logic { get; }
-            public Player State { get; }
-
-            public PlayerSet(IReadOnlyList<IPlayerLogic> logic, Player state)
+            public UserSet(IReadOnlyList<IUserLogic> logic, User state)
             {
                 Logic = logic;
                 State = state;

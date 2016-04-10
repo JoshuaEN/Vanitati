@@ -15,5 +15,6 @@
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/vanilla/images/terrain_plain.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/vanilla/images/terrain_road.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/vanilla/images/testimga.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/vanilla/images/unit_none.png")]
 
 

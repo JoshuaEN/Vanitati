@@ -6,77 +6,48 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnnamedStrategyGame.Game.Event;
+using UnnamedStrategyGame.Game.Properties;
 
 namespace UnnamedStrategyGame.Game
 {
-    public class Terrain : IAttributeContainer
+    public class Terrain : IPropertyContainer
     {
-        public IReadOnlyList<IAttribute> Attributes
-        {
-            get
-            {
-                return attributeContainer.Attributes;
-            }
-        }
+        public TerrainType TerrainType { get; set; }
+        public Location Location { get; set; }
+        public Dictionary<int, int> CaptureProgress { get; set; }
 
-        private IAttributeContainer attributeContainer;
-
-        public event PropertyChangedEventHandler PropertyChanged
-        {
-            add { attributeContainer.PropertyChanged += value; }
-            remove { attributeContainer.PropertyChanged -= value; }
-        }
-
-        public event EventHandler<AttributeChangedEventArgs> AttributeChanged
-        {
-            add { attributeContainer.AttributeChanged += value; }
-            remove { attributeContainer.AttributeChanged -= value; }
-        }
-
-        public IAttribute GetAttribute(string key)
-        {
-            return attributeContainer.GetAttribute(key);
-        }
-
-        public void SetAttribute(IAttribute value)
-        {
-            attributeContainer.SetAttribute(value);
-        }
-
-        public void SetAttributeReadOnly(string key)
-        {
-            attributeContainer.SetAttributeReadOnly(key);
-        }
-
-        public void SetAttributes(IReadOnlyList<IAttribute> values)
-        {
-            attributeContainer.SetAttributes(values);
-        }
-
-        public Terrain(string terrainTypeKey) : this(TerrainType.TYPES[terrainTypeKey])
+        public Terrain(string terrainTypeKey, Location location) : this(TerrainType.TYPES[terrainTypeKey], location)
         {
             Contract.Requires<ArgumentNullException>(terrainTypeKey != null);
         }
 
-        private Terrain(TerrainType type)
+        [Newtonsoft.Json.JsonConstructor]
+        public Terrain(TerrainType terrainType, Location location)
         {
-            Contract.Requires<ArgumentNullException>(type != null);
-
-            var attributes = new IAttribute[type.Attributes.Count];
-
-            var i = 0;
-            foreach (var attr in type.Attributes)
-            {
-                attributes[i++] = attr.Definition.GetAttribute(attr.GetValue(), false);
-            }
-
-            attributeContainer = new AttributeContainer(attributes);
+            Contract.Requires<ArgumentNullException>(terrainType != null);
+            Contract.Requires<ArgumentNullException>(location != null);
+            TerrainType = terrainType;
+            Location = location;
         }
 
-        [Newtonsoft.Json.JsonConstructor]
-        public Terrain(IAttribute[] attributes)
+        public IDictionary<string, object> GetProperties()
         {
-            attributeContainer = new AttributeContainer(TerrainType.TERRAIN_ATTRIBUTES_BUILDER.BuildFullAttributeList(attributes));
+            return PropertyContainer.TERRAIN.GetProperties(this);
+        }
+
+        public IDictionary<string, object> GetWriteableProperties()
+        {
+            return PropertyContainer.TERRAIN.GetWriteableProperties(this);
+        }
+
+        public void SetProperties(IDictionary<string, object> values)
+        {
+            PropertyContainer.TERRAIN.SetProperties(this, values);
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0} at {1}", TerrainType, Location);
         }
     }
 }

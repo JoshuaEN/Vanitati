@@ -20,6 +20,11 @@ namespace UnnamedStrategyGame.Serializers.JsonConverters
         {
             var key = (string)reader.Value;
 
+            return GetInstanceFromTypeString(objectType, key);
+        }
+
+        public static object GetInstanceFromTypeString(Type objectType, string key)
+        {
             if (objectType == typeof(UnitType))
                 return UnitType.TYPES[key];
             else if (objectType == typeof(TerrainType))
@@ -28,6 +33,8 @@ namespace UnnamedStrategyGame.Serializers.JsonConverters
                 return MovementType.TYPES[key];
             else if (objectType == typeof(ActionType))
                 return ActionType.TYPES[key];
+            else if (objectType == typeof(SupplyType))
+                return SupplyType.TYPES[key];
             else
                 throw new InvalidOperationException(string.Format("Unsupported or unknown type of {0}", objectType.Name));
         }

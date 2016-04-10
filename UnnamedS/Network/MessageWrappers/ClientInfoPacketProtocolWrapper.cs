@@ -8,16 +8,16 @@ namespace UnnamedStrategyGame.Network.MessageWrappers
 {
     public class ClientInfoPacketProtocolWrapper : ServerToClientProtocolMessageWrapper
     {
-        public Protocol.ClientInfo ClientInfo { get; }
+        public Game.User User { get; }
 
-        public ClientInfoPacketProtocolWrapper(Protocol.ClientInfo clientInfo)
+        public ClientInfoPacketProtocolWrapper(Game.User user)
         {
-            ClientInfo = clientInfo;
+            User = user;
         }
 
         public override void Run(IClientProtocolLogic logic)
         {
-            logic.ClientInfoPacketRecieved(ClientInfo);
+            logic.ClientInfoPacketRecieved(User);
         }
     }
 }

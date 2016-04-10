@@ -15,6 +15,11 @@ namespace UnnamedStrategyGame.Serializers
             return Instance.Deserialize<T>(str);
         }
 
+        public static object Deserialize(string str, Type type)
+        {
+            return Instance.Deserialize(str, type);
+        }
+
         public static string Serialize(object obj)
         {
             return Instance.Serialize(obj);

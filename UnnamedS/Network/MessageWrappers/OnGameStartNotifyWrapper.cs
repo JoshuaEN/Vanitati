@@ -16,7 +16,7 @@ namespace UnnamedStrategyGame.Network.MessageWrappers
             Args = args;
         }
 
-        public override void Notify(IPlayerLogic logic)
+        public override void Notify(IUserLogic logic)
         {
             logic.OnGameStart(this, Args);
         }

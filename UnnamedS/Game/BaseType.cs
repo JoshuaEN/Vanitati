@@ -52,29 +52,9 @@ namespace UnnamedStrategyGame.Game
             return listing;
         }
 
-        public static Dictionary<string, IAttributeDefinition> AttributeDefinitions { get; private set; }
-
-        public static void BuildAttributeDefinitionsListing()
+        public override string ToString()
         {
-            if (AttributeDefinitions != null)
-            {
-                throw new InvalidOperationException("Attribute Definitions Listing already built!");
-            }
-
-            var defs = new Dictionary<string, IAttributeDefinition>();
-
-            AddDefintionsFrom(ref defs, UnitType.UNIT_ATTRIBUTES_BUILDER.Definitions);
-            AddDefintionsFrom(ref defs, TerrainType.TERRAIN_ATTRIBUTES_BUILDER.Definitions);
-
-            AttributeDefinitions = defs;
-        }
-
-        private static void AddDefintionsFrom(ref Dictionary<string, IAttributeDefinition> target, IReadOnlyDictionary<string, IAttributeDefinition> source)
-        {
-            foreach(var kp in source)
-            {
-                target.Add(kp.Value.Key, kp.Value);
-            }
+            return Key;
         }
     }
 }

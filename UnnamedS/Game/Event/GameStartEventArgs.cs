@@ -8,9 +8,9 @@ namespace UnnamedStrategyGame.Game.Event
 {
     public class GameStartEventArgs : EventArgs
     {
-        public StateChanges.GameStarted ChangeInfo { get; }
+        public BattleGameState.Fields ChangeInfo { get; }
 
-        public GameStartEventArgs(StateChanges.GameStarted changeInfo)
+        public GameStartEventArgs(BattleGameState.Fields changeInfo)
         {
             ChangeInfo = changeInfo;
         }
