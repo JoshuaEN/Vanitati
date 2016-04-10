@@ -12,20 +12,20 @@ namespace UnnamedStrategyGame.Game.StateChanges
         public int Width { get; }
         public Terrain[] Terrain { get; }
         public Unit[] Units { get; }
-        public Player[] Players { get; }
-        public Dictionary<string, object> GameStateAttributes { get; }
+        public Commander[] Commanders { get; }
+        public IDictionary<string, object> GameStateAttributes { get; }
 
         public GameStarted(
             int height, int width, 
-            Terrain[] terrain, Unit[] units, Player[] players, 
-            Dictionary<string, object> gameStateAttributes
-        ) : base(new List<IAttribute>())
+            Terrain[] terrain, Unit[] units, Commander[] commanders, 
+            IDictionary<string, object> gameStateAttributes
+        ) : base()
         {
             Height = height;
             Width = width;
             Terrain = terrain;
             Units = units;
-            Players = players;
+            Commanders = commanders;
             GameStateAttributes = gameStateAttributes;
         }
     }

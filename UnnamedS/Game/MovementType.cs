@@ -10,6 +10,11 @@ namespace UnnamedStrategyGame.Game
     {
         protected MovementType(string key) : base("movement_" + key) { }
 
+        public virtual int GetMovementCost(TerrainType terrainType)
+        {
+            return 1;
+        }
+
         public static IReadOnlyDictionary<string, MovementType> TYPES { get; }
 
         static MovementType()

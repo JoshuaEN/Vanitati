@@ -6,103 +6,91 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnnamedStrategyGame.Game.Event;
+using UnnamedStrategyGame.Game.Properties;
 
 namespace UnnamedStrategyGame.Game
 {
-    public sealed class Unit : IAttributeContainer
+    public sealed class Unit : IPropertyContainer
     {
-        [Newtonsoft.Json.JsonIgnore]
-        public int UniqueId
+        public int UnitID { get; } = -1;
+        public UnitType UnitType { get; set; }
+        public Location Location { get; set; }
+        public IDictionary<SupplyType, int> Supplies { get; set; }
+        public int CommanderID { get; set; } = -1;
+        public int Movement { get; set; } = -1;
+        public int Attacks { get; set; } = -1;
+        public int Health { get; set; } = -1;
+
+        [Newtonsoft.Json.JsonConstructor]
+        public Unit(int unitID, UnitType unitType, Location location, int commanderID)
         {
-            get;
+            Contract.Requires<ArgumentNullException>(unitType != null);
+            Contract.Requires<ArgumentNullException>(location != null);
+            Contract.Requires<ArgumentException>(unitID > -1);
+            Contract.Requires<ArgumentException>(commanderID > -1);
+
+            UnitID = unitID;
+            UnitType = unitType;
+            Location = location;
+            Supplies = UnitType.SupplyLimits.ToDictionary(kp => kp.Key, kp => kp.Value);
+            CommanderID = commanderID;
+            Movement = UnitType.MaxMovement;
+            Attacks = UnitType.MaxAttacks;
+            Health = UnitType.MaxHealth;
         }
 
-        public IReadOnlyList<IAttribute> Attributes
+        public Unit(IDictionary<string, object> values)
         {
-            get
+            SetProperties(values);
+        }
+
+        public IDictionary<Location, ActionType> GetAvailableMovement(IReadOnlyBattleGameState state)
+        {
+            Contract.Requires<ArgumentNullException>(null != state);
+
+            var sourceTile = state.GetTile(Location);
+            var dic = new Dictionary<Location, ActionType>();
+
+            foreach(var action in UnitType.Actions.Where(a => a.CausesMovement && a.AvailableDuringTurn))
             {
-                return attributeContainer.Attributes;
-            }
-        }
-
-        private IAttributeContainer attributeContainer;
-
-        public event PropertyChangedEventHandler PropertyChanged
-        {
-            add { attributeContainer.PropertyChanged += value; }
-            remove { attributeContainer.PropertyChanged -= value; }
-        }
-
-        public event EventHandler<AttributeChangedEventArgs> AttributeChanged
-        {
-            add { attributeContainer.AttributeChanged += value; }
-            remove { attributeContainer.AttributeChanged -= value; }
-        }
-
-
-        public IAttribute GetAttribute(string key)
-        {
-            return attributeContainer.GetAttribute(key);
-        }
-
-        public void SetAttribute(IAttribute value)
-        {
-            attributeContainer.SetAttribute(value);
-        }
-
-        public void SetAttributeReadOnly(string key)
-        {
-            attributeContainer.SetAttributeReadOnly(key);
-        }
-
-        public void SetAttributes(IReadOnlyList<IAttribute> values)
-        {
-            attributeContainer.SetAttributes(values);
-        }
-
-        public Unit(int unitId, string unitTypeKey, int player_id) : this(unitId, UnitType.TYPES[unitTypeKey], player_id)
-        {
-            Contract.Requires<ArgumentNullException>(unitTypeKey != null);
-        }
-
-        private Unit(int unitId, UnitType type, int player_id)
-        {
-            Contract.Requires<ArgumentNullException>(type != null);
-
-            var attributes = new IAttribute[type.Attributes.Count];
-
-            var i = 0;
-            foreach(var attr in type.Attributes)
-            {
-                object value;
-                bool readOnly = false;
-
-                if (attr.Key == UnitType.PLAYER_ID)
+                foreach(var location in (action as ActionTypes.ICausesMovement).GetRemainingMovement(state, new Game.Action.ActionContext(CommanderID, ActionType.ActionTriggers.None), sourceTile).Keys)
                 {
-                    value = player_id;
-                }
-                else if (attr.Key == UnitType.UNIT_ID)
-                {
-                    value = unitId;
-                    readOnly = true;
-                }
-                else
-                {
-                    value = attr.GetValue();
-                }
+                    if (dic.ContainsKey(location))
+                        continue;
 
-                attributes[i++] = attr.Definition.GetAttribute(value, readOnly);
+                    dic.Add(location, action);
+                }
             }
 
-            UniqueId = unitId;
-            attributeContainer = new AttributeContainer(attributes);
+            return dic;
         }
 
-        public Unit(IReadOnlyList<IAttribute> attributes)
+        public IDictionary<string, object> GetProperties()
         {
-            attributeContainer = new AttributeContainer(UnitType.UNIT_ATTRIBUTES_BUILDER.BuildFullAttributeList(attributes.ToArray(), false));
+            return PropertyContainer.UNIT.GetProperties(this);
+        }
 
-            UniqueId = (int)GetAttribute(UnitType.UNIT_ID).GetValue();
+        public IDictionary<string, object> GetWriteableProperties()
+        {
+            return PropertyContainer.UNIT.GetWriteableProperties(this);
+        }
+
+        public void SetProperties(IDictionary<string, object> values)
+        {
+            PropertyContainer.UNIT.SetProperties(this, values);
+        }
+
+        [ContractInvariantMethod]
+        private void Invariants()
+        {
+            Contract.Invariant(UnitID > -1);
+            Contract.Invariant(UnitType != null);
+            Contract.Invariant(Location != null);
+            Contract.Invariant(Supplies != null);
+            Contract.Invariant(CommanderID > -1);
+            Contract.Invariant(Movement > -1);
+            Contract.Invariant(Attacks > -1);
+            Contract.Invariant(Health > -1);
         }
 
     }

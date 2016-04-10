@@ -16,8 +16,7 @@ namespace UnnamedStrategyGame.Serializers
         {
             SERIALIZER = new Newtonsoft.Json.JsonSerializer();
             SERIALIZER.Converters.Add(new JsonConverters.XTypeJsonConverter());
-            SERIALIZER.Converters.Add(new JsonConverters.IAttributeJsonConverter());
-            SERIALIZER.Converters.Add(new JsonConverters.IAttributeDefinitionJsonConverter());
+            SERIALIZER.Converters.Add(new JsonConverters.XTypeDictionaryConverter());
             SERIALIZER.Converters.Add(new JsonConverters.MessageWrapperConverter());
 
             //SERIALIZER.ReferenceLoopHandling = ReferenceLoopHandling.Serialize;
@@ -26,7 +25,7 @@ namespace UnnamedStrategyGame.Serializers
 #if DEBUG
             SERIALIZER.Formatting = Formatting.Indented;
 #else
-            serializer.Formatting = Formatting.None;
+            SERIALIZER.Formatting = Formatting.None;
 #endif
         }
 
@@ -36,6 +35,15 @@ namespace UnnamedStrategyGame.Serializers
             using (JsonReader reader = new JsonTextReader(sr))
             {
                 return SERIALIZER.Deserialize<T>(reader);
+            }
+        }
+
+        public override object Deserialize(string str, Type type)
+        {
+            using (StringReader sr = new StringReader(str))
+            using (JsonReader reader = new JsonTextReader(sr))
+            {
+                return SERIALIZER.Deserialize(reader, type);
             }
         }
 

@@ -9,6 +9,6 @@ namespace UnnamedStrategyGame.Network.MessageWrappers
 {
     public abstract class NotifyMessageWrapper : MessageWrapper
     {
-        public abstract void Notify(IPlayerLogic logic);
+        public abstract void Notify(IUserLogic logic);
     }
 }

@@ -92,21 +92,34 @@ namespace UnnamedStrategyGame.Network
 
                 if(headerBufferRes != headerBuffer.Length)
                 {
-                    throw new Exceptions.IncompleteHeaderException(String.Format("Expected to receieve {0} bytes, got {1} bytes", headerBuffer.Length, headerBufferRes));
+                    throw new Exceptions.IncompleteHeaderException(String.Format("Expected to receive {0} bytes, got {1} bytes", headerBuffer.Length, headerBufferRes));
                 }
 
                 byte[] messageBuffer = new byte[BitConverter.ToInt32(headerBuffer, 0)];
-                int messageBufferRes = await NetworkStream.ReadAsync(messageBuffer, 0, messageBuffer.Length);
+                var messageBufferOffset = 0;
 
-                if(messageBufferRes == 0)
+                
+
+                while (messageBufferOffset < messageBuffer.Length)
                 {
-                    throw new Exceptions.ConnectionClosedException("Connection closed while sending Message");
+                    int messageBufferRes = await NetworkStream.ReadAsync(messageBuffer, messageBufferOffset, messageBuffer.Length - messageBufferOffset);
+
+                    if (messageBufferRes == 0)
+                    {
+                        throw new Exceptions.ConnectionClosedException("Connection closed while sending Message");
+                    }
+
+                    messageBufferOffset += messageBufferRes;
                 }
 
-                if(messageBufferRes != messageBuffer.Length)
+                if(messageBufferOffset != messageBuffer.Length)
                 {
-                    throw new Exceptions.IncompleteMessageException(string.Format("Expected to receieve {0} bytes, got {1} bytes", messageBuffer.Length, messageBufferRes));
+                    throw new Exceptions.IncompleteMessageException(string.Format("Expected to receive {0} bytes, got {1} bytes", messageBuffer.Length, messageBufferOffset));
                 }
+
+#if NETWORK_LAG
+                await Task.Delay(150);
+#endif
 
                 OnMessageReceived(new MessageReceivedEventArgs(Encoding.Unicode.GetString(messageBuffer)));
             }

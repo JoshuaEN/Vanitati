@@ -8,13 +8,6 @@ namespace UnnamedStrategyGame.Game
 {
     public abstract class StateChange
     {
-        public IReadOnlyList<IAttribute> UpdatedAttributes { get; }
-        
-
-        public StateChange(List<IAttribute> updatedAttributes)
-        {
-            UpdatedAttributes = updatedAttributes;
-        }
 
     }
 }

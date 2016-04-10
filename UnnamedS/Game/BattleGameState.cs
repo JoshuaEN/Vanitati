@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.Contracts;
@@ -6,95 +7,107 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnnamedStrategyGame.Game.Event;
+using UnnamedStrategyGame.Game.Properties;
 using UnnamedStrategyGame.Game.StateChanges;
 
 namespace UnnamedStrategyGame.Game
 {
-    public class BattleGameState : GameState, IAttributeContainer
+    public class BattleGameState : GameState, IPropertyContainer, IReadOnlyBattleGameState
     {
-        //protected const string UNITS = "units";
-        //protected const string TERRAIN = "terrain";
-        //protected const string PLAYERS = "players";
-        protected const string CURRENT_PLAYER = "current_player";
-        protected const string TURN_COUNTER = "turn_counter";
-        protected const string NEXT_PLAYER_ID = "next_player_id";
-        protected const string NEXT_UNIT_ID = "next_unit_id";
+        [JsonProperty]
+        public int CurrentCommanderIndex { get; set; } = -1;
 
-        //protected static readonly AttributeDefinition<Dictionary<int, Unit>> UNITS_DEF = new AttributeDefinition<Dictionary<int, Unit>>(UNITS, new Dictionary<int, Unit>());
-        //protected static readonly AttributeDefinition<Terrain[]> TERRAIN_DEF = new AttributeDefinition<Terrain[]>(TERRAIN, new Terrain[0]);
-        //protected static readonly AttributeDefinition<Dictionary<int, Player>> PLAYERS_DEF = new AttributeDefinition<Dictionary<int, Player>>(PLAYERS, new Dictionary<int, Player>());
-        protected static readonly AttributeDefinition<int> CURRENT_PLAYER_DEF = new AttributeDefinition<int>(CURRENT_PLAYER, 0);
-        protected static readonly AttributeDefinition<int> TURN_COUNTER_DEF = new AttributeDefinition<int>(TURN_COUNTER, 1);
-        protected static readonly AttributeDefinition<int> NEXT_PLAYER_ID_DEF = new AttributeDefinition<int>(NEXT_PLAYER_ID, 0);
+        [JsonProperty]
+        public int TurnCounter { get; set; } = 1;
 
-        protected static readonly AttributeDefinition<int> NEXT_UNIT_ID_DEF = new AttributeDefinition<int>(NEXT_UNIT_ID, 0);
+        [JsonProperty]
+        public int NextUnitID { get; set; } = 0;
 
-        public static readonly AttributeBuilder ATTRIBUTES_BUILDER = new AttributeBuilder(CURRENT_PLAYER_DEF, TURN_COUNTER_DEF, NEXT_PLAYER_ID_DEF, NEXT_UNIT_ID_DEF);
+        [JsonIgnore]
+        public Commander CurrentCommander
+        {
+            get
+            {
+                if (CurrentCommanderIndex == -1)
+                    return null;
 
-        private IAttributeContainer attributeContainer;
+                return _commanderOrder[CurrentCommanderIndex];
+            }
+        }
 
-        //public virtual int CurrentPlayer { get; protected set; }
-        //public virtual int TurnCounter { get; protected set; } = 1;
-
+        [JsonProperty]
         protected Dictionary<int, Unit> _units { get; set; } = new Dictionary<int, Unit>();
 
         /// <summary>
-        /// Listing of all units on the map, the int being the index of the tile they are on.
+        /// Listing of all units on the map, the int being the unique ID of the unit.
         /// </summary>
+        [JsonIgnore]
         public IReadOnlyDictionary<int, Unit> Units
         {
             get { return _units; }
         }
 
-        protected Terrain[] _terrain { get; set; }
+        [JsonProperty]
+        protected Terrain[] _terrain { get; set; } = new Terrain[0];
 
+        [JsonIgnore]
         public IReadOnlyCollection<Terrain> Terrain
         {
             get
             {
+                if (_terrain == null)
+                    return null;
+
                 return Array.AsReadOnly(_terrain);
             }
         }
 
-        protected Dictionary<int, Player> _players { get; set; } = new Dictionary<int, Player>();
+        [JsonProperty]
+        protected Commander[] _commanderOrder { get; set; } = new Commander[0];
 
-        public IReadOnlyDictionary<int, Player> Players
+        [JsonProperty]
+        protected Dictionary<int, Commander> _commanders { get; set; } = new Dictionary<int, Commander>();
+
+        [JsonIgnore]
+        public IReadOnlyDictionary<int, Commander> Commanders
         {
-            get { return _players; }
+            get { return _commanders; }
         }
 
-        public IReadOnlyList<IAttribute> Attributes
-        {
-            get
-            {
-                return attributeContainer.Attributes;
-            }
-        }
-
+        [JsonConstructor]
         public BattleGameState()
         {
-            
+
         }
 
-        public void StartGame(int height, int width, Terrain[] terrain, Unit[] units, Player[] players, Dictionary<string, object> gameStateAttributes)
+        public void Sync(Fields fields)
         {
-            Contract.Requires<ArgumentNullException>(gameStateAttributes != null);
+            Contract.Requires<ArgumentNullException>(fields != null);
 
-            Height = height;
-            Width = width;
+            Height = fields.Height;
+            Width = fields.Width;
 
-            _terrain = terrain;
+            _terrain = fields.Terrain;
             _units.Clear();
-            foreach(var unit in units)
+            foreach (var unit in fields.Units)
             {
                 AddUnit(unit);
             }
-            _players.Clear();
-            foreach(var player in players)
+            _commanders.Clear();
+            foreach (var commander in fields.Commanders)
             {
-                AddPlayer(player);
+                _commanders.Add(commander.CommanderID, commander);
             }
-            attributeContainer = new AttributeContainer(ATTRIBUTES_BUILDER.BuildFullAttributeList(gameStateAttributes, true));
+            _commanderOrder = fields.Commanders;
+            SetProperties(fields.Values);
+        }
+
+        public void StartGame(Fields fields)
+        {
+            Contract.Requires<ArgumentNullException>(fields != null);
+
+            Sync(fields);
+            AdvanceToNextCommander();
         }
 
         public override Unit GetUnit(int x, int y)
@@ -102,13 +115,18 @@ namespace UnnamedStrategyGame.Game
             // TODO Improve performance?
             foreach(var unit in _units)
             {
-                var loc = (unit.Value.GetAttribute(UnitType.LOCATION).GetValue() as Location);
+                var loc = unit.Value.Location;
                 if (loc.X == x && loc.Y == y)
                 {
                     return unit.Value;
                 }
             }
             return null;
+        }
+
+        Unit IReadOnlyBattleGameState.GetUnit(int x, int y)
+        {
+            return GetUnit(x, y);
         }
 
         public Unit GetUnit(int unitId)
@@ -135,6 +153,11 @@ namespace UnnamedStrategyGame.Game
             }
         }
 
+        Terrain IReadOnlyBattleGameState.GetTerrain(int x, int y)
+        {
+            return GetTerrain(x, y);
+        }
+
         public override void SetUnit(int x, int y, Unit value)
         {
             throw new NotSupportedException();
@@ -147,12 +170,12 @@ namespace UnnamedStrategyGame.Game
 
         private int GetIndex(int x, int y)
         {
-            Contract.Requires<ArgumentException>(0 >= x, "X Cord should be >= 0");
-            Contract.Requires<ArgumentException>(0 >= y, "Y Cord should be >= 0");
+            Contract.Requires<ArgumentException>(0 <= x, "X Cord should be >= 0");
+            Contract.Requires<ArgumentException>(0 <= y, "Y Cord should be >= 0");
             Contract.Ensures(Contract.Result<int>() >= 0, "Resulting index should be >= 0");
             Contract.Ensures(Contract.Result<int>() <= _terrain.Length, "Resulting index should be <= game board size");
 
-            var i = x * Width + y;
+            var i = y + Height * x;
 
             if(i >= _terrain.Length)
             {
@@ -164,12 +187,12 @@ namespace UnnamedStrategyGame.Game
 
         public override void AddUnit(Unit unit)
         {
-            _units.Add(unit.UniqueId, unit);
+            _units.Add(unit.UnitID, unit);
         }
 
         public override void DeleteUnit(int x, int y)
         {
-            DeleteUnit(GetUnit(x, y).UniqueId);
+            DeleteUnit(GetUnit(x, y).UnitID);
         }
 
         public void DeleteUnit(int id)
@@ -177,47 +200,10 @@ namespace UnnamedStrategyGame.Game
             _units.Remove(id);
         }
 
-        protected int nextPlayerId = Globals.UNIQUE_PLAYER_ID_RESERVED_NAMESPACE_END;
-
-        public event PropertyChangedEventHandler PropertyChanged
+        public Commander GetCommander(int commanderID)
         {
-            add { attributeContainer.PropertyChanged += value; }
-            remove { attributeContainer.PropertyChanged -= value; }
-        }
-
-        public event EventHandler<AttributeChangedEventArgs> AttributeChanged
-        {
-            add { attributeContainer.AttributeChanged += value; }
-            remove { attributeContainer.AttributeChanged -= value; }
-        }
-
-        public int AddPlayer()
-        {
-            var id = nextPlayerId++;
-            AddPlayer(id);
-            return id;
-        }
-
-        public void AddPlayer(int id)
-        {
-            var p = new Player(id);
-            AddPlayer(p);
-        }
-
-        protected void AddPlayer(Player player)
-        {
-            _players.Add(player.UniqueId, player);
-        }
-
-        public void RemovePlayer(int id)
-        {
-            _players.Remove(id);
-        }
-
-        public Player GetPlayer(int id)
-        {
-            Player p;
-            if(_players.TryGetValue(id, out p) == false)
+            Commander p;
+            if(_commanders.TryGetValue(commanderID, out p) == false)
             {
                 throw new Exceptions.UnknownPlayerException();
             }
@@ -225,23 +211,50 @@ namespace UnnamedStrategyGame.Game
             return p;
         }
 
-        public virtual void EndCurrentTurn()
+        public virtual void EndTurn(int commanderID)
         {
-            throw new NotImplementedException();
+            if(CurrentCommander.CommanderID != commanderID)
+            {
+                throw new Exceptions.NotYourTurnException();
+            }
+
+            AdvanceToNextCommander();
         }
 
-        public void UpdatePlayer(PlayerStateChange changeInfo)
+        private void AdvanceToNextCommander()
+        {
+            CurrentCommanderIndex++;
+            if (CurrentCommanderIndex >= _commanderOrder.Length)
+                CurrentCommanderIndex = 0;
+            else if (CurrentCommanderIndex < 0)
+                CurrentCommanderIndex = 0;
+        }
+
+        public Fields GetFields()
+        {
+            return new Fields(Height, Width, _terrain.ToArray(), _units.Values.ToArray(), _commanders.Values.ToArray(), GetWriteableProperties(), CurrentCommanderIndex);
+        }
+
+        public void UpdateCommander(CommanderStateChange changeInfo)
         {
             switch(changeInfo.ChangeCause)
             {
-                case PlayerStateChange.Cause.Added:
-                    AddPlayer(changeInfo.PlayerId);
-                    break;
-                case PlayerStateChange.Cause.Removed:
-                    RemovePlayer(changeInfo.PlayerId);
+                case CommanderStateChange.Cause.Added:
+                    throw new NotSupportedException();
+                case CommanderStateChange.Cause.Removed:
+                    throw new NotSupportedException();
+                case CommanderStateChange.Cause.Changed:
+                    var commander = GetCommander(changeInfo.CommanderID);
+
+                    if (null == commander)
+                    {
+                        throw new Exceptions.StateMismatchException(string.Format("Expected Unit with ID of {0} to exist, it did not", changeInfo.CommanderID));
+                    }
+                    commander.SetProperties(changeInfo.UpdatedProperties);
                     return;
+                default:
+                    throw new InvalidOperationException("Unknown Change Cause: " + changeInfo.ChangeCause);
             }
-            GetPlayer(changeInfo.PlayerId).SetAttributes(changeInfo.UpdatedAttributes);
         }
 
         public void UpdateUnit(UnitStateChange changeInfo)
@@ -250,18 +263,18 @@ namespace UnnamedStrategyGame.Game
             switch (changeInfo.ChangeCause)
             {
                 case UnitStateChange.Cause.Created:
-                    AddUnit(new Unit(changeInfo.UpdatedAttributes));
+                    AddUnit(new Unit(changeInfo.UpdatedProperties));
                     break;
                 case UnitStateChange.Cause.Destroyed:
-                    DeleteUnit(changeInfo.UnitId);
+                    DeleteUnit(changeInfo.UnitID);
                     return;
                 case UnitStateChange.Cause.Changed:
-                    var unit = GetUnit(changeInfo.UnitId);
+                    var unit = GetUnit(changeInfo.UnitID);
                     if(null == unit)
                     {
-                        throw new Exceptions.StateMismatchException(string.Format("Expected Unit with ID of {0} to exist, it did not", changeInfo.UnitId));
+                        throw new Exceptions.StateMismatchException(string.Format("Expected Unit with ID of {0} to exist, it did not", changeInfo.UnitID));
                     }
-                    unit.SetAttributes(changeInfo.UpdatedAttributes);
+                    unit.SetProperties(changeInfo.UpdatedProperties);
                     return;
             }
         }
@@ -279,12 +292,12 @@ namespace UnnamedStrategyGame.Game
                 );
             }
 
-            terrain.SetAttributes(changeInfo.UpdatedAttributes);
+            terrain.SetProperties(changeInfo.UpdatedProperties);
         }
 
         public void UpdateGame(GameStateChange changeInfo)
         {
-            SetAttributes(changeInfo.UpdatedAttributes);
+            SetProperties(changeInfo.UpdatedProperties);
         }
 
         public void Update(StateChange change)
@@ -293,9 +306,9 @@ namespace UnnamedStrategyGame.Game
             {
                 UpdateGame(change as GameStateChange);
             }
-            else if(change is PlayerStateChange)
+            else if(change is CommanderStateChange)
             {
-                UpdatePlayer(change as PlayerStateChange);
+                UpdateCommander(change as CommanderStateChange);
             }
             else if(change is UnitStateChange)
             {
@@ -311,24 +324,228 @@ namespace UnnamedStrategyGame.Game
             }
         }
 
-        public IAttribute GetAttribute(string key)
+        
+
+        public bool LocationsAdjacent(Location a, Location b)
         {
-            return attributeContainer.GetAttribute(key);
+            return LocationsAroundPoint(a, 1).Contains(b);
         }
 
-        public void SetAttribute(IAttribute value)
+        public List<Location> LocationsAroundPoint(Location point, int minimum, int maximum)
         {
-            attributeContainer.SetAttribute(value);
+            var list = new List<Location>();
+
+            for(var i = minimum; i <= maximum; i++)
+            {
+                list.AddRange(LocationsAroundPoint(point, i));
+            }
+
+            return list;            
         }
 
-        public void SetAttributeReadOnly(string key)
+        public List<Location> LocationsAroundPoint(Location point, int range)
         {
-            attributeContainer.SetAttributeReadOnly(key);
+            if (range == 0)
+                return new List<Location>() { point };
+
+            var list = new List<Location>();
+            var x = point.X;
+            var y = point.Y;
+
+            var xEdge = x - range;
+
+            // Intentional integer division
+            var yEdge = y - (range / 2);
+
+            if (range % 2 != 0 && x % 2 == 0)
+                yEdge -= 1;
+
+            var xReverse = xEdge + range * 2;
+
+            var sideLength = (range + 1);
+
+            for(var c = 0; c < sideLength; c++)
+            {
+                // "wall" on left side
+                list.Add(new Location(xEdge, yEdge + c));
+                // "wall" on right side
+                list.Add(new Location(xReverse, yEdge + c));
+            }
+
+            for (var d = 1; d < range; d++)
+            {
+                // Intentional integer division
+                var tEdge = yEdge - (d / 2);
+
+                if (range % 2 == 0)
+                {
+                    if (x % 2 == 0 && (xEdge + d) % 2 != 0)
+                        tEdge -= 1;
+                }
+                else
+                {
+                    if (x % 2 != 0 && (xEdge + d) % 2 != 0)
+                        tEdge -= 1;
+                }
+
+                // top-left
+                list.Add(new Location(xEdge + d, tEdge));
+                // top-right
+                list.Add(new Location(xReverse - d, tEdge));
+                // bottom-left
+                list.Add(new Location(xEdge + d, tEdge + range + d));
+                // bottom-right
+                list.Add(new Location(xReverse - d, tEdge + range + d));
+            }
+
+            // directly above
+            list.Add(new Location(x, y + range));
+            // directly below
+            list.Add(new Location(x, y - range));
+
+            return list;
         }
 
-        public void SetAttributes(IReadOnlyList<IAttribute> values)
+        public IDictionary<string, object> GetProperties()
         {
-            attributeContainer.SetAttributes(values);
+            return PropertyContainer.BATTLE_GAME_STATE.GetProperties(this);
         }
+
+        public IDictionary<string, object> GetWriteableProperties()
+        {
+            return PropertyContainer.BATTLE_GAME_STATE.GetWriteableProperties(this);
+        }
+
+        public void SetProperties(IDictionary<string, object> values)
+        {
+            PropertyContainer.BATTLE_GAME_STATE.SetProperties(this, values);
+        }
+
+        public BattleGameState Fork()
+        {
+            // TODO Perhaps not the best way.
+            return Serializers.Serializer.Deserialize<BattleGameState>(Serializers.Serializer.Serialize(this));
+        }
+
+
+        public class Fields
+        {
+            public int Height { get; }
+            public int Width { get; }
+            public Terrain[] Terrain { get; }
+            public Unit[] Units { get; }
+            public Commander[] Commanders { get; }
+
+            [Newtonsoft.Json.JsonConverter(typeof(Serializers.JsonConverters.DynamicProperitesConverter))]
+            public IDictionary<string, object> Values { get; }
+
+            public int CurrentCommanderIndex { get; }
+
+            public Fields(int height, int width, Terrain[] terrain, Unit[] units, Commander[] commanders, IDictionary<string, object> values, int currentCommanderIndex)
+            {
+                Height = height;
+                Width = width;
+                Terrain = terrain;
+                Units = units;
+                Commanders = commanders;
+                Values = values;
+                CurrentCommanderIndex = currentCommanderIndex;
+
+            }
+        }
+        //public class GridFlower
+        //{
+        //    public Location Top { get; }
+        //    public Location Bottom { get; }
+        //    public Location TopLeft { get; }
+        //    public Location TopRight { get; }
+        //    public Location BottomLeft { get; }
+        //    public Location BottomRight { get; }
+        //    public Location Center { get; }
+
+        //    public GridFlower(Location center)
+        //    {
+        //        Contract.Requires<ArgumentNullException>(null != center);
+
+        //        var x = center.X;
+        //        var y = center.Y;
+
+        //        Top = new Location(x, y - 1);
+        //        Bottom = new Location(x, y + 1);
+
+        //        if (x % 2 == 0)
+        //        {
+        //            TopLeft = new Location(x - 1, y - 1);
+        //            TopRight = new Location(x, y - 1);
+        //            BottomLeft = new Location(x - 1, y + 1);
+        //            BottomRight = new Location(x, y + 1);
+        //        }
+        //        else
+        //        {
+        //            TopLeft = new Location(x, y - 1);
+        //            TopRight = new Location(x + 1, y - 1);
+        //            BottomLeft = new Location(x, y + 1);
+        //            BottomRight = new Location(x + 1, y + 1);
+        //        }
+        //        Center = center;
+        //    }
+
+        //    public Location GetAtPedal(Pedal pedal)
+        //    {
+        //        switch(pedal)
+        //        {
+        //            case Pedal.Top:
+        //                return Top;
+        //            case Pedal.Bottom:
+        //                return Bottom;
+        //            case Pedal.TopLeft:
+        //                return TopLeft;
+        //            case Pedal.TopRight:
+        //                return TopRight;
+        //            case Pedal.BottomLeft:
+        //                return BottomLeft;
+        //            case Pedal.BottomRight:
+        //                return BottomRight;
+        //            case Pedal.Center:
+        //                return Center;
+        //            case Pedal.None:
+        //                return null;
+        //            default:
+        //                throw new ArgumentException("Unknown Pedal direction of " + pedal);
+        //        }
+        //    }
+
+        //    public Pedal GetAtLocation(Location loc)
+        //    {
+        //        if (Math.Abs(loc.X - Center.X) > 1)
+        //            return Pedal.None;
+        //        if (Math.Abs(loc.Y - Center.Y) > 2)
+        //            return Pedal.None;
+
+        //        if (loc == Top)
+        //            return Pedal.Top;
+        //        if (loc == Bottom)
+        //            return Pedal.Bottom;
+        //        if (loc == TopLeft)
+        //            return Pedal.TopLeft;
+        //        if (loc == TopRight)
+        //            return Pedal.TopRight;
+        //        if (loc == BottomLeft)
+        //            return Pedal.BottomLeft;
+        //        if (loc == BottomRight)
+        //            return Pedal.BottomRight;
+        //        if (loc == Center)
+        //            return Pedal.Center;
+
+        //        return Pedal.None;
+        //    }
+
+        //    public bool IsInPedal(Location loc)
+        //    {
+        //        return GetAtLocation(loc) != Pedal.None;
+        //    }
+
+        //    public enum Pedal { Top, Bottom, TopLeft, TopRight, BottomLeft, BottomRight, Center, None }
+        //}
     }
 }

@@ -9,9 +9,15 @@ using UnnamedStrategyGame.Game;
 
 namespace UnnamedStrategyGame.UI
 {
-    static class Resource
+    public static class Resource
     {
         public static readonly IReadOnlyDictionary<string, BitmapImage> SPRITES;
+
+        public static readonly BitmapImage BITMAP_HIT_REFERENCE =
+            new BitmapImage(new Uri(Path.Combine(Globals.RESOURCE_IMAGE_PATH, "terrain_hit_reference.png"), UriKind.Relative));
+
+        public static readonly BitmapImage BITMAP_NO_UNIT =
+            new BitmapImage(new Uri(Path.Combine(Globals.RESOURCE_IMAGE_PATH, "unit_none.png"), UriKind.Relative));
 
         static Resource()
         {

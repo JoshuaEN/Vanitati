@@ -6,14 +6,23 @@ using System.Threading.Tasks;
 
 namespace UnnamedStrategyGame.Game.StateChanges
 {
-    public class UnitStateChange : StateChange
+    public class UnitStateChange : UpdateStateChange
     {
-        public int UnitId { get; }
+        public int UnitID { get; }
         public Cause ChangeCause { get; }
-        public UnitStateChange(int unitId, List<IAttribute> updatedAttributes, Cause cause = Cause.Changed) : base(updatedAttributes)
+        public Location Location { get; }
+        public Location PreviousLocation { get; }
+        public bool LocationChanged
         {
-            UnitId = unitId;
-            ChangeCause = cause;
+            get { return Location != PreviousLocation; }
+        }
+
+        public UnitStateChange(int unitID, IDictionary<string, object> updatedProperties, Location location, Cause changeCause = Cause.Changed, Location previousLocation = null) : base(updatedProperties)
+        {
+            UnitID = unitID;
+            ChangeCause = changeCause;
+            Location = location;
+            PreviousLocation = previousLocation ?? location;
         }
 
         public enum Cause { Created, Destroyed, Changed }

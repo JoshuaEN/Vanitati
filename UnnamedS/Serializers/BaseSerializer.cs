@@ -10,5 +10,6 @@ namespace UnnamedStrategyGame.Serializers
     {
         public abstract string Serialize(object obj);
         public abstract T Deserialize<T>(string str);
+        public abstract object Deserialize(string str, Type type);
     }
 }

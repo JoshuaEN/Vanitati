@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,7 +27,7 @@ namespace UnnamedStrategyGame.Game
 
         public override bool Equals(object obj)
         {
-            if (obj == null)
+            if (object.ReferenceEquals(obj, null))
                 return false;
 
             if (!(obj is Location))
@@ -34,29 +35,23 @@ namespace UnnamedStrategyGame.Game
 
             var otherLoc = (obj as Location);
 
-            return otherLoc.X == X && otherLoc.Y == Y;
+            return this == otherLoc;
         }
 
         public bool Equals(Location loc)
         {
-            if (System.Object.ReferenceEquals(this, loc))
-                return true;
-
-            if (loc == null)
-                return false;
-
-            return loc.X == X && loc.Y == Y;
+            return this == loc;
         }
 
         public static bool operator ==(Location a, Location b)
         {
-            if (System.Object.ReferenceEquals(a, b))
+            if (object.ReferenceEquals(a, b))
                 return true;
 
-            if (a == null && b != null)
+            if (object.ReferenceEquals(a, null) || object.ReferenceEquals(b, null))
                 return false;
 
-            return a.Equals(b);
+            return a.X == b.X && a.Y == b.Y;
         }
 
         public static bool operator !=(Location a, Location b)
@@ -67,6 +62,11 @@ namespace UnnamedStrategyGame.Game
         public override int GetHashCode()
         {
             return X.GetHashCode() * 17 + Y.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0},{1}", X, Y);
         }
     }
 }

@@ -9,26 +9,31 @@ namespace UnnamedStrategyGame.Game.ActionTypes
 {
     public sealed class AttackRifle : AttackBase
     {
-        public override bool CanPerformOn(BattleGameState state, Action.ActionContext context, Tile sourceTile, Tile targetTile = null)
+        public override IReadOnlyList<StateChange> PerformOn(IReadOnlyBattleGameState state, Action.ActionContext context, Tile sourceTile, Tile targetTile)
         {
-            if (targetTile != null)
-                return true;
-            else
-                return false;
+            return new List<StateChange>()
+            {
+                new StateChanges.UnitStateChange(targetTile.Unit.UnitID, new Dictionary<string, object>(0), targetTile.Location, StateChanges.UnitStateChange.Cause.Destroyed)
+            };
         }
 
-        public override IReadOnlyList<StateChange> PerformOn(BattleGameState state, Action.ActionContext context, Tile sourceTile, Tile targetTile = null)
-        {
-            return new List<StateChange>();
-        }
+        private AttackRifle() : 
+            base(
+                "rifle",
+                targetableMovementTypes:
+                    new HashSet<MovementType>()
+                    {
+                        MovementTypes.Boots.Instance
+                    },
+                maximumRange: 1,
+                suppliesNeeded:
+                    new Dictionary<SupplyType, int>()
+                    {
+                        { SupplyTypes.RifleRounds.Instance, 1 }
+                    }
+            )
+        { }
 
-        private AttackRifle(string key) : base(key) { }
-
-        public static AttackRifle Instance { get; } = new AttackRifle("rifle");
-
-        static AttackRifle()
-        {
-            Instance = new AttackRifle("attack_rifle");
-        }
+        public static AttackRifle Instance { get; } = new AttackRifle();
     }
 }

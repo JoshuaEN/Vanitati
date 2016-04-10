@@ -16,11 +16,13 @@ namespace UnnamedStrategyGame.Network
 
         private Dictionary<ServerClient, Task> ConnectedClients = new Dictionary<ServerClient, Task>();
 
-        private Game.LocalGameLogic Logic { get; } = new Game.LocalGameLogic(new Game.BattleGameState());
+        private Game.LocalGameLogic Logic { get; } = new Game.LocalGameLogic();
 
         public event EventHandler<MessageReceivedEventArgs> MessageReceived;
         public event EventHandler<ExceptionEventArgs> Exception;
         public event EventHandler<DisconnectedEventArgs> Disconnected;
+
+        private int nextUserID = 0;
 
         public Server(TcpListener listener)
         {
@@ -58,7 +60,7 @@ namespace UnnamedStrategyGame.Network
                         break;
                     }
 
-                    var client = new ServerClient(new NetworkStream(tcpClient), Logic);
+                    var client = new ServerClient(new NetworkStream(tcpClient), Logic, new Game.User(nextUserID++, null));
                     client.Disconnected += Client_Disconnected;
                     client.Exception += Client_Exception;
 #if DEBUG

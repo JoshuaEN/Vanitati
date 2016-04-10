@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace UnnamedStrategyGame.Game.StateChanges
 {
-    public class TerrainStateChange : StateChange
+    public class TerrainStateChange : UpdateStateChange
     {
         public Location ChangedTerrainLocation { get; }
-        public TerrainStateChange(Location changedTerrainLocation, List<IAttribute> updatedAttributes) : base(updatedAttributes)
+        public TerrainStateChange(Location changedTerrainLocation, IDictionary<string, object> updatedProperties) : base(updatedProperties)
         {
             ChangedTerrainLocation = changedTerrainLocation;
         }

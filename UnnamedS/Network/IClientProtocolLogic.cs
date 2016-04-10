@@ -8,6 +8,6 @@ namespace UnnamedStrategyGame.Network
 {
     public interface IClientProtocolLogic : IProtocolLogic
     {
-        void ClientInfoPacketRecieved(Protocol.ClientInfo clientInfo);
+        void ClientInfoPacketRecieved(Game.User user);
     }
 }

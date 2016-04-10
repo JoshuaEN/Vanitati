@@ -8,31 +8,65 @@ using UnnamedStrategyGame.Game.Event;
 
 namespace UnnamedStrategyGame.Game
 {
-    public class NetworkedGameLogic : GameLogic, IPlayerLogic, Network.IClientProtocolLogic
+    public class NetworkedGameLogic : GameLogic, IUserLogic, Network.IClientProtocolLogic
     {
+        #region Properties
+
         public Network.Client Client { get; }
 
-        private int _playerID;
-        public int PlayerID
+        public LocalGameLogic Logic { get; } = new LocalGameLogic();
+
+        public override IReadOnlyBattleGameState State
         {
-            get { return _playerID; }
+            get { return Logic.State; }
+        }
+
+        public override IReadOnlyDictionary<int, int?> CommanderAssignments
+        {
+            get { return Logic.CommanderAssignments; }
+        }
+
+        protected BattleGameState InternalState
+        {
+            get { return Logic.InternalState; }
+        }
+
+        private User _user;
+        public User User
+        {
+            get { return _user; }
             protected set
             {
-                Contract.Requires<InvalidOperationException>(false == PlayerIdKnown, "Player ID has already been set");
-                _playerID = value;
-                PlayerIdKnown = true;
+                Contract.Requires<InvalidOperationException>(null == User, "User has already been set");
+                _user = value;
             }
         }
-        public bool PlayerIdKnown { get; protected set; }
-        private Task clientListern;
-        private IReadOnlyList<IPlayerLogic> thisPlayerLogic;
 
-        public NetworkedGameLogic(System.Net.IPEndPoint remoteEP, IReadOnlyList<IPlayerLogic> logic) : this(new Network.Client(remoteEP), logic)
+        private Task clientListener;
+        private IReadOnlyList<IUserLogic> thisPlayerLogic;
+
+        #endregion
+
+        #region Events
+
+        public event EventHandler<UserSetEventArgs> UserSetByServer;
+        protected void OnUserSetByServer()
+        {
+            var handler = UserSetByServer;
+            if(handler != null)
+            {
+                handler(this, new UserSetEventArgs(User));
+            }
+        }
+
+        #endregion
+
+        public NetworkedGameLogic(System.Net.IPEndPoint remoteEP, string name, IReadOnlyList<IUserLogic> logic) : this(new Network.Client(remoteEP), name, logic)
         {
             Contract.Requires<ArgumentNullException>(null != remoteEP);
         }
 
-        public NetworkedGameLogic(Network.Client client, IReadOnlyList<IPlayerLogic> logic) : base()
+        public NetworkedGameLogic(Network.Client client, string name, IReadOnlyList<IUserLogic> logic) : base()
         {
             Contract.Requires<ArgumentNullException>(null != client);
 
@@ -41,7 +75,8 @@ namespace UnnamedStrategyGame.Game
             Client.Disconnected += Client_Disconnected;
             Client.Exception += Client_Exception;
             Client.MessageReceived += Client_MessageReceived;
-            clientListern = Client.Listen();
+            clientListener = Client.Listen();
+            Client.Send(new Network.MessageWrappers.ClientHelloProtocolWrapper(new Network.Protocol.ClientHelloData(name, ++LastSyncID)));
         }
 
         private void Client_MessageReceived(object sender, Network.MessageReceivedEventArgs e)
@@ -54,16 +89,16 @@ namespace UnnamedStrategyGame.Game
             }
             else if(m is Network.MessageWrappers.NotifyMessageWrapper)
             {
-                if(PlayerIdKnown == false)
-                {
-                    throw new Network.Exceptions.InvalidMessageOrderException(
-                        String.Format(
-                            "{0} message must be received before ANY {1} messages", 
-                            typeof(Network.MessageWrappers.ClientInfoPacketProtocolWrapper).Name, 
-                            typeof(Network.MessageWrappers.NotifyMessageWrapper).Name
-                        )
-                   );
-                }
+                //if(User == null)
+                //{
+                //    throw new Network.Exceptions.InvalidMessageOrderException(
+                //        String.Format(
+                //            "{0} message must be received before ANY {1} messages", 
+                //            typeof(Network.MessageWrappers.ClientInfoPacketProtocolWrapper).Name, 
+                //            typeof(Network.MessageWrappers.NotifyMessageWrapper).Name
+                //        )
+                //   );
+                //}
 
                 var notifier = (m as Network.MessageWrappers.NotifyMessageWrapper);
 
@@ -94,43 +129,54 @@ namespace UnnamedStrategyGame.Game
             throw new NotImplementedException();
         }
 
-        public override void DoActions(int playerID, List<ActionInfo> actions)
+        public override void DoActions(List<ActionInfo> actions)
         {
             Client.Send(new Network.MessageWrappers.DoActionsCallWrapper(actions));
         }
 
-        public override void DoAction(int playerID, ActionInfo action)
+        public override void DoAction(ActionInfo action)
         {
-            DoActions(playerID, new List<ActionInfo>() { action });
+            DoActions(new List<ActionInfo>() { action });
         }
 
-        public override void StartGame(int height, int width, Terrain[] terrain, Unit[] units, Player[] players, Dictionary<string, object> gameStateAttributes)
+        public override void Sync(int syncID)
         {
-            Client.Send(
-                new Network.MessageWrappers.OnGameStartNotifyWrapper(
-                    new GameStartEventArgs(
-                        new StateChanges.GameStarted(height, width, terrain, units, players, gameStateAttributes)
-                    )
-                )
-            );
+            LastSyncID = syncID;
+            Client.Send(new Network.MessageWrappers.SyncCallWrapper(syncID));
         }
 
-        public readonly Queue<IReadOnlyList<IPlayerLogic>> pendingPlayerList = new Queue<IReadOnlyList<IPlayerLogic>>();
-
-        public override void AddPlayer(IReadOnlyList<IPlayerLogic> logic)
+        public override void StartGame(BattleGameState.Fields fields)
         {
-            throw new InvalidOperationException("Not supported for remote games");
-            //pendingPlayerList.Enqueue(logic);
+            Client.Send(new Network.MessageWrappers.StartGameCallWrapper(fields));
         }
 
-        public override void RemovePlayer(int playerID)
+        public override void EndTurn(int commanderID)
         {
-            throw new NotImplementedException();
+            Client.Send(new Network.MessageWrappers.EndTurnCallWrapper(commanderID));
         }
 
-        public void ClientInfoPacketRecieved(Network.Protocol.ClientInfo clientInfo)
+        public override void AddUser(User user, IReadOnlyList<IUserLogic> logic)
         {
-            PlayerID = clientInfo.PlayerId;
+            throw new NotSupportedException();
+        }
+
+        public override void RemoveUser(int userID)
+        {
+            Client.Send(new Network.MessageWrappers.RemoveUserCallWrapper(userID));
+        }
+
+        public override void AssignUserToCommander(int? userID, int commanderID)
+        {
+            Client.Send(new Network.MessageWrappers.AssignUserToCommanderCallWrapper(userID, commanderID));
+        }
+
+        #region Event Handlers
+
+        public void ClientInfoPacketRecieved(User user)
+        {
+            User = user;
+
+            OnUserSetByServer();
         }
 
         public void OnActionsTaken(object sender, ActionsTakenEventArgs e)
@@ -138,35 +184,66 @@ namespace UnnamedStrategyGame.Game
             // TODO Add Action Verification code to cross-check that we agree with the server's result of the action, maybe?
         }
 
-        public void OnPlayerChanged(object sender, PlayerChangedEventArgs e)
+        public void OnCommanderChanged(object sender, CommanderChangedEventArgs e)
         {
-            State.UpdatePlayer(e.ChangeInfo);
+            InternalState.UpdateCommander(e.ChangeInfo);
         }
 
         public void OnUnitChanged(object sender, UnitChangedEventArgs e)
         {
-            State.UpdateUnit(e.ChangeInfo);
+            InternalState.UpdateUnit(e.ChangeInfo);
         }
 
         public void OnTerrainChanged(object sender, TerrainChangedEventArgs e)
         {
-            State.UpdateTerrain(e.ChangeInfo);
+            InternalState.UpdateTerrain(e.ChangeInfo);
         }
 
         public void OnGameStateChanged(object sender, GameStateChangedArgs e)
         {
-            throw new NotImplementedException();
-        }
-
-        public void OnThisPlayerAdded(object sender, ThisPlayerAddedArgs e)
-        {
-            throw new NotImplementedException();
+            InternalState.SetProperties(e.ChangeInfo.UpdatedProperties);
         }
 
         public void OnGameStart(object sender, GameStartEventArgs e)
         {
-            var info = e.ChangeInfo;
-            State.StartGame(info.Height, info.Width, info.Terrain, info.Units, info.Players, info.GameStateAttributes);
+            Logic.StartGame(e.ChangeInfo);
+        }
+
+        public void OnUserAdded(object sender, UserAddedEventArgs e)
+        {
+            Logic.AddUser(e.User, new List<IUserLogic>(0));   
+        }
+
+        public void OnUserRemoved(object sender, UserRemovedEventArgs e)
+        {
+            Logic.RemoveUser(e.UserID);
+        }
+
+        public void OnUserAssignedToCommander(object sender, UserAssignedToCommanderEventArgs e)
+        {
+            Logic.AssignUserToCommander(e.UserID, e.CommanderID);
+        }
+
+        public void OnTurnEnded(object sender, TurnEndedEventArgs e)
+        {
+            Logic.EndTurn(e.CommanderID);
+        }
+
+        public void OnSync(object sender, SyncEventArgs e)
+        {
+            Logic.Sync(e.SyncID, e.Fields);
+        }
+
+        #endregion
+
+        public class UserSetEventArgs : EventArgs
+        {
+            public User User { get; }
+
+            public UserSetEventArgs(User user)
+            {
+                User = user;
+            }
         }
     }
 }

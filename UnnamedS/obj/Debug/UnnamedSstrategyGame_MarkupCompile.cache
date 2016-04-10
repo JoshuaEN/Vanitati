@@ -8,13 +8,13 @@ e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\Unname
 UnnamedStrategyGame
 none
 false
-DEBUG;TRACE
+TRACE;DEBUG;NETWORK_LAG
 e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedS\App.xaml
-5244642343
-71886593206
-108-2070675957
+6563668721
+8-952475885
+131-1200960843
 18-83065066
-MainWindow.xaml;UI\BattleView.xaml;UI\LogView.xaml;UI\NetworkLogViewer.xaml;UI\TileView.xaml;
+MainWindow.xaml;UI\BattleView.xaml;UI\LogView.xaml;UI\NetworkLogViewer.xaml;UI\PropView.xaml;UI\TileView.xaml;
 
 False
 

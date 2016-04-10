@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,85 +10,136 @@ namespace UnnamedStrategyGame.Game
 {
     public class LocalGameLogic : GameLogic
     {
-        protected Dictionary<int, PlayerSet> PlayerList { get; } = new Dictionary<int, PlayerSet>();
+        protected Dictionary<int, UserSet> UserList { get; } = new Dictionary<int, UserSet>();
+        protected Dictionary<int, int?> _commanderAssignments { get; } = new Dictionary<int, int?>();
 
-        public LocalGameLogic(BattleGameState state) : base(state)
+        public override IReadOnlyDictionary<int, int?> CommanderAssignments
         {
-
+            get { return _commanderAssignments; }
         }
 
-        public override void AddPlayer(IReadOnlyList<IPlayerLogic> logic)
+        public override IReadOnlyBattleGameState State
         {
-            var id = AddPlayerLocally(logic);
-            var eventArgs = new Event.ThisPlayerAddedArgs(id);
-            foreach(var _logic in logic)
+            get
             {
-                _logic.OnThisPlayerAdded(this, eventArgs);
-            }
-
-            var changeArgs = new Event.PlayerChangedEventArgs(new PlayerStateChange(id, new List<IAttribute>(), PlayerStateChange.Cause.Added));
-            foreach(var l in PlayersToNotify())
-            {
-                l.OnPlayerChanged(this, changeArgs);
+                return InternalState;
             }
         }
 
-        public int AddPlayerLocally(IReadOnlyList<IPlayerLogic> logic)
+        private BattleGameState _state;
+        public BattleGameState InternalState
         {
-            var playerID = State.AddPlayer();
-            PlayerList.Add(playerID, new PlayerSet(logic, new Player(playerID)));
-            return playerID;
-        }
-
-        public override void RemovePlayer(int playerID)
-        {
-            State.RemovePlayer(playerID);
-            PlayerList.Remove(playerID);
-            var changeArgs = new Event.PlayerChangedEventArgs(new PlayerStateChange(playerID, new List<IAttribute>(), PlayerStateChange.Cause.Removed));
-            foreach(var l in PlayersToNotify())
+            get
             {
-                l.OnPlayerChanged(this, changeArgs);
+                return _state;
+            }
+            set
+            {
+                Contract.Requires<ArgumentNullException>(null != value);
+                _state = value;
             }
         }
 
-        public override void DoAction(int playerID, ActionInfo action)
+        public LocalGameLogic()
+        {
+            InternalState = new BattleGameState();
+        }
+
+        public override void AddUser(User user, IReadOnlyList<IUserLogic> logic)
+        {
+            UserList.Add(user.UserID, new UserSet(logic, user));
+            var args = new Event.UserAddedEventArgs(user);
+            foreach (var l in UsersToNotify())
+            {
+                l.OnUserAdded(this, args);
+            }
+        }
+
+        public override void RemoveUser(int userID)
+        {
+            UserList.Remove(userID);
+            foreach(var kp in _commanderAssignments)
+            {
+                if(kp.Value == userID)
+                {
+                    _commanderAssignments[kp.Key] = null;
+                }
+            }
+            var args = new Event.UserRemovedEventArgs(userID);
+            foreach (var l in UsersToNotify())
+            {
+                l.OnUserRemoved(this, args);
+            }
+        }
+
+        public override void AssignUserToCommander(int? userID, int commanderID)
+        {
+            AssignUserToCommander(userID, commanderID, false);
+        }
+
+        public void AssignUserToCommander(int? userID, int commanderID, bool isHost = false)
+        {
+            int? currentUserID;
+            if(_commanderAssignments.TryGetValue(commanderID, out currentUserID))
+            {
+                if(currentUserID != null && isHost != true)
+                {
+                    // TODO Better exception
+                    throw new NotSupportedException();
+                }
+                _commanderAssignments[commanderID] = userID;
+
+                var args = new Event.UserAssignedToCommanderEventArgs(userID, commanderID);
+                foreach (var l in UsersToNotify())
+                {
+                    l.OnUserAssignedToCommander(this, args);
+                }
+            }
+            else
+            {
+                // TODO Better exception
+                throw new NotSupportedException("Invalid commander ID");
+            }
+        }
+
+        public override void DoAction(ActionInfo action)
         {
             var changes = action.Type.PerformOn(
-                State, 
-                new Action.ActionContext(playerID, ActionType.ActionTriggers.None), 
-                State.GetTile(action.Source), State.GetTile(action.Target));
+                InternalState, 
+                new Action.ActionContext(action.CommanderID, action.Trigger), 
+                InternalState.GetTile(action.Source), InternalState.GetTile(action.Target));
 
             foreach(var change in changes)
             {
                 if (change is GameStateChange)
                 {
                     var castedChange = (change as GameStateChange);
-                    State.UpdateGame(castedChange);
+                    InternalState.UpdateGame(castedChange);
 
                     var args = new Event.GameStateChangedArgs(castedChange);
-                    foreach (var l in PlayersToNotify())
+                    foreach (var l in UsersToNotify())
                     {
                         l.OnGameStateChanged(this, args);
                     }
                 }
-                else if (change is PlayerStateChange)
+                else if (change is CommanderStateChange)
                 {
-                    var castedChange = (change as PlayerStateChange);
-                    State.UpdatePlayer(castedChange);
+                    var castedChange = (change as CommanderStateChange);
+                    InternalState.UpdateCommander(castedChange);
 
-                    var args = new Event.PlayerChangedEventArgs(castedChange);
-                    foreach (var l in PlayersToNotify())
+                    var args = new Event.CommanderChangedEventArgs(castedChange);
+                    foreach (var l in UsersToNotify())
                     {
-                        l.OnPlayerChanged(this, args);
+                        l.OnCommanderChanged(this, args);
                     }
                 }
                 else if (change is UnitStateChange)
                 {
                     var castedChange = (change as UnitStateChange);
-                    State.UpdateUnit(castedChange);
+                    InternalState.UpdateUnit(castedChange);
 
                     var args = new Event.UnitChangedEventArgs(castedChange);
-                    foreach(var l in PlayersToNotify())
+                    foreach(var l in UsersToNotify())
                     {
                         l.OnUnitChanged(this, args);
                     }
@@ -95,10 +147,10 @@ namespace UnnamedStrategyGame.Game
                 else if (change is TerrainStateChange)
                 {
                     var castedChange = (change as TerrainStateChange);
-                    State.UpdateTerrain(castedChange);
+                    InternalState.UpdateTerrain(castedChange);
 
                     var args = new Event.TerrainChangedEventArgs(castedChange);
-                    foreach(var l in PlayersToNotify())
+                    foreach(var l in UsersToNotify())
                     {
                         l.OnTerrainChanged(this, args);
                     }
@@ -110,27 +162,114 @@ namespace UnnamedStrategyGame.Game
             }
         }
 
-        public override void StartGame(int height, int width, Terrain[] terrain, Unit[] units, Player[] players, Dictionary<string, object> gameStateAttributes)
+        public override void Sync(int syncID)
         {
-            State.StartGame(height, width, terrain, units, players, gameStateAttributes);
+            var fields = InternalState.GetFields();
+            var args = new Event.SyncEventArgs(syncID, fields);
+            NotifyOfSync(args);
+        }
 
-            var args = new Event.GameStartEventArgs(new GameStarted(height, width, terrain, units, players, gameStateAttributes));
+        public void Sync(int syncID, BattleGameState.Fields fields)
+        {
+            Sync(fields);
+            NotifyOfSync(new Event.SyncEventArgs(syncID, fields));
+        }
 
-            foreach (var l in PlayersToNotify())
+        private void Sync(BattleGameState.Fields fields)
+        {
+            InternalState.Sync(fields);
+            _commanderAssignments.Clear();
+            foreach (var commander in fields.Commanders)
+            {
+                _commanderAssignments.Add(commander.CommanderID, null);
+            }
+        }
+
+        private void NotifyOfSync(Event.SyncEventArgs args)
+        {
+            foreach(var l in UsersToNotify())
+            {
+                l.OnSync(this, args);
+            }
+        }
+
+        public override void StartGame(BattleGameState.Fields fields)
+        {
+            InternalState.StartGame(fields);
+            Sync(fields);
+
+            var args = new Event.GameStartEventArgs(fields);
+
+            foreach (var l in UsersToNotify())
             {
                 l.OnGameStart(this, args);    
             }
         }
 
-        private IEnumerable<IPlayerLogic> PlayersToNotify()
+        public override void EndTurn(int commanderID)
         {
-            var list = new List<IPlayerLogic>();
+            InternalState.EndTurn(commanderID);
 
-            foreach (var kp in PlayerList)
+            var args = new Event.TurnEndedEventArgs(commanderID);
+            foreach(var l in UsersToNotify())
+            {
+                l.OnTurnEnded(this, args);
+            }
+
+            // Ensure that the end of turn actions are all run first, followed by the start of turn actions.
+            DoActions(
+                CommanderUnitActionsForTrigger(commanderID, ActionType.ActionTriggers.TurnEnd).Concat(
+                CommanderUnitActionsForTrigger(State.CurrentCommander.CommanderID, ActionType.ActionTriggers.TurnStart)
+                ).ToList()
+            );
+        }
+
+        private IEnumerable<IUserLogic> UsersToNotify()
+        {
+            foreach (var kp in UserList)
             {
                 foreach (var value in kp.Value.Logic)
                 {
                     yield return value;
+                }
+            }
+        }
+
+        private IEnumerable<ActionInfo> CommanderUnitActionsForTrigger(int commanderID, ActionType.ActionTriggers trigger)
+        {
+            foreach (var unit in State.Units.Values)
+            {
+                if (unit.CommanderID != commanderID)
+                    continue;
+
+                foreach(var action in unit.UnitType.Actions)
+                {
+                    var matches = false;
+                    switch(trigger)
+                    {
+                        case ActionType.ActionTriggers.AttributeChange:
+                            matches = action.TriggerOnAttributeChange;
+                            break;
+                        case ActionType.ActionTriggers.TurnEnd:
+                            matches = action.TriggerOnTurnEnd;
+                            break;
+                        case ActionType.ActionTriggers.TurnStart:
+                            matches = action.TriggerOnTurnStart;
+                            break;
+                        case ActionType.ActionTriggers.UnitCreated:
+                            matches = action.TriggerOnUnitCreated;
+                            break;
+                        case ActionType.ActionTriggers.UnitDestroyed:
+                            matches = action.TriggerOnUnitDestroyed;
+                            break;
+                        default:
+                            throw new ArgumentException(string.Format("Unsupported ActionTrigger {0}", trigger));
+                    }
+
+                    if(matches)
+                    {
+                        yield return new ActionInfo(unit.CommanderID, action, unit.Location, unit.Location, trigger);
+                    }
                 }
             }
         }
