@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace UnnamedStrategyGame.Network.Exceptions
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public abstract class ProtocolException : NetworkExcetpion
     {
         public ProtocolException() : base() { }

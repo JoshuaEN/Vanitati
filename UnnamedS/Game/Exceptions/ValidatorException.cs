@@ -9,6 +9,7 @@ namespace UnnamedStrategyGame.Game.Exceptions
     /// <summary>
     /// Generic Validator Exception
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public abstract class ValidatorException : Exceptions.GameException
     {
         public ValidatorException() : base() { }

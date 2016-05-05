@@ -8,13 +8,13 @@ e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\Unname
 UnnamedStrategyGame
 none
 false
-TRACE
+TRACE;NETWORK_PREDICTION
 e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedS\App.xaml
-6563668721
-8-952475885
-1281577405169
-18-83065066
-MainWindow.xaml;UI\BattleView.xaml;UI\LogView.xaml;UI\NetworkLogViewer.xaml;UI\PropView.xaml;UI\TileView.xaml;
+779470188
+111760946636
+186-1940782231
+18761058941
+MainWindow.xaml;UI\ActionView.xaml;UI\BattleView.xaml;UI\LogView.xaml;UI\NetworkLogViewer.xaml;UI\PropView.xaml;UI\TileView.xaml;
 
 False
 

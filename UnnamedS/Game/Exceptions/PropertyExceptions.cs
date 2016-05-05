@@ -9,6 +9,7 @@ namespace UnnamedStrategyGame.Game.Exceptions
     /// <summary>
     /// Generic Property Exception
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public abstract class GamePropertyException : GameException
     {
         public GamePropertyException() : base() { }
@@ -20,6 +21,7 @@ namespace UnnamedStrategyGame.Game.Exceptions
     /// <summary>
     /// Thrown when two Incompatible Property's are used together.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public class IncompatiblePropertyException : GamePropertyException
     {
         public IncompatiblePropertyException() : base("Incompatible Property") { }
@@ -31,6 +33,7 @@ namespace UnnamedStrategyGame.Game.Exceptions
     /// <summary>
     /// Thrown when an Property without a default value is missing.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public class MissingPropertyException : GamePropertyException
     {
         public MissingPropertyException() : base("Missing Property") { }
@@ -42,6 +45,7 @@ namespace UnnamedStrategyGame.Game.Exceptions
     /// <summary>
     /// Thrown when attempting to access an unknown Property.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public class UnknownPropertyException : GamePropertyException
     {
         public UnknownPropertyException() : base("Unknown Property") { }
@@ -53,6 +57,7 @@ namespace UnnamedStrategyGame.Game.Exceptions
     /// <summary>
     /// Thrown when an Property does not match it's definition.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public class PropertyDefinitionMismatchException : GamePropertyException
     {
         public PropertyDefinitionMismatchException() : base("Property Definition Mismatch") { }
@@ -64,6 +69,7 @@ namespace UnnamedStrategyGame.Game.Exceptions
     /// <summary>
     /// Thrown when attempting to create a new Property from a Definition with an invalid input.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public class BadPropertyTypeException : GamePropertyException
     {
         public BadPropertyTypeException() : base("Bad Property Type") { }
@@ -75,6 +81,7 @@ namespace UnnamedStrategyGame.Game.Exceptions
     /// <summary>
     /// Thrown when attempting to reassign a read-only Property
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public class PropertyReadOnlyException : GamePropertyException
     {
         public PropertyReadOnlyException() : base("Property Read-Only") { }

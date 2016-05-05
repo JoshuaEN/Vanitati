@@ -8,11 +8,12 @@ using System.Threading.Tasks;
 
 namespace UnnamedStrategyGame.Network.MessageWrappers
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public abstract class MessageWrapper
     {
         public string Type
         {
-            get { return GetType().Name; }
+            get { return GetType().FullName; }
         }
 
         public static readonly IReadOnlyDictionary<string, Type> WRAPPER_LISTING;
@@ -27,7 +28,7 @@ namespace UnnamedStrategyGame.Network.MessageWrappers
 
             foreach (var t in types)
             {
-                listing.Add(t.Name, t);
+                listing.Add(t.FullName, t);
             }
 
             WRAPPER_LISTING = listing;

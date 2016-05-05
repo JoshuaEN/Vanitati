@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace UnnamedStrategyGame.Game.Event
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public class UserRemovedEventArgs : EventArgs
     {
         public int UserID { get; }

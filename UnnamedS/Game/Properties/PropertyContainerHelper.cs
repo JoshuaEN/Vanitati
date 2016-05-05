@@ -35,14 +35,14 @@ namespace UnnamedStrategyGame.Game.Properties
                     var readable = false;
                     var writeable = false;
 
-                    var get = i.GetGetMethod(false);
-                    if (null != get && get.IsPublic)
+                    var get = i.GetGetMethod(true);
+                    if (null != get)
                     {
                         ReadableProperties.Add(i.Name, i);
                         readable = true;
                     }
-                    var set = i.GetSetMethod(false);
-                    if (null != set && set.IsPublic)
+                    var set = i.GetSetMethod(true);
+                    if (null != set)
                     {
                         WritableProperties.Add(i.Name, i);
                         writeable = true;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ using UnnamedStrategyGame.Game;
 
 namespace UnnamedStrategyGame.Network.MessageWrappers
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public abstract class CommanderTypeCallWrapper : CallMessageWrapper
     {
         public int CommanderID { get; }
@@ -18,6 +20,9 @@ namespace UnnamedStrategyGame.Network.MessageWrappers
 
         public virtual bool AuthCheck(LocalGameLogic logic, User user)
         {
+            Contract.Requires<ArgumentNullException>(null != logic);
+            Contract.Requires<ArgumentNullException>(null != user);
+
             int? assignedUserID;
             if(logic.CommanderAssignments.TryGetValue(CommanderID, out assignedUserID))
             {

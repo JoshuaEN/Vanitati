@@ -14,14 +14,19 @@ namespace UnnamedStrategyGame.Game
 {
     public class BattleGameState : GameState, IPropertyContainer, IReadOnlyBattleGameState
     {
+        #region Properties
+
         [JsonProperty]
         public int CurrentCommanderIndex { get; set; } = -1;
 
         [JsonProperty]
-        public int TurnCounter { get; set; } = 1;
+        public int TurnID { get; set; } = 1;
 
         [JsonProperty]
         public int NextUnitID { get; set; } = 0;
+
+        [JsonProperty]
+        public int CreditsPerCity { get; set; } = 1000;
 
         [JsonIgnore]
         public Commander CurrentCommander
@@ -36,12 +41,14 @@ namespace UnnamedStrategyGame.Game
         }
 
         [JsonProperty]
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
         protected Dictionary<int, Unit> _units { get; set; } = new Dictionary<int, Unit>();
 
         /// <summary>
         /// Listing of all units on the map, the int being the unique ID of the unit.
         /// </summary>
         [JsonIgnore]
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
         public IReadOnlyDictionary<int, Unit> Units
         {
             get { return _units; }
@@ -51,6 +58,7 @@ namespace UnnamedStrategyGame.Game
         protected Terrain[] _terrain { get; set; } = new Terrain[0];
 
         [JsonIgnore]
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
         public IReadOnlyCollection<Terrain> Terrain
         {
             get
@@ -66,6 +74,7 @@ namespace UnnamedStrategyGame.Game
         protected Commander[] _commanderOrder { get; set; } = new Commander[0];
 
         [JsonProperty]
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
         protected Dictionary<int, Commander> _commanders { get; set; } = new Dictionary<int, Commander>();
 
         [JsonIgnore]
@@ -73,6 +82,8 @@ namespace UnnamedStrategyGame.Game
         {
             get { return _commanders; }
         }
+
+        #endregion
 
         [JsonConstructor]
         public BattleGameState()
@@ -99,6 +110,9 @@ namespace UnnamedStrategyGame.Game
                 _commanders.Add(commander.CommanderID, commander);
             }
             _commanderOrder = fields.Commanders;
+
+            CurrentCommanderIndex = fields.CurrentCommanderIndex;
+
             SetProperties(fields.Values);
         }
 
@@ -124,6 +138,7 @@ namespace UnnamedStrategyGame.Game
             return null;
         }
 
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
         Unit IReadOnlyBattleGameState.GetUnit(int x, int y)
         {
             return GetUnit(x, y);
@@ -141,71 +156,92 @@ namespace UnnamedStrategyGame.Game
 
         public override Terrain GetTerrain(int x, int y)
         {
-            var idx = GetIndex(x, y);
+            int idx;
 
-            if(idx >= _terrain.Length)
-            {
+            if (TryGetIndex(x, y, out idx) == false)
                 return null;
-            }
             else
-            {
                 return _terrain[idx];
-            }
         }
 
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
         Terrain IReadOnlyBattleGameState.GetTerrain(int x, int y)
         {
             return GetTerrain(x, y);
         }
 
-        public override void SetUnit(int x, int y, Unit value)
+        private bool TryGetIndex(int x, int y, out int index)
         {
-            throw new NotSupportedException();
-        }
+            index = y + Height * x;
 
-        public override void SetTerrain(int x, int y, Terrain value)
-        {
-            _terrain[GetIndex(x, y)] = value;
-        }
-
-        private int GetIndex(int x, int y)
-        {
-            Contract.Requires<ArgumentException>(0 <= x, "X Cord should be >= 0");
-            Contract.Requires<ArgumentException>(0 <= y, "Y Cord should be >= 0");
-            Contract.Ensures(Contract.Result<int>() >= 0, "Resulting index should be >= 0");
-            Contract.Ensures(Contract.Result<int>() <= _terrain.Length, "Resulting index should be <= game board size");
-
-            var i = y + Height * x;
-
-            if(i >= _terrain.Length)
+            if (x < 0 || y < 0 || index >= _terrain.Length)
             {
-                throw new IndexOutOfRangeException("X Y Coordinate outside of valid range.");
+                index = -1;
+                return false;
             }
+            else
+            {
+                return true;
+            }
+        }
 
-            return i;
+        public override Tile GetTile(int x, int y)
+        {
+            int idx;
+
+            if (TryGetIndex(x, y, out idx) == false)
+                return null;
+
+            return new Tile(GetTerrain(x, y), GetUnit(x, y));
+        }
+
+        public static int GetIndex(int x, int y, int height)
+        {
+            return y + height * x;
+        }
+
+        public int GetNextUnitID()
+        {
+            return NextUnitID++;
         }
 
         public override void AddUnit(Unit unit)
         {
+            if (NextUnitID <= unit.UnitID)
+                NextUnitID = unit.UnitID + 1;
+
             _units.Add(unit.UnitID, unit);
         }
 
         public override void DeleteUnit(int x, int y)
         {
-            DeleteUnit(GetUnit(x, y).UnitID);
+            var unit = GetUnit(x, y);
+
+            if(null != unit)
+                DeleteUnit(unit.UnitID);
         }
 
-        public void DeleteUnit(int id)
+        public void DeleteUnit(int unitID)
         {
-            _units.Remove(id);
+            _units.Remove(unitID);
         }
 
         public Commander GetCommander(int commanderID)
         {
+            var commander = SafeGetCommander(commanderID);
+
+            if(commander == null)
+                throw new Exceptions.UnknownCommanderException();
+
+            return commander;
+        }
+
+        public Commander SafeGetCommander(int commanderID)
+        {
             Commander p;
-            if(_commanders.TryGetValue(commanderID, out p) == false)
+            if (_commanders.TryGetValue(commanderID, out p) == false)
             {
-                throw new Exceptions.UnknownPlayerException();
+                return null;
             }
 
             return p;
@@ -213,12 +249,17 @@ namespace UnnamedStrategyGame.Game
 
         public virtual void EndTurn(int commanderID)
         {
-            if(CurrentCommander.CommanderID != commanderID)
+            if(CurrentCommander == null)
+            {
+                throw new Exceptions.NotYourTurnException();
+            }
+            else if(CurrentCommander.CommanderID != commanderID)
             {
                 throw new Exceptions.NotYourTurnException();
             }
 
             AdvanceToNextCommander();
+            TurnID += 1;
         }
 
         private void AdvanceToNextCommander()
@@ -232,23 +273,28 @@ namespace UnnamedStrategyGame.Game
 
         public Fields GetFields()
         {
-            return new Fields(Height, Width, _terrain.ToArray(), _units.Values.ToArray(), _commanders.Values.ToArray(), GetWriteableProperties(), CurrentCommanderIndex);
+            return new Fields(
+                Height, 
+                Width, 
+                _terrain.ToArray(), 
+                _units.Values.ToArray(), 
+                _commanders.Values.ToArray(), 
+                GetWriteableProperties(), 
+                CurrentCommanderIndex
+            );
         }
 
         public void UpdateCommander(CommanderStateChange changeInfo)
         {
+            Contract.Requires<ArgumentNullException>(null != changeInfo);
             switch(changeInfo.ChangeCause)
             {
-                case CommanderStateChange.Cause.Added:
-                    throw new NotSupportedException();
-                case CommanderStateChange.Cause.Removed:
-                    throw new NotSupportedException();
                 case CommanderStateChange.Cause.Changed:
                     var commander = GetCommander(changeInfo.CommanderID);
 
                     if (null == commander)
                     {
-                        throw new Exceptions.StateMismatchException(string.Format("Expected Unit with ID of {0} to exist, it did not", changeInfo.CommanderID));
+                        throw new Exceptions.StateMismatchException(string.Format("Expected Commander with ID of {0} to exist, it did not", changeInfo.CommanderID));
                     }
                     commander.SetProperties(changeInfo.UpdatedProperties);
                     return;
@@ -282,13 +328,14 @@ namespace UnnamedStrategyGame.Game
         public void UpdateTerrain(TerrainStateChange changeInfo)
         {
             Contract.Requires<ArgumentNullException>(null != changeInfo);
-            var terrain = GetTerrain(changeInfo.ChangedTerrainLocation);
+
+            var terrain = GetTerrain(changeInfo.Location);
             if(null == terrain)
             {
                 throw new Exceptions.StateMismatchException(
                     string.Format("Expected Terrain item to exist at {0},{1}, it did not", 
-                    changeInfo.ChangedTerrainLocation.X, 
-                    changeInfo.ChangedTerrainLocation.Y)
+                    changeInfo.Location.X, 
+                    changeInfo.Location.Y)
                 );
             }
 
@@ -297,34 +344,34 @@ namespace UnnamedStrategyGame.Game
 
         public void UpdateGame(GameStateChange changeInfo)
         {
+            Contract.Requires<ArgumentNullException>(null != changeInfo);
+
             SetProperties(changeInfo.UpdatedProperties);
         }
 
-        public void Update(StateChange change)
+        public void Update(StateChange changeInfo)
         {
-            if(change is GameStateChange)
+            if(changeInfo is UnitStateChange)
             {
-                UpdateGame(change as GameStateChange);
+                UpdateUnit(changeInfo as UnitStateChange);
             }
-            else if(change is CommanderStateChange)
+            else if(changeInfo is TerrainStateChange)
             {
-                UpdateCommander(change as CommanderStateChange);
+                UpdateTerrain(changeInfo as TerrainStateChange);
             }
-            else if(change is UnitStateChange)
+            else if(changeInfo is CommanderStateChange)
             {
-                UpdateUnit(change as UnitStateChange);
+                UpdateCommander(changeInfo as CommanderStateChange);
             }
-            else if(change is TerrainStateChange)
+            else if(changeInfo is GameStateChange)
             {
-                UpdateTerrain(change as TerrainStateChange);
+                UpdateGame(changeInfo as GameStateChange);
             }
             else
             {
-                throw new InvalidOperationException(string.Format("Unsupported StateChange type of {0}", change.GetType()));
+                throw new ArgumentException($"Unknown state change type of {changeInfo.GetType()}");
             }
         }
-
-        
 
         public bool LocationsAdjacent(Location a, Location b)
         {
@@ -406,16 +453,19 @@ namespace UnnamedStrategyGame.Game
             return list;
         }
 
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
         public IDictionary<string, object> GetProperties()
         {
             return PropertyContainer.BATTLE_GAME_STATE.GetProperties(this);
         }
 
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
         public IDictionary<string, object> GetWriteableProperties()
         {
             return PropertyContainer.BATTLE_GAME_STATE.GetWriteableProperties(this);
         }
 
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
         public void SetProperties(IDictionary<string, object> values)
         {
             PropertyContainer.BATTLE_GAME_STATE.SetProperties(this, values);
@@ -424,7 +474,9 @@ namespace UnnamedStrategyGame.Game
         public BattleGameState Fork()
         {
             // TODO Perhaps not the best way.
-            return Serializers.Serializer.Deserialize<BattleGameState>(Serializers.Serializer.Serialize(this));
+            var newState = new BattleGameState();
+            newState.Sync(Serializers.Serializer.Deserialize<BattleGameState.Fields>(Serializers.Serializer.Serialize(GetFields())));
+            return newState;
         }
 
 
@@ -436,13 +488,18 @@ namespace UnnamedStrategyGame.Game
             public Unit[] Units { get; }
             public Commander[] Commanders { get; }
 
-            [Newtonsoft.Json.JsonConverter(typeof(Serializers.JsonConverters.DynamicProperitesConverter))]
+            [JsonConverter(typeof(Serializers.JsonConverters.DynamicProperitesConverter))]
             public IDictionary<string, object> Values { get; }
 
             public int CurrentCommanderIndex { get; }
 
             public Fields(int height, int width, Terrain[] terrain, Unit[] units, Commander[] commanders, IDictionary<string, object> values, int currentCommanderIndex)
             {
+                Contract.Requires<ArgumentNullException>(null != terrain);
+                Contract.Requires<ArgumentNullException>(null != units);
+                Contract.Requires<ArgumentNullException>(null != commanders);
+                Contract.Requires<ArgumentNullException>(null != values);
+
                 Height = height;
                 Width = width;
                 Terrain = terrain;
@@ -450,102 +507,16 @@ namespace UnnamedStrategyGame.Game
                 Commanders = commanders;
                 Values = values;
                 CurrentCommanderIndex = currentCommanderIndex;
+            }
 
+            [ContractInvariantMethod]
+            private void Invariants()
+            {
+                Contract.Invariant(null != Terrain);
+                Contract.Invariant(null != Units);
+                Contract.Invariant(null != Commanders);
+                Contract.Invariant(null != Values);
             }
         }
-        //public class GridFlower
-        //{
-        //    public Location Top { get; }
-        //    public Location Bottom { get; }
-        //    public Location TopLeft { get; }
-        //    public Location TopRight { get; }
-        //    public Location BottomLeft { get; }
-        //    public Location BottomRight { get; }
-        //    public Location Center { get; }
-
-        //    public GridFlower(Location center)
-        //    {
-        //        Contract.Requires<ArgumentNullException>(null != center);
-
-        //        var x = center.X;
-        //        var y = center.Y;
-
-        //        Top = new Location(x, y - 1);
-        //        Bottom = new Location(x, y + 1);
-
-        //        if (x % 2 == 0)
-        //        {
-        //            TopLeft = new Location(x - 1, y - 1);
-        //            TopRight = new Location(x, y - 1);
-        //            BottomLeft = new Location(x - 1, y + 1);
-        //            BottomRight = new Location(x, y + 1);
-        //        }
-        //        else
-        //        {
-        //            TopLeft = new Location(x, y - 1);
-        //            TopRight = new Location(x + 1, y - 1);
-        //            BottomLeft = new Location(x, y + 1);
-        //            BottomRight = new Location(x + 1, y + 1);
-        //        }
-        //        Center = center;
-        //    }
-
-        //    public Location GetAtPedal(Pedal pedal)
-        //    {
-        //        switch(pedal)
-        //        {
-        //            case Pedal.Top:
-        //                return Top;
-        //            case Pedal.Bottom:
-        //                return Bottom;
-        //            case Pedal.TopLeft:
-        //                return TopLeft;
-        //            case Pedal.TopRight:
-        //                return TopRight;
-        //            case Pedal.BottomLeft:
-        //                return BottomLeft;
-        //            case Pedal.BottomRight:
-        //                return BottomRight;
-        //            case Pedal.Center:
-        //                return Center;
-        //            case Pedal.None:
-        //                return null;
-        //            default:
-        //                throw new ArgumentException("Unknown Pedal direction of " + pedal);
-        //        }
-        //    }
-
-        //    public Pedal GetAtLocation(Location loc)
-        //    {
-        //        if (Math.Abs(loc.X - Center.X) > 1)
-        //            return Pedal.None;
-        //        if (Math.Abs(loc.Y - Center.Y) > 2)
-        //            return Pedal.None;
-
-        //        if (loc == Top)
-        //            return Pedal.Top;
-        //        if (loc == Bottom)
-        //            return Pedal.Bottom;
-        //        if (loc == TopLeft)
-        //            return Pedal.TopLeft;
-        //        if (loc == TopRight)
-        //            return Pedal.TopRight;
-        //        if (loc == BottomLeft)
-        //            return Pedal.BottomLeft;
-        //        if (loc == BottomRight)
-        //            return Pedal.BottomRight;
-        //        if (loc == Center)
-        //            return Pedal.Center;
-
-        //        return Pedal.None;
-        //    }
-
-        //    public bool IsInPedal(Location loc)
-        //    {
-        //        return GetAtLocation(loc) != Pedal.None;
-        //    }
-
-        //    public enum Pedal { Top, Bottom, TopLeft, TopRight, BottomLeft, BottomRight, Center, None }
-        //}
     }
 }

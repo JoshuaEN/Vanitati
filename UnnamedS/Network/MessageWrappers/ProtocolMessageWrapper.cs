@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace UnnamedStrategyGame.Network.MessageWrappers
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public abstract class ProtocolMessageWrapper : MessageWrapper
     {
         

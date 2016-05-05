@@ -1,18 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnnamedStrategyGame.Game;
+using UnnamedStrategyGame.Game.Action;
 
 namespace UnnamedStrategyGame.Network.MessageWrappers
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public class DoActionsCallWrapper : CommanderTypeCallWrapper
     {
         public List<ActionInfo> Actions { get; }
 
         public DoActionsCallWrapper(List<ActionInfo> actions) : base(-1)
         {
+            Contract.Requires<ArgumentNullException>(null != actions);
             Actions = actions;
         }
 
@@ -25,14 +29,19 @@ namespace UnnamedStrategyGame.Network.MessageWrappers
         {
             int? commanderID = null;
 
-            foreach(var action in Actions)
+            foreach (var action in Actions)
             {
-                if(commanderID == null)
+                if (action.Context.TriggeredByCommanderID == null)
+                    return false;
+
+                int tmpCommanderID = (int)action.Context.TriggeredByCommanderID;
+                if (commanderID == null)
                 {
-                    commanderID = action.CommanderID;
+                    commanderID = tmpCommanderID;
                 }
-                else if(commanderID != action.CommanderID)
+                else if (commanderID != tmpCommanderID)
                 {
+                    // Sending commands from more than one commander is not permitted.
                     return false;
                 }
             }

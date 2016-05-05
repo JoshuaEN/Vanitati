@@ -59,5 +59,834 @@ namespace UnnamedStrategyGame.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to End Turn.
+        /// </summary>
+        internal static string action_commander_end_turn {
+            get {
+                return ResourceManager.GetString("action_commander_end_turn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Defending unit&apos;s armor of {1} exceeds armor pentration of {0}..
+        /// </summary>
+        internal static string action_modifier_attack_no_damage_from_armor {
+            get {
+                return ResourceManager.GetString("action_modifier_attack_no_damage_from_armor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} attack pen.
+        /// </summary>
+        internal static string action_modifier_attackers_pen {
+            get {
+                return ResourceManager.GetString("action_modifier_attackers_pen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0:0%;-0%} Attacker&apos;s Overall Accuracy.
+        /// </summary>
+        internal static string action_modifier_attacking_unit_actual_accuracy {
+            get {
+                return ResourceManager.GetString("action_modifier_attacking_unit_actual_accuracy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attacker&apos;s Armor Penetration ({0}).
+        /// </summary>
+        internal static string action_modifier_attacking_unit_armor_penetration {
+            get {
+                return ResourceManager.GetString("action_modifier_attacking_unit_armor_penetration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Base Damage: {0}.
+        /// </summary>
+        internal static string action_modifier_attacking_unit_base_damage {
+            get {
+                return ResourceManager.GetString("action_modifier_attacking_unit_base_damage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0:+0%;-0%} from Attacker&apos;s Base Accuracy.
+        /// </summary>
+        internal static string action_modifier_base_accuracy {
+            get {
+                return ResourceManager.GetString("action_modifier_base_accuracy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Defender&apos;s Armor ({0}).
+        /// </summary>
+        internal static string action_modifier_base_unit_armor {
+            get {
+                return ResourceManager.GetString("action_modifier_base_unit_armor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0:+0%;-0%} from Defender&apos;s Base Concealment.
+        /// </summary>
+        internal static string action_modifier_base_unit_concealment {
+            get {
+                return ResourceManager.GetString("action_modifier_base_unit_concealment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} stopped by Defender&apos;s Armor.
+        /// </summary>
+        internal static string action_modifier_damage_blocked_by_armor {
+            get {
+                return ResourceManager.GetString("action_modifier_damage_blocked_by_armor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Defender&apos;s Armor ({1}) is completely ineffective against the Attacker&apos;s Armor Penetration ({0}).
+        /// </summary>
+        internal static string action_modifier_damage_blocked_by_armor_overmatched {
+            get {
+                return ResourceManager.GetString("action_modifier_damage_blocked_by_armor_overmatched", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0:0%} damage pen.
+        /// </summary>
+        internal static string action_modifier_damage_penetration {
+            get {
+                return ResourceManager.GetString("action_modifier_damage_penetration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} defener&apos;s armor.
+        /// </summary>
+        internal static string action_modifier_defenders_armor {
+            get {
+                return ResourceManager.GetString("action_modifier_defenders_armor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} from Defender&apos;s Armor.
+        /// </summary>
+        internal static string action_modifier_defending_unit_armor {
+            get {
+                return ResourceManager.GetString("action_modifier_defending_unit_armor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Defender&apos;s Effective Armor: {0}.
+        /// </summary>
+        internal static string action_modifier_defending_unit_armor_effectiveness {
+            get {
+                return ResourceManager.GetString("action_modifier_defending_unit_armor_effectiveness", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0:+0%;-0%} from Defender&apos;s Dig In Concealment Bonus.
+        /// </summary>
+        internal static string action_modifier_dig_in_concealment_bonus {
+            get {
+                return ResourceManager.GetString("action_modifier_dig_in_concealment_bonus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Defending unit cannot benefit from Dig In.
+        /// </summary>
+        internal static string action_modifier_dig_in_concealment_bonus_not_effected_by_dig_in_modifiers {
+            get {
+                return ResourceManager.GetString("action_modifier_dig_in_concealment_bonus_not_effected_by_dig_in_modifiers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ÷.
+        /// </summary>
+        internal static string action_modifier_operator_divide {
+            get {
+                return ResourceManager.GetString("action_modifier_operator_divide", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (.
+        /// </summary>
+        internal static string action_modifier_operator_left_parenthese {
+            get {
+                return ResourceManager.GetString("action_modifier_operator_left_parenthese", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to -.
+        /// </summary>
+        internal static string action_modifier_operator_minus {
+            get {
+                return ResourceManager.GetString("action_modifier_operator_minus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to x.
+        /// </summary>
+        internal static string action_modifier_operator_multiply {
+            get {
+                return ResourceManager.GetString("action_modifier_operator_multiply", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to +.
+        /// </summary>
+        internal static string action_modifier_operator_plus {
+            get {
+                return ResourceManager.GetString("action_modifier_operator_plus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ).
+        /// </summary>
+        internal static string action_modifier_operator_right_parenthese {
+            get {
+                return ResourceManager.GetString("action_modifier_operator_right_parenthese", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Potential Damage: {0}.
+        /// </summary>
+        internal static string action_modifier_potential_damage {
+            get {
+                return ResourceManager.GetString("action_modifier_potential_damage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0:+0%;-0%} from Attacker&apos;s Terrain Modifier.
+        /// </summary>
+        internal static string action_modifier_terrain_accuracy_modifier {
+            get {
+                return ResourceManager.GetString("action_modifier_terrain_accuracy_modifier", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attacking unit&apos;s Accuracy is not impacted by Terrain.
+        /// </summary>
+        internal static string action_modifier_terrain_accuracy_modifier_not_effected_by_terrain_modifiers {
+            get {
+                return ResourceManager.GetString("action_modifier_terrain_accuracy_modifier_not_effected_by_terrain_modifiers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0:+0%;-0%} from Defender&apos;s Terrain Concealment Modifier.
+        /// </summary>
+        internal static string action_modifier_terrain_concealment_modifier {
+            get {
+                return ResourceManager.GetString("action_modifier_terrain_concealment_modifier", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Defending unit&apos;s Concealment is not impacted by Terrain.
+        /// </summary>
+        internal static string action_modifier_terrain_concealment_modifier_not_effected_by_terrain_modifiers {
+            get {
+                return ResourceManager.GetString("action_modifier_terrain_concealment_modifier_not_effected_by_terrain_modifiers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0:+0%;-0%} from Terrain Height Difference.
+        /// </summary>
+        internal static string action_modifier_terrain_high_difference_modifier {
+            get {
+                return ResourceManager.GetString("action_modifier_terrain_high_difference_modifier", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Both units cannot benefit from Terrain Modifiers.
+        /// </summary>
+        internal static string action_modifier_terrain_high_difference_modifier_not_effected_by_terrain_modifiers {
+            get {
+                return ResourceManager.GetString("action_modifier_terrain_high_difference_modifier_not_effected_by_terrain_modifier" +
+                        "s", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total Damage: {0}.
+        /// </summary>
+        internal static string action_modifier_unit_damage {
+            get {
+                return ResourceManager.GetString("action_modifier_unit_damage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Build.
+        /// </summary>
+        internal static string action_terrain_build_land_unit {
+            get {
+                return ResourceManager.GetString("action_terrain_build_land_unit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Anti-Air Cannon (vs. Air).
+        /// </summary>
+        internal static string action_unit_attack_anti_aircraft_cannon_vs_air {
+            get {
+                return ResourceManager.GetString("action_unit_attack_anti_aircraft_cannon_vs_air", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Anti-Air Cannon (vs. Ground).
+        /// </summary>
+        internal static string action_unit_attack_anti_aircraft_cannon_vs_ground {
+            get {
+                return ResourceManager.GetString("action_unit_attack_anti_aircraft_cannon_vs_ground", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attack w/ AT Rocket.
+        /// </summary>
+        internal static string action_unit_attack_anti_tank_rocket {
+            get {
+                return ResourceManager.GetString("action_unit_attack_anti_tank_rocket", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attack w/ Artillery Barrage.
+        /// </summary>
+        internal static string action_unit_attack_artillery_barrage {
+            get {
+                return ResourceManager.GetString("action_unit_attack_artillery_barrage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dive Bomb.
+        /// </summary>
+        internal static string action_unit_attack_dive_bomb {
+            get {
+                return ResourceManager.GetString("action_unit_attack_dive_bomb", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wing Mounted HMGs.
+        /// </summary>
+        internal static string action_unit_attack_fighter_heavy_machine_gun {
+            get {
+                return ResourceManager.GetString("action_unit_attack_fighter_heavy_machine_gun", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attack w/ HMG.
+        /// </summary>
+        internal static string action_unit_attack_heavy_machine_gun {
+            get {
+                return ResourceManager.GetString("action_unit_attack_heavy_machine_gun", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attack w/ LMG.
+        /// </summary>
+        internal static string action_unit_attack_light_machine_gun {
+            get {
+                return ResourceManager.GetString("action_unit_attack_light_machine_gun", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quad HMG (vs. Air).
+        /// </summary>
+        internal static string action_unit_attack_quad_hmg_vs_air {
+            get {
+                return ResourceManager.GetString("action_unit_attack_quad_hmg_vs_air", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quad HMG (vs. Ground).
+        /// </summary>
+        internal static string action_unit_attack_quad_hmg_vs_ground {
+            get {
+                return ResourceManager.GetString("action_unit_attack_quad_hmg_vs_ground", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attack w/ Rifles.
+        /// </summary>
+        internal static string action_unit_attack_rifle {
+            get {
+                return ResourceManager.GetString("action_unit_attack_rifle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rocket Artillery Barrage.
+        /// </summary>
+        internal static string action_unit_attack_rocket_artillery_barrage {
+            get {
+                return ResourceManager.GetString("action_unit_attack_rocket_artillery_barrage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attack w/ Saturation Bombing.
+        /// </summary>
+        internal static string action_unit_attack_saturation_bombing {
+            get {
+                return ResourceManager.GetString("action_unit_attack_saturation_bombing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attack w/ Tank Main Gun.
+        /// </summary>
+        internal static string action_unit_attack_tank_main_gun {
+            get {
+                return ResourceManager.GetString("action_unit_attack_tank_main_gun", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Capture.
+        /// </summary>
+        internal static string action_unit_capture {
+            get {
+                return ResourceManager.GetString("action_unit_capture", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Auto-Clear Repeat Action.
+        /// </summary>
+        internal static string action_unit_clear_repeated_action_automatically {
+            get {
+                return ResourceManager.GetString("action_unit_clear_repeated_action_automatically", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clear Repeat Action.
+        /// </summary>
+        internal static string action_unit_clear_repeated_action_manually {
+            get {
+                return ResourceManager.GetString("action_unit_clear_repeated_action_manually", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dig In.
+        /// </summary>
+        internal static string action_unit_dig_in {
+            get {
+                return ResourceManager.GetString("action_unit_dig_in", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Action.
+        /// </summary>
+        internal static string action_unit_null_unit_action {
+            get {
+                return ResourceManager.GetString("action_unit_null_unit_action", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Boots.
+        /// </summary>
+        internal static string movement_boots {
+            get {
+                return ResourceManager.GetString("movement_boots", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Treads.
+        /// </summary>
+        internal static string movement_treads {
+            get {
+                return ResourceManager.GetString("movement_treads", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wheels.
+        /// </summary>
+        internal static string movement_wheels {
+            get {
+                return ResourceManager.GetString("movement_wheels", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remaining Actions.
+        /// </summary>
+        internal static string state_Actions {
+            get {
+                return ResourceManager.GetString("state_Actions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Armor.
+        /// </summary>
+        internal static string state_Armor {
+            get {
+                return ResourceManager.GetString("state_Armor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Capture Progress.
+        /// </summary>
+        internal static string state_CaptureProgress {
+            get {
+                return ResourceManager.GetString("state_CaptureProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Commander ID.
+        /// </summary>
+        internal static string state_CommanderID {
+            get {
+                return ResourceManager.GetString("state_CommanderID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Credits.
+        /// </summary>
+        internal static string state_Credits {
+            get {
+                return ResourceManager.GetString("state_Credits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dig In.
+        /// </summary>
+        internal static string state_DigIn {
+            get {
+                return ResourceManager.GetString("state_DigIn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Health.
+        /// </summary>
+        internal static string state_Health {
+            get {
+                return ResourceManager.GetString("state_Health", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Is Owned.
+        /// </summary>
+        internal static string state_IsOwned {
+            get {
+                return ResourceManager.GetString("state_IsOwned", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Location.
+        /// </summary>
+        internal static string state_Location {
+            get {
+                return ResourceManager.GetString("state_Location", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Movement.
+        /// </summary>
+        internal static string state_Movement {
+            get {
+                return ResourceManager.GetString("state_Movement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Repeating Action.
+        /// </summary>
+        internal static string state_RepeatedAction {
+            get {
+                return ResourceManager.GetString("state_RepeatedAction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Supplies.
+        /// </summary>
+        internal static string state_Supplies {
+            get {
+                return ResourceManager.GetString("state_Supplies", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type.
+        /// </summary>
+        internal static string state_TerrainType {
+            get {
+                return ResourceManager.GetString("state_TerrainType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unit ID.
+        /// </summary>
+        internal static string state_UnitID {
+            get {
+                return ResourceManager.GetString("state_UnitID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type.
+        /// </summary>
+        internal static string state_UnitType {
+            get {
+                return ResourceManager.GetString("state_UnitType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bullets.
+        /// </summary>
+        internal static string supply_bullets {
+            get {
+                return ResourceManager.GetString("supply_bullets", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Diesel.
+        /// </summary>
+        internal static string supply_diesel {
+            get {
+                return ResourceManager.GetString("supply_diesel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rations.
+        /// </summary>
+        internal static string supply_rations {
+            get {
+                return ResourceManager.GetString("supply_rations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rockets.
+        /// </summary>
+        internal static string supply_rockets {
+            get {
+                return ResourceManager.GetString("supply_rockets", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shells.
+        /// </summary>
+        internal static string supply_shells {
+            get {
+                return ResourceManager.GetString("supply_shells", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to City.
+        /// </summary>
+        internal static string terrain_city {
+            get {
+                return ResourceManager.GetString("terrain_city", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Factory.
+        /// </summary>
+        internal static string terrain_factory {
+            get {
+                return ResourceManager.GetString("terrain_factory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hill.
+        /// </summary>
+        internal static string terrain_hill {
+            get {
+                return ResourceManager.GetString("terrain_hill", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mt..
+        /// </summary>
+        internal static string terrain_mountain {
+            get {
+                return ResourceManager.GetString("terrain_mountain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Plain.
+        /// </summary>
+        internal static string terrain_plain {
+            get {
+                return ResourceManager.GetString("terrain_plain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Anti-Air HalfTrack.
+        /// </summary>
+        internal static string unit_anti_air_half_track {
+            get {
+                return ResourceManager.GetString("unit_anti_air_half_track", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Anti-Air Tank.
+        /// </summary>
+        internal static string unit_anti_aircraft_artillery {
+            get {
+                return ResourceManager.GetString("unit_anti_aircraft_artillery", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AT Infantry.
+        /// </summary>
+        internal static string unit_anti_tank_infantry {
+            get {
+                return ResourceManager.GetString("unit_anti_tank_infantry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Artillery.
+        /// </summary>
+        internal static string unit_artillery {
+            get {
+                return ResourceManager.GetString("unit_artillery", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bomber.
+        /// </summary>
+        internal static string unit_bomber {
+            get {
+                return ResourceManager.GetString("unit_bomber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dive Bomber.
+        /// </summary>
+        internal static string unit_dive_bomber {
+            get {
+                return ResourceManager.GetString("unit_dive_bomber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fighter.
+        /// </summary>
+        internal static string unit_fighter {
+            get {
+                return ResourceManager.GetString("unit_fighter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Infantry.
+        /// </summary>
+        internal static string unit_infantry {
+            get {
+                return ResourceManager.GetString("unit_infantry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Jeep.
+        /// </summary>
+        internal static string unit_recon_car {
+            get {
+                return ResourceManager.GetString("unit_recon_car", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rocket Artillery.
+        /// </summary>
+        internal static string unit_rocket_artillery {
+            get {
+                return ResourceManager.GetString("unit_rocket_artillery", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tank.
+        /// </summary>
+        internal static string unit_tank {
+            get {
+                return ResourceManager.GetString("unit_tank", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Transport Half-Track.
+        /// </summary>
+        internal static string unit_transport_half_track {
+            get {
+                return ResourceManager.GetString("unit_transport_half_track", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Transport Truck.
+        /// </summary>
+        internal static string unit_transport_truck {
+            get {
+                return ResourceManager.GetString("unit_transport_truck", resourceCulture);
+            }
+        }
     }
 }

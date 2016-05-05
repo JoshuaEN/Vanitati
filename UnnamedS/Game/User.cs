@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace UnnamedStrategyGame.Game
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public class User
     {
         public int UserID { get; }

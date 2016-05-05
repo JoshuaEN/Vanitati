@@ -133,14 +133,37 @@ namespace UnnamedStrategyGame.UI
                     return;
 
                 _selectedUnit = value;
+                _selectedTerrain = null;
                 unitStatePropView.PropertySource = _selectedUnit;
-                UpdateHighlights();
+
+                if (_selectedUnit != null)
+                    terrainStatePropView.PropertySource = State.GetTerrain(_selectedUnit.Location);
+                else
+                    terrainStatePropView.PropertySource = null;
+
+                UpdateSelectedEntryDisplay();
+            }
+        }
+
+        private Terrain _selectedTerrain;
+        private Terrain SelectedTerrain
+        {
+            get { return _selectedTerrain; }
+            set
+            {
+                if (CanSelectTerrain(value) == false)
+                    return;
+
+                _selectedTerrain = value;
+                _selectedUnit = null;
+                terrainStatePropView.PropertySource = _selectedTerrain;
+                UpdateSelectedEntryDisplay();
             }
         }
 
         public bool OurTurn { get; protected set; }
 
-        protected Dictionary<Location, List<ActionChain>> SelectedUnitActionMap { get; set; } = new Dictionary<Location, List<ActionChain>>();
+        protected Dictionary<Location, List<ActionChain>> SelectedEntryActionMap { get; set; } = new Dictionary<Location, List<ActionChain>>();
 
         private const int INPUT_TICK_RATE = 50;
 
@@ -161,8 +184,22 @@ namespace UnnamedStrategyGame.UI
                 for (var w = 0; w < width; w++)
                 {
                     var i = h + height * w;
-                    terrain[i] = new Terrain(TerrainType.TYPES.Values.First(), new Location(w, h));
+                    var type = TerrainType.TYPES.ElementAt(i % TerrainType.TYPES.Count).Value;
+                    terrain[i] = new Terrain(type, new Location(w, h), null, (i % 3) != 2 && type.CanCapture, (i % 3));
                 }
+            }
+
+            var units = new Unit[UnitType.TYPES.Count * 2];
+
+            var unitX = 5;
+            var unitY = 5;
+
+            for(var i = 0; i < UnitType.TYPES.Count; i++)
+            {
+                units[i] = new Unit(i, UnitType.TYPES.ElementAt(i).Value, new Location(unitX, unitY), 0);
+                units[i + UnitType.TYPES.Count] = new Unit(i + UnitType.TYPES.Count, UnitType.TYPES.ElementAt(i).Value, new Location(unitX, unitY + 5), 1);
+
+                unitX++;
             }
 
             User firstUser = null;
@@ -191,6 +228,7 @@ namespace UnnamedStrategyGame.UI
                 Logic = networked;
 
                 networked.UserSetByServer += Networked_UserSetByServer;
+                networked.Listen();
             }
             else
             {
@@ -206,23 +244,16 @@ namespace UnnamedStrategyGame.UI
 
             if (NETWORKED == false || SERVER)
             {
-                var unitID = 0;
                 Logic.StartGame(
                     new BattleGameState.Fields(height, width, terrain,
-                    new Unit[]
-                    {
-                    new Unit(unitID++, Game.UnitTypes.Infantry.Instance, new Location(6, 6), 0),
-                    new Unit(unitID++, Game.UnitTypes.Infantry.Instance, new Location(6, 7), 0),
-                    new Unit(unitID++, Game.UnitTypes.Infantry.Instance, new Location(7, 8), 1),
-                    new Unit(unitID++, Game.UnitTypes.Infantry.Instance, new Location(5, 8), 1)
-                    },
-                    new Commander[] { new Commander(0, 0), new Commander(1, 0) }, new Dictionary<string, object>(), -1));
+                    units,
+                    new Commander[] { new Commander(Game.CommanderTypes.BasicCommander.Instance, 0, 0), new Commander(Game.CommanderTypes.BasicCommander.Instance, 1, 0) }, new Dictionary<string, object>(), -1));
             }
 
             if (NETWORKED == false)
             {
                 Logic.AssignUserToCommander(firstUser.UserID, 0);
-                Logic.AssignUserToCommander(secondUser.UserID, 1);
+                Logic.AssignUserToCommander(firstUser.UserID, 1);
             }
 
         }
@@ -231,6 +262,7 @@ namespace UnnamedStrategyGame.UI
         {
             this.Dispatcher.Invoke(() =>
             {
+                MessageBox.Show($"Disconnect\n\n{e.Exception?.Message}\n\n{e.Exception?.StackTrace}");
                 ExceptionDispatchInfo.Capture(e.Exception).Throw();
             });
         }
@@ -239,13 +271,17 @@ namespace UnnamedStrategyGame.UI
         {
             this.Dispatcher.Invoke(() =>
             {
+                MessageBox.Show($"Exception\n\n{e.Exception?.Message}\n\n{e.Exception?.StackTrace}");
                 ExceptionDispatchInfo.Capture(e.Exception).Throw();
             });
         }
 
         private void OnGameLoopException(Exception e)
         {
-            Dispatcher.Invoke(() => { System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(e).Throw(); });
+            Dispatcher.Invoke(() => {
+                MessageBox.Show($"Game Loop Exception\n\n{e?.Message}\n\n{e?.StackTrace}");
+                System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(e).Throw();
+            });
         }
 
         private bool Shutdown = false;
@@ -350,6 +386,7 @@ namespace UnnamedStrategyGame.UI
                     var view = new TileView(this, new Location(w, h));
                     view.TileViewMouseDown += View_MouseDown;
                     view.TileViewMouseUp += View_MouseUp;
+                    view.TileViewMouseEnter += View_MouseEnter;
                     canvas.Children.Add(view);
                     TileMap.Add(view.Location, view);
                 }
@@ -361,46 +398,156 @@ namespace UnnamedStrategyGame.UI
             var currentCommander = State.CurrentCommander;
 
             OurTurn = currentCommander != null && CurrentUser != null && Logic.CommanderAssignments[currentCommander.CommanderID] == CurrentUser.UserID;
-            
+
+            gameStatePropView.Update();
             UpdateHighlights();
+            UpdateCurrentCommanderActionList();
+        }
+
+        private void UpdateCurrentCommanderActionList()
+        {
+            currentCommanderActionList.Children.Clear();
+
+            if(OurTurn == false || State.CurrentCommander == null)
+            {
+                currentCommanderActionList.Visibility = Visibility.Collapsed;
+                return;
+            }
+            
+            currentCommanderActionList.Visibility = Visibility.Visible;
+
+            var sourceContext = new CommanderContext(State.CurrentCommander.CommanderID);
+
+            foreach(var action in State.CurrentCommander.CommanderType.Actions.Where(a => a.CanUserTrigger))
+            {
+                var view = new ActionView(State, action, sourceContext, State.CurrentCommander.CommanderID);
+                view.ActionTriggered += View_ActionTriggered;
+                currentCommanderActionList.Children.Add(view);
+            }
+        }
+
+        private void UpdateSelectedEntryDisplay()
+        {
+            UpdateHighlights();
+            UpdateSelectedEntryActions();
+        }
+
+        private void UpdateSelectedEntryActions()
+        {
+            selectedEntryActionList.Children.Clear();
+
+            if(SelectedUnit != null)
+            {
+                UpdateNonTargetedSelectedEntryActions(SelectedUnit.UnitType.Actions, new UnitContext(SelectedUnit.Location));
+            }
+            else if(SelectedTerrain != null)
+            {
+                UpdateNonTargetedSelectedEntryActions(SelectedTerrain.TerrainType.Actions, new TerrainContext(SelectedTerrain.Location));
+            }
+
+            if (selectedEntryActionList.Children.Count > 0)
+                selectedEntryActionList.Visibility = Visibility.Visible;
+            else
+                selectedEntryActionList.Visibility = Visibility.Collapsed;
+        }
+
+        private void UpdateNonTargetedSelectedEntryActions(IEnumerable<ActionType> actions, Context sourceContext)
+        {
+
+            foreach (var action in actions.Where(a => a.CanUserTrigger == true))
+            {
+                selectedEntryActionList.Children.Add(GetActionViewForAction(action, sourceContext));
+            }
+        }
+
+        private ActionView GetActionViewForAction(ActionType action, Context sourceContext)
+        {
+            var view = new ActionView(State, action, sourceContext, State.CurrentCommander.CommanderID);
+            view.ActionTriggered += View_ActionTriggered;
+            return view;
+        }
+
+        private void View_ActionTriggered(object sender, ActionView.ActionTriggeredEventArgs e)
+        {
+            Logic.DoAction(new ActionInfo(e.ActionType, e.ActionContext));
         }
 
         private void UpdateHighlights()
         {
+            SelectedEntryActionMap.Clear();
             UpdateSelectedUnitActionMap();
+            UpdateSelectedTerrainActionMap();
+            UpdateSelectedEntryActions();
 
-            var highlightTargets = SelectedUnitActionMap.Keys;
+            var highlightTargets = SelectedEntryActionMap.Keys;
 
             foreach (var v in TileMap)
             {
-                v.Value.Highlight = highlightTargets.Contains(v.Value.Location);
+                if(SelectedUnit?.Location == v.Value.Location || SelectedTerrain?.Location == v.Value.Location)
+                {
+                    v.Value.Highlight = TileView.HighlightMode.Selected;
+                }
+                else if (highlightTargets.Contains(v.Value.Location))
+                {
+                    var tile = State.GetTile(v.Value.Location);
+
+                    if (tile.Unit != null)
+                    {
+                        if (State.CurrentCommander.CommanderID == tile.Unit.CommanderID)
+                        {
+                            v.Value.Highlight = TileView.HighlightMode.Ally;
+                        }
+                        else
+                        {
+                            v.Value.Highlight = TileView.HighlightMode.Enemy;
+                        }
+                    }
+                    else
+                    {
+                        v.Value.Highlight = TileView.HighlightMode.Neutral;
+                    }
+                }
+                else
+                {
+                    v.Value.Highlight = TileView.HighlightMode.None;
+                }
             }
         }
 
         private void UpdateSelectedUnitActionMap()
         {
-            SelectedUnitActionMap.Clear();
-
             if (OurTurn == false || SelectedUnit == null)
                 return;
 
-            foreach(var action in SelectedUnit.UnitType.Actions.Where(a => a.AvailableDuringTurn))
+            UpdateSelectedEntryActionMap(SelectedUnit.UnitType.Actions);
+        }
+
+        private void UpdateSelectedTerrainActionMap()
+        {
+            if (OurTurn == false || SelectedTerrain == null)
+                return;
+
+            UpdateSelectedEntryActionMap(SelectedTerrain.TerrainType.Actions);
+        }
+
+        private void UpdateSelectedEntryActionMap(IEnumerable<ActionType> actions)
+        {
+            foreach (var action in actions.Where(a => a.ActionTargetCategory == ActionType.TargetCategory.Tile && a.CanUserTrigger == true))
             {
-                foreach(var kp in action.ActionableLocations
-                    (
-                        State, 
-                        new Game.Action.ActionContext(State.CurrentCommander.CommanderID, ActionType.ActionTriggers.None), 
-                        State.GetTile(SelectedUnit.Location)
+                foreach (var kp in action.ActionableLocations
+                        (
+                            State,
+                            new ActionContext(State.CurrentCommander.CommanderID, ActionContext.TriggerAutoDetermineMode.ManuallyByUser, new UnitContext(SelectedUnit.Location), new UnitContext(SelectedUnit.Location))
+                        )
                     )
-                )
                 {
                     var location = kp.Key;
 
                     List<ActionChain> listing;
-                    if(SelectedUnitActionMap.TryGetValue(location, out listing) == false)
+                    if (SelectedEntryActionMap.TryGetValue(location, out listing) == false)
                     {
                         listing = new List<ActionChain>();
-                        SelectedUnitActionMap.Add(location, listing);
+                        SelectedEntryActionMap.Add(location, listing);
                     }
 
                     Contract.Assert(listing != null);
@@ -412,7 +559,12 @@ namespace UnnamedStrategyGame.UI
 
         private bool CanSelectUnit(Unit unit)
         {
-            return unit == null || (unit != null && unit.CommanderID == State.CurrentCommander.CommanderID);
+            return unit == null || (unit != null && unit.CommanderID == State.CurrentCommander.CommanderID && Logic.IsUserCommanding(CurrentUser.UserID, unit.CommanderID));
+        }
+
+        private bool CanSelectTerrain(Terrain terrain)
+        {
+            return terrain == null || (terrain.CommanderID == State.CurrentCommander.CommanderID && Logic.IsUserCommanding(CurrentUser.UserID, terrain.CommanderID));
         }
 
         private List<ActionChain> GetAvailableActions(Location location)
@@ -421,7 +573,7 @@ namespace UnnamedStrategyGame.UI
 
             List<ActionChain> actionChain;
 
-            if (SelectedUnitActionMap.TryGetValue(location, out actionChain))
+            if (SelectedEntryActionMap.TryGetValue(location, out actionChain))
                 return actionChain;
             else
                 return new List<ActionChain>(0);
@@ -454,19 +606,20 @@ namespace UnnamedStrategyGame.UI
             GameLoop().ContinueWith(t => { OnGameLoopException(t.Exception); }, TaskContinuationOptions.OnlyOnFaulted);
         }
 
-        private void View_MouseUp(object sender, TileView.TileViewEventArgs e)
+        private void View_MouseUp(object sender, TileView.TileViewMouseButtonEventArgs e)
         {
             var location = (sender as TileView).Location;
 
         }
 
-        private void View_MouseDown(object sender, TileView.TileViewEventArgs e)
+        private void View_MouseDown(object sender, TileView.TileViewMouseButtonEventArgs e)
         {
             if (e.Args.ChangedButton == MouseButton.Left)
             {
                 var location = (sender as TileView).Location;
 
                 var unit = State.GetUnit(location);
+                var terrain = State.GetTerrain(location);
 
                 if (unit != null && CanSelectUnit(unit))
                 {
@@ -477,23 +630,54 @@ namespace UnnamedStrategyGame.UI
                     List<ActionChain> availableActions = GetAvailableActions(location);
                     if (availableActions.Count > 0)
                     {
-                        Logic.DoActions(availableActions.First().GetActionsInfo(State.CurrentCommander.CommanderID, ActionType.ActionTriggers.None));
+                        Logic.DoActions(availableActions.First().GetActionsInfo(State.CurrentCommander.CommanderID));
+                    }
+                    else
+                    {
+                        SelectedUnit = null;
                     }
                 }
-
+                else if(terrain != null && CanSelectTerrain(terrain))
+                {
+                    SelectedTerrain = terrain;
+                }
+                else if(SelectedTerrain != null)
+                {
+                    List<ActionChain> availableActions = GetAvailableActions(location);
+                    if (availableActions.Count > 0)
+                    {
+                        Logic.DoActions(availableActions.First().GetActionsInfo(State.CurrentCommander.CommanderID));
+                    }
+                    else
+                    {
+                        SelectedTerrain = null;
+                    }
+                }
 
                 lastDownAt = location;
             }
         }
 
+
+        private void View_MouseEnter(object sender, TileView.TileViewMouseEventArgs e)
+        {
+            var location = (sender as TileView).Location;
+            var unit = State.GetUnit(location);
+            var terrain = State.GetTerrain(location);
+
+            unitHoveredStatePropView.PropertySource = unit;
+            terrainHoveredStatePropView.PropertySource = terrain;
+        }
+
         public void OnActionsTaken(object sender, ActionsTakenEventArgs e)
         {
-            throw new NotImplementedException();
+            
         }
 
         public void OnCommanderChanged(object sender, CommanderChangedEventArgs e)
         {
             // TODO Update commander data
+            gameStatePropView.Update();
         }
 
         public void OnUnitChanged(object sender, UnitChangedEventArgs e)
@@ -505,6 +689,10 @@ namespace UnnamedStrategyGame.UI
                 UpdateUnitAtLocation(e.ChangeInfo.PreviousLocation);
             }
 
+            if (e.ChangeInfo.ChangeCause == Game.StateChanges.UnitStateChange.Cause.Destroyed && e.ChangeInfo.UnitID == SelectedUnit?.UnitID)
+                SelectedUnit = null;
+
+            unitHoveredStatePropView.Update();
             UpdateHighlights();
         }
 
@@ -518,6 +706,7 @@ namespace UnnamedStrategyGame.UI
                 if(SelectedUnit != null && SelectedUnit.Location == location)
                 {
                     unitStatePropView.Update();
+                    terrainStatePropView.PropertySource = State.GetTerrain(location);
                 }
             }
             else
@@ -528,29 +717,35 @@ namespace UnnamedStrategyGame.UI
 
         public void OnTerrainChanged(object sender, TerrainChangedEventArgs e)
         {
-            var location = e.ChangeInfo.ChangedTerrainLocation;
+            var location = e.ChangeInfo.Location;
             TileView view;
             if(TileMap.TryGetValue(location, out view))
             {
                 view.UpdateTerrain();
+
+                if(SelectedUnit != null && SelectedUnit.Location == location)
+                {
+                    terrainStatePropView.Update();
+                }
             }
             else
             {
                 throw new Game.Exceptions.StateMismatchException();
             }
+
+            terrainHoveredStatePropView.Update();
+            UpdateHighlights();
         }
 
         public void OnGameStateChanged(object sender, GameStateChangedArgs e)
         {
             // TODO Reload/update any state information.
-            gameStatePropView.Update();
             UpdateTurnInfo();
         }
 
         public void OnGameStart(object sender, GameStartEventArgs e)
         {
             // TODO
-            gameStatePropView.Update();
             UpdateTurnInfo();
             InitTiles();
         }
@@ -571,10 +766,9 @@ namespace UnnamedStrategyGame.UI
             UpdateTurnInfo();
         }
 
-        public void OnTurnEnded(object sender, TurnEndedEventArgs e)
+        public void OnTurnChanged(object sender, TurnChangedEventArgs e)
         {
             // TODO Figure out if it's currently our turn and enable/disable controls as needed.
-            gameStatePropView.Update();
             UpdateTurnInfo();
         }
 
@@ -582,7 +776,6 @@ namespace UnnamedStrategyGame.UI
         {
             if (e.SyncID == Logic.LastSyncID)
             {
-                gameStatePropView.Update();
                 UpdateTurnInfo();
                 InitTiles();
             }
@@ -620,11 +813,6 @@ namespace UnnamedStrategyGame.UI
         private void Page_MouseUp(object sender, MouseButtonEventArgs e)
         {
             activeInput.Remove(new Settings.MouseInput(e.ChangedButton));
-        }
-
-        private void endTurnButton_Click(object sender, RoutedEventArgs e)
-        {
-            Logic.EndTurn(State.CurrentCommander.CommanderID);
         }
 
         private void Networked_UserSetByServer(object sender, NetworkedGameLogic.UserSetEventArgs e)
@@ -668,9 +856,10 @@ namespace UnnamedStrategyGame.UI
                 return;
 
             var unit = State.GetUnit(location);
+            var terrain = State.GetTerrain(location);
 
             var availableActions = GetAvailableActions(location);
-            if (SelectedUnit != null && availableActions.Count > 0)
+            if ((SelectedUnit != null || SelectedTerrain != null) && availableActions.Count > 0)
             {
                 canvasContextMenu.Items.Add(new MenuItem() { IsEnabled = false, Header = "Available Actions", FontWeight = FontWeights.Bold });
 
@@ -687,6 +876,16 @@ namespace UnnamedStrategyGame.UI
                     actionItem.Tag = action;
                     actionItem.PreviewMouseDown += CanvasContextMenu_ActionItem_MouseDown;
 
+
+                    var actionInfos = action.GetActionsInfo(State.CurrentCommander.CommanderID);
+
+                    if (actionInfos.Count == 1)
+                    {
+                        var actionInfo = actionInfos[0];
+                        actionItem.ToolTip = new ActionDetails() { Modifiers = actionInfo.Type.Modifiers(State, actionInfo.Context) };
+                        ToolTipService.SetShowDuration(actionItem, int.MaxValue);
+                    }
+
                     canvasContextMenu.Items.Add(actionItem);
                 }
             }
@@ -695,18 +894,35 @@ namespace UnnamedStrategyGame.UI
             {
                 if (canvasContextMenu.Items.Count > 0)
                     canvasContextMenu.Items.Add(new Separator());
-                var selectItem = new MenuItem() { Header = "Select Unit", Tag = location };
-                selectItem.PreviewMouseDown += CanvasContextMenu_SelectItem_MouseDown;
-                canvasContextMenu.Items.Add(selectItem);
+                var selectUnit = new MenuItem() { Header = "Select Unit", Tag = location };
+                selectUnit.PreviewMouseDown += CanvasContextMenu_SelectUnit_MouseDown;
+                canvasContextMenu.Items.Add(selectUnit);
             }
+
+            if(terrain != null && CanSelectTerrain(terrain))
+            {
+                if (canvasContextMenu.Items.Count > 0)
+                    canvasContextMenu.Items.Add(new Separator());
+                var selectTerrain = new MenuItem() { Header = "Select Terrain", Tag = location };
+                selectTerrain.PreviewMouseDown += CanvasContextMenu_SelectTerrain_MouseDown;
+                canvasContextMenu.Items.Add(selectTerrain);
+            }
+        }
+
+        private void CanvasContextMenu_SelectTerrain_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var terrain = State.GetTerrain((sender as MenuItem).Tag as Location);
+
+            if (terrain != null && CanSelectTerrain(terrain))
+                SelectedTerrain = terrain;
         }
 
         private void CanvasContextMenu_ActionItem_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            Logic.DoActions(((sender as MenuItem).Tag as ActionChain).GetActionsInfo(State.CurrentCommander.CommanderID, ActionType.ActionTriggers.None));
+            Logic.DoActions(((sender as MenuItem).Tag as ActionChain).GetActionsInfo(State.CurrentCommander.CommanderID));
         }
 
-        private void CanvasContextMenu_SelectItem_MouseDown(object sender, MouseButtonEventArgs e)
+        private void CanvasContextMenu_SelectUnit_MouseDown(object sender, MouseButtonEventArgs e)
         {
             var unit = State.GetUnit((sender as MenuItem).Tag as Location);
 

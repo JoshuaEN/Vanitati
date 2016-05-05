@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="UnnamedStrategyGame.Game.ActionType" Collapsed="true">
+    <Position X="6.25" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAIAAAAKAAAAhAAEAAAQABAAABCgAgAAEA=</HashCode>
+      <FileName>Game\ActionType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.ActionTypes.GameAction" Collapsed="true">
+    <Position X="2.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIAAAAgAACAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Game\ActionTypes\GameAction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.ActionTypes.CommanderAction" Collapsed="true">
+    <Position X="4.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIAAAAgAACAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Game\ActionTypes\CommanderAction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.ActionTypes.TileAction" Collapsed="true">
+    <Position X="6.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Game\ActionTypes\TileAction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.ActionTypes.UnitAction" Collapsed="true">
+    <Position X="7.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIAAAAgAACAAAQAAAAAAABAAAAAA=</HashCode>
+      <FileName>Game\ActionTypes\UnitAction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.ActionTypes.TerrainAction" Collapsed="true">
+    <Position X="5.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIAAAAgAACAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Game\ActionTypes\TerrainAction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.ActionTypes.ForUnits.UnitTargetCommanderAction" Collapsed="true">
+    <Position X="1.5" Y="5.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAAAAAAAAAAABAAAAAAAABAAAAAAAAAAEA=</HashCode>
+      <FileName>Game\ActionTypes\ForUnits\UnitTargetCommanderAction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.ActionTypes.ForUnits.UnitTargetGenericAction&lt;T&gt;" Collapsed="true">
+    <Position X="3.75" Y="5.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAAAAAAAAAAABAAAAAAAABAAABAAAAAAEA=</HashCode>
+      <FileName>Game\ActionTypes\ForUnits\UnitTargetGenericAction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.ActionTypes.ForUnits.UnitTargetOtherAction" Collapsed="true">
+    <Position X="6" Y="5.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAAAAAAAAAAABAAAAAAAABAAAAAAAAAAEA=</HashCode>
+      <FileName>Game\ActionTypes\ForUnits\UnitTargetOtherAction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.ActionTypes.ForUnits.UnitTargetTileAction" Collapsed="true">
+    <Position X="8.25" Y="5.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAIAAAAAAAAABAAAAAAAABAAAAAAAAAAEA=</HashCode>
+      <FileName>Game\ActionTypes\ForUnits\UnitTargetTileAction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.ActionTypes.ForUnits.Move" Collapsed="true">
+    <Position X="3" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAIAAAAAAAAAAAACAAEAABAQAAABAAAAEA=</HashCode>
+      <FileName>Game\ActionTypes\ForUnits\Move.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.ActionTypes.ForUnits.DigIn" Collapsed="true">
+    <Position X="6.5" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAIAACAAAAAAAAACAAAAABAQAAAAAAAAEA=</HashCode>
+      <FileName>Game\ActionTypes\ForUnits\DigIn.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.ActionTypes.ForUnits.Capture" Collapsed="true">
+    <Position X="4.75" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAIgAgAAAAAAAAACAAAAABAQAAAAAAAAEA=</HashCode>
+      <FileName>Game\ActionTypes\ForUnits\Capture.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.ActionTypes.ForUnits.AttackBase" Collapsed="true">
+    <Position X="8.5" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAJgAAAAgKAAEIIAICAACCCCUGQwhAAGAHAAAAAUQ=</HashCode>
+      <FileName>Game\ActionTypes\ForUnits\AttackBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.ActionTypes.ForUnits.AttackRifle" Collapsed="true">
+    <Position X="9.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAEAIAIAAAAAAAACAAgAQAAEAAAAAAA=</HashCode>
+      <FileName>Game\ActionTypes\ForUnits\AttackRifle.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.ActionTypes.ForUnits.AttackTankMainGun" Collapsed="true">
+    <Position X="7.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAEAIAIAAAAAAAQCAAgAQAAEAAAAAAQ=</HashCode>
+      <FileName>Game\ActionTypes\ForUnits\AttackTankMainGun.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

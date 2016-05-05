@@ -1,47 +1,56 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="UnnamedStrategyGame.Network.Server" Collapsed="true">
-    <Position X="2.5" Y="2.75" Width="1.5" />
+    <Position X="7.5" Y="4.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAEIAAAAQAECAEAQACAAAAAAAAAAgAAAICBABgAAIAA=</HashCode>
+      <HashCode>AAEIAAAAQAECAEAQACAAAAAAAAAAwAAAICBABgIAIAA=</HashCode>
       <FileName>Network\Server.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="UnnamedStrategyGame.Network.ServerClient" Collapsed="true">
-    <Position X="4.25" Y="2.75" Width="1.5" />
+    <Position X="5.5" Y="4.5" Width="1.5" />
+    <InheritanceLine Type="UnnamedStrategyGame.Network.Client" FixedFromPoint="true">
+      <Path>
+        <Point X="10.25" Y="5.062" />
+        <Point X="10.25" Y="5.566" />
+        <Point X="6.25" Y="5.566" />
+        <Point X="6.25" Y="5.191" />
+      </Path>
+    </InheritanceLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAEAAAAQAACAACAAAAEAAAAAEAAEIAAAAAAA=</HashCode>
+      <HashCode>AAABAAAIAECAAAQhACAACAAQAkAQQAAAAAAAAgAAAAA=</HashCode>
       <FileName>Network\ServerClient.cs</FileName>
     </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
   <Class Name="UnnamedStrategyGame.Network.Client" Collapsed="true">
-    <Position X="4.25" Y="1.5" Width="1.5" />
+    <Position X="9.5" Y="4.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>gAQAAEIAQAAAAEAAAEAAACAAAAAAAAAAQABAAgGAAgA=</HashCode>
+      <HashCode>gAQAAEIAQAAAAEAAAEAAACAgAAAAQAAAQABAAgGAAgA=</HashCode>
       <FileName>Network\Client.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="UnnamedStrategyGame.Game.NetworkedGameLogic" Collapsed="true">
-    <Position X="8.5" Y="2.75" Width="1.75" />
+    <Position X="9.5" Y="2.75" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AEAAAAAAAEEAAAQAADAAQAAAAFAoAAAECAkIAQAAMAQ=</HashCode>
+      <HashCode>AAEBACIAQFEAEESlACAAIAAwA1A4QMAgCCiABiAAIkw=</HashCode>
       <FileName>Game\NetworkedGameLogic.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="UnnamedStrategyGame.Game.LocalGameLogic" Collapsed="true">
-    <Position X="6" Y="2.75" Width="1.5" />
+    <Position X="5.5" Y="2.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAgAAAAAAAAABABAAAAAAAIAAAAAAgAAAAAAAA=</HashCode>
+      <HashCode>AAGAACQEAAAAAACEAAEBKACgAAAIQFAgAAAEBAAAAgg=</HashCode>
       <FileName>Game\LocalGameLogic.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="UnnamedStrategyGame.Game.GameLogic" Collapsed="true">
-    <Position X="7.25" Y="1.5" Width="1.5" />
+    <Position X="7.5" Y="2.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAABAACAAAAAAIAAAAAAgABAAAAAA=</HashCode>
+      <HashCode>IAEAACAAAAAAAACEAAAAAAAgAAAIAEAgAAAABAAAAgA=</HashCode>
       <FileName>Game\GameLogic.cs</FileName>
     </TypeIdentifier>
   </Class>

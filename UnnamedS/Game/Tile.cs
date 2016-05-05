@@ -13,10 +13,7 @@ namespace UnnamedStrategyGame.Game
         public Terrain Terrain { get; }
         public Location Location
         {
-            get
-            {
-                return Terrain.Location;
-            }
+            get { return Terrain.Location; }
         }
 
         public Tile(Terrain terrain, Unit unit)

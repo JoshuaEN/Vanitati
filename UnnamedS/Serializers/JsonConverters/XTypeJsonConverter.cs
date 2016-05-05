@@ -25,16 +25,19 @@ namespace UnnamedStrategyGame.Serializers.JsonConverters
 
         public static object GetInstanceFromTypeString(Type objectType, string key)
         {
-            if (objectType == typeof(UnitType))
+
+            if (typeof(UnitType).IsAssignableFrom(objectType))
                 return UnitType.TYPES[key];
-            else if (objectType == typeof(TerrainType))
+            else if (typeof(TerrainType).IsAssignableFrom(objectType))
                 return TerrainType.TYPES[key];
-            else if (objectType == typeof(MovementType))
+            else if (typeof(MovementType).IsAssignableFrom(objectType))
                 return MovementType.TYPES[key];
-            else if (objectType == typeof(ActionType))
+            else if (typeof(ActionType).IsAssignableFrom(objectType))
                 return ActionType.TYPES[key];
-            else if (objectType == typeof(SupplyType))
+            else if (typeof(SupplyType).IsAssignableFrom(objectType))
                 return SupplyType.TYPES[key];
+            else if (typeof(CommanderType).IsAssignableFrom(objectType))
+                return CommanderType.TYPES[key];
             else
                 throw new InvalidOperationException(string.Format("Unsupported or unknown type of {0}", objectType.Name));
         }

@@ -5,38 +5,61 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnnamedStrategyGame.Game.Action;
 using UnnamedStrategyGame.Game.Event;
 using UnnamedStrategyGame.Game.Properties;
 
 namespace UnnamedStrategyGame.Game
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public sealed class Unit : IPropertyContainer
     {
-        public int UnitID { get; } = -1;
-        public UnitType UnitType { get; set; }
-        public Location Location { get; set; }
-        public IDictionary<SupplyType, int> Supplies { get; set; }
-        public int CommanderID { get; set; } = -1;
-        public int Movement { get; set; } = -1;
-        public int Attacks { get; set; } = -1;
-        public int Health { get; set; } = -1;
+        [Newtonsoft.Json.JsonIgnore]
+        private int _unitID = -1;
+        public int UnitID
+        {
+            get { return _unitID; }
+            set
+            {
+                Contract.Requires<ArgumentException>(value >= 0);
+                if(_unitID != -1)
+                    throw new NotSupportedException("Unit ID cannot be changed after being set");
+
+                _unitID = value;
+            }
+        }
+        public UnitType UnitType { get; private set; }
+        public Location Location { get; private set; }
+        public IDictionary<SupplyType, int> Supplies { get; private set; }
+        public int CommanderID { get; private set; } = -1;
+        public int Movement { get; private set; } = -1;
+        public int Actions { get; private set; } = -1;
+        public int Health { get; private set; } = -1;
+        public double Armor { get; private set; } = -1;
+        public ActionInfo RepeatedAction { get; private set; }
 
         [Newtonsoft.Json.JsonConstructor]
-        public Unit(int unitID, UnitType unitType, Location location, int commanderID)
+        public Unit(int unitID, UnitType unitType, Location location, int commanderID, IDictionary<SupplyType, int> supplies = null, int? health = null, double? armor = null, ActionInfo repeatedAction = null, int movement = 0, int actions = 0)
         {
             Contract.Requires<ArgumentNullException>(unitType != null);
             Contract.Requires<ArgumentNullException>(location != null);
             Contract.Requires<ArgumentException>(unitID > -1);
             Contract.Requires<ArgumentException>(commanderID > -1);
+            Contract.Requires<ArgumentException>(movement > -1);
+            Contract.Requires<ArgumentException>(actions > -1);
 
             UnitID = unitID;
             UnitType = unitType;
             Location = location;
-            Supplies = UnitType.SupplyLimits.ToDictionary(kp => kp.Key, kp => kp.Value);
+            Supplies = supplies ?? UnitType.SupplyLimits.ToDictionary(kp => kp.Key, kp => kp.Value);
             CommanderID = commanderID;
-            Movement = UnitType.MaxMovement;
-            Attacks = UnitType.MaxAttacks;
-            Health = UnitType.MaxHealth;
+            Health = health ?? UnitType.MaxHealth;
+            Armor = armor ?? UnitType.MaxArmor;
+            RepeatedAction = repeatedAction ?? ActionTypes.ForUnits.NullUnitAction.ActionInfoInstance;
+
+            // Per a turn attributes
+            Movement = movement;
+            Actions = actions;
         }
 
         public Unit(IDictionary<string, object> values)
@@ -47,13 +70,19 @@ namespace UnnamedStrategyGame.Game
         public IDictionary<Location, ActionType> GetAvailableMovement(IReadOnlyBattleGameState state)
         {
             Contract.Requires<ArgumentNullException>(null != state);
-
             var sourceTile = state.GetTile(Location);
+
+            return GetAvailableMovement(state, new UnitTargetTileContext(state, new ActionContext(state.CurrentCommander.CommanderID, ActionTypes.UnitAction.ActionTriggers.ManuallyByUser, new UnitContext(sourceTile.Location), new UnitContext(sourceTile.Location))), sourceTile);
+        }
+
+        public IDictionary<Location, ActionType> GetAvailableMovement(IReadOnlyBattleGameState state, UnitTargetTileContext context, Tile sourceTile)
+        { 
+            
             var dic = new Dictionary<Location, ActionType>();
 
-            foreach(var action in UnitType.Actions.Where(a => a.CausesMovement && a.AvailableDuringTurn))
+            foreach(var action in UnitType.Actions.Where(a => a.CausesMovement && a.CanUserTrigger))
             {
-                foreach(var location in (action as ActionTypes.ICausesMovement).GetRemainingMovement(state, new Game.Action.ActionContext(CommanderID, ActionType.ActionTriggers.None), sourceTile).Keys)
+                foreach(var location in (action as ActionTypes.ForUnits.ICausesMovement).GetRemainingMovement(state, context, sourceTile).Keys)
                 {
                     if (dic.ContainsKey(location))
                         continue;
@@ -89,8 +118,10 @@ namespace UnnamedStrategyGame.Game
             Contract.Invariant(Supplies != null);
             Contract.Invariant(CommanderID > -1);
             Contract.Invariant(Movement > -1);
-            Contract.Invariant(Attacks > -1);
+            Contract.Invariant(Actions > -1);
             Contract.Invariant(Health > -1);
+            Contract.Invariant(Armor >= 0);
+            Contract.Invariant(RepeatedAction != null);
         }
 
     }

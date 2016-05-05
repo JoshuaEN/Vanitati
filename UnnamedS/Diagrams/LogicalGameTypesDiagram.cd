@@ -1,0 +1,158 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="UnnamedStrategyGame.Game.BaseType" Collapsed="true">
+    <Position X="6" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQEAAAAAAAAAAACQAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Game\BaseType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.ActionType" Collapsed="true">
+    <Position X="1" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAIAAAAKAAAAhAAEAAAQABAAABCgAgAAEA=</HashCode>
+      <FileName>Game\ActionType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.UnitType" Collapsed="true">
+    <Position X="9" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACABIAAACAAAgAIAAAAAAAAAQAgVAAAAgAAAIAA=</HashCode>
+      <FileName>Game\UnitType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.TerrainType" Collapsed="true">
+    <Position X="11" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAEAQAJAEICAAEAAQAAABAAAAAQgAACAAAgAAAAAA=</HashCode>
+      <FileName>Game\TerrainType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.CommanderType" Collapsed="true">
+    <Position X="3" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAAAAAAEAAAAAAAAAAAAQAAAAAAAgAAAAAA=</HashCode>
+      <FileName>Game\CommanderType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.MovementType" Collapsed="true">
+    <Position X="5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAACABAAAAAAAAAgAAAAAAAAAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>Game\MovementType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.SupplyType" Collapsed="true">
+    <Position X="7" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>Game\SupplyType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.UnitTypes.Infantry" Collapsed="true">
+    <Position X="9" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Game\UnitTypes\Infantry.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.UnitTypes.Tank" Collapsed="true">
+    <Position X="9" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Game\UnitTypes\Tank.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.UnitTypes.Artillery" Collapsed="true">
+    <Position X="9" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Game\UnitTypes\Artillery.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.TerrainTypes.Land" Collapsed="true">
+    <Position X="11" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Game\TerrainTypes\Land.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.TerrainTypes.Hill" Collapsed="true">
+    <Position X="11" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQABAAAAAAAAAAAAABAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Game\TerrainTypes\Hill.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.TerrainTypes.Plain" Collapsed="true">
+    <Position X="11" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAAAAAAAAAAABAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Game\TerrainTypes\Plain.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.TerrainTypes.LandStructure" Collapsed="true">
+    <Position X="11" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAQABAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Game\TerrainTypes\LandStructure.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.TerrainTypes.Factory" Collapsed="true">
+    <Position X="11" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Game\TerrainTypes\Factory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.SupplyTypes.Rations" Collapsed="true">
+    <Position X="7" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Game\SupplyTypes\Rations.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.MovementTypes.Boots" Collapsed="true">
+    <Position X="5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACABAAAAAAAAAgAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Game\MovementTypes\Boots.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.MovementTypes.Treads" Collapsed="true">
+    <Position X="5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACABAAAAAAAAAgAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Game\MovementTypes\Treads.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.SupplyTypes.Bullets" Collapsed="true">
+    <Position X="7" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Game\SupplyTypes\Bullets.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.SupplyTypes.Shells" Collapsed="true">
+    <Position X="7" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Game\SupplyTypes\Shells.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.MovementTypes.Wheels" Collapsed="true">
+    <Position X="5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACABAAAAAAAAAgAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Game\MovementTypes\Wheels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.CommanderTypes.BasicCommander" Collapsed="true">
+    <Position X="3" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Game\CommanderTypes\BasicCommander.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

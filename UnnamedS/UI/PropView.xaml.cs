@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using UnnamedStrategyGame.Game;
 
 namespace UnnamedStrategyGame.UI
 {
@@ -48,9 +49,10 @@ namespace UnnamedStrategyGame.UI
             {
                 propertyGrid.RowDefinitions.Add(new RowDefinition());
 
-                var label = new Label();
-                label.Content = v.Key;
-                label.HorizontalContentAlignment = HorizontalAlignment.Right;
+                var label = new TextBlock();
+                label.Text = Globals.GetResource("state_" + v.Key);
+                label.HorizontalAlignment = HorizontalAlignment.Right;
+                label.Margin = new Thickness(5);
                 Grid.SetColumn(label, 0);
                 Grid.SetRow(label, propertyGrid.RowDefinitions.Count - 1);
                 propertyGrid.Children.Add(label);
@@ -62,27 +64,40 @@ namespace UnnamedStrategyGame.UI
                     {
                         foreach (System.Collections.DictionaryEntry kp in (v.Value as System.Collections.IDictionary))
                         {
-                            propertyGrid.Children.Add(GetLabelFor(string.Format("{0},{1}", kp.Key, kp.Value)));
+                            propertyGrid.Children.Add(GetLabelFor(string.Format("{0}: {1}", Globals.GetResource(kp.Key?.ToString()), Globals.GetResource(kp.Value?.ToString()))));
                             propertyGrid.RowDefinitions.Add(new RowDefinition());
                         }
                     }
+                    else if(v.Value is System.Collections.IEnumerable)
+                    {
+                        foreach(var val in (v.Value as System.Collections.IEnumerable))
+                        {
+                            propertyGrid.Children.Add(GetLabelFor(Globals.GetResource(val?.ToString())));
+                            propertyGrid.RowDefinitions.Add(new RowDefinition());
+                        }
+                    }
+                    else if(v.Value is ActionInfo)
+                    {
+                        propertyGrid.Children.Add(GetLabelFor(Globals.GetResource((v.Value as ActionInfo).Type.Key)));
+                    }
                     else
                     {
-                        propertyGrid.Children.Add(GetLabelFor(v.Value));
+                        propertyGrid.Children.Add(GetLabelFor(Globals.GetResource(v.Value?.ToString())));
                     }
                 }
                 else
                 {
-                    propertyGrid.Children.Add(GetLabelFor(v.Value));
+                    propertyGrid.Children.Add(GetLabelFor(Globals.GetResource(v.Value?.ToString())));
                 }
             }
         }
 
-        private Label GetLabelFor(object content)
+        private TextBlock GetLabelFor(object content)
         {
-            var label = new Label();
-            label.HorizontalContentAlignment = HorizontalAlignment.Left;
-            label.Content = content;
+            var label = new TextBlock();
+            label.HorizontalAlignment = HorizontalAlignment.Left;
+            label.Text = content?.ToString();
+            label.Margin = new Thickness(5);
             Grid.SetColumn(label, 1);
             Grid.SetRow(label, propertyGrid.RowDefinitions.Count - 1);
             return label;

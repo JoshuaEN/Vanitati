@@ -7,6 +7,7 @@ using UnnamedStrategyGame.Game;
 
 namespace UnnamedStrategyGame.Network.MessageWrappers
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public class AssignUserToCommanderCallWrapper : CallMessageWrapper
     {
         public int? UserID { get; }

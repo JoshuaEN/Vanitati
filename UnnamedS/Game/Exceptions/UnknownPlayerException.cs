@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace UnnamedStrategyGame.Game.Exceptions
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public class UnknownPlayerException : GameException
     {
         public UnknownPlayerException() : base() { }

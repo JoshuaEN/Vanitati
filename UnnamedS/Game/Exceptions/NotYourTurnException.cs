@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace UnnamedStrategyGame.Game.Exceptions
 {
-    class NotYourTurnException : GameException
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    public class NotYourTurnException : GameException
     {
         public NotYourTurnException() : base() { }
         public NotYourTurnException(string message) : base(message) { }

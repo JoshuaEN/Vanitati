@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace UnnamedStrategyGame.Game.Exceptions
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public class StateMismatchException : GameException
     {
         public StateMismatchException() : base() { }

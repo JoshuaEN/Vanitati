@@ -1,0 +1,225 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="UnnamedStrategyGame.Game.GameLogic" Collapsed="true">
+    <Position X="5.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAEAAAAAAAAAAACEAAAAAAAgAAAIAEAgAAAABAAAAgA=</HashCode>
+      <FileName>Game\GameLogic.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.BattleGameState" Collapsed="true">
+    <Position X="9.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AASIiJAAgAAAABDRAUARgQAgASAAAQAANEIGRiAggEI=</HashCode>
+      <FileName>Game\BattleGameState.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.LocalGameLogic" Collapsed="true">
+    <Position X="7.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAGAAAQEAAAAAACEAAEBKAAgAAAIQFAgAAAEBAAAAgg=</HashCode>
+      <FileName>Game\LocalGameLogic.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.NetworkedGameLogic" Collapsed="true">
+    <Position X="1.25" Y="1.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAEBAAIAQFEAEESlACAAIAAwA1A4QMAgCCiABiAAIkw=</HashCode>
+      <FileName>Game\NetworkedGameLogic.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.UnitType" Collapsed="true">
+    <Position X="11" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACABIAAACAAAgAIAAAAAAAAAQAABAAAAgAAAAAA=</HashCode>
+      <FileName>Game\UnitType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.Unit" Collapsed="true">
+    <Position X="9.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAACIAAIAAAACAABAIAAAAAACAARAAAAAAEAAAAAAE=</HashCode>
+      <FileName>Game\Unit.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.Terrain" Collapsed="true">
+    <Position X="9.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIACIAACAAAAAAEAAIAAEAAACAAQAAAAAAAAAAAAAE=</HashCode>
+      <FileName>Game\Terrain.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.CommanderType" Collapsed="true">
+    <Position X="11" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAAAAAAEAAAAAAAAAAAAQAAAAAAAgAAAAAA=</HashCode>
+      <FileName>Game\CommanderType.cs</FileName>
+      <NewMemberFileName>Game\TerrainType.cs</NewMemberFileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.Commander" Collapsed="true">
+    <Position X="9.25" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAACIAAAAAAAAAEAAAAAAAAACAAAAAAAAACAAAAACE=</HashCode>
+      <FileName>Game\Commander.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.TerrainType" Collapsed="true">
+    <Position X="11" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAIAAAAAAEAAAAAAAAAAAAQAAAEAAAgAAAAAA=</HashCode>
+      <FileName>Game\TerrainType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.UI.BattleView" Collapsed="true">
+    <Position X="5.25" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>iJAMoAQAAMKKEEQxtSIAI6Aag0ASTDiGEjCKJAAKBCE=</HashCode>
+      <FileName>UI\BattleView.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="UnnamedStrategyGame.Network.Client" Collapsed="true">
+    <Position X="1.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAQAAEIAQAAAAEAAAEAAACAgAAAAQAAAQABAAgGAAgA=</HashCode>
+      <FileName>Network\Client.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="UnnamedStrategyGame.Network.ServerClient" Collapsed="true">
+    <Position X="6.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAIAECAAAQhACAACAAQAkAQQAAAAAAAAgAAAAA=</HashCode>
+      <FileName>Network\ServerClient.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="UnnamedStrategyGame.Network.Server" Collapsed="true">
+    <Position X="3.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEIAAAAQAECAEAQACAAAAAAAAAAwAAAICBABgIAIAA=</HashCode>
+      <FileName>Network\Server.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.User" Collapsed="true">
+    <Position X="9.25" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAwAAAAQAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Game\User.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.ActionType" Collapsed="true">
+    <Position X="18.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAIAAAAKAAAAhAAEAAAQABAAABAgAgAAEA=</HashCode>
+      <FileName>Game\ActionType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.ActionTypes.CommanderAction" Collapsed="true">
+    <Position X="18.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABAAIAAAAgAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Game\ActionTypes\CommanderAction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.ActionTypes.UnitAction" Collapsed="true">
+    <Position X="18.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABAAIAAAAgAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Game\ActionTypes\UnitAction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.ActionTypes.TerrainAction" Collapsed="true">
+    <Position X="18.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABAAIAAAAgAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Game\ActionTypes\TerrainAction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.ActionTypes.ForUnits.Move" Collapsed="true">
+    <Position X="20.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAIABAAAAAAAAAAAAAEAABAQAAABAAAAEA=</HashCode>
+      <FileName>Game\ActionTypes\ForUnits\Move.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.ActionTypes.ForUnits.AttackRifle" Collapsed="true">
+    <Position X="22.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAEA=</HashCode>
+      <FileName>Game\ActionTypes\ForUnits\AttackRifle.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.ActionTypes.ForCommanders.EndTurn" Collapsed="true">
+    <Position X="20.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABAAAAAAAAAAAAAAAABAQAAAAAAAAEA=</HashCode>
+      <FileName>Game\ActionTypes\ForCommanders\EndTurn.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.ActionTypes.ForCommanders.ProvideCommanderEarnings" Collapsed="true">
+    <Position X="22.25" Y="6" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABAAAAAAAAAAAAAAAABAQAAAAAAAAEA=</HashCode>
+      <FileName>Game\ActionTypes\ForCommanders\ProvideCommanderEarnings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.ActionTypes.ForTerrain.BuildLandUnit" Collapsed="true">
+    <Position X="20.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Game\ActionTypes\ForTerrain\BuildLandUnit.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.StateChange" Collapsed="true">
+    <Position X="20.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Game\StateChanges\StateChange.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.UnitTypes.Infantry" Collapsed="true">
+    <Position X="12.75" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Game\UnitTypes\Infantry.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.TerrainTypes.City" Collapsed="true">
+    <Position X="12.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Game\TerrainTypes\City.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.TerrainTypes.Factory" Collapsed="true">
+    <Position X="14.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Game\TerrainTypes\Factory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.TerrainTypes.Plain" Collapsed="true">
+    <Position X="16.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Game\TerrainTypes\Plain.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnnamedStrategyGame.Game.CommanderTypes.BasicCommander" Collapsed="true">
+    <Position X="12.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Game\CommanderTypes\BasicCommander.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

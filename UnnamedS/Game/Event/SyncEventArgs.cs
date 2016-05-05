@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace UnnamedStrategyGame.Game.Event
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public class SyncEventArgs : EventArgs
     {
         public int SyncID { get; }
@@ -13,8 +15,16 @@ namespace UnnamedStrategyGame.Game.Event
 
         public SyncEventArgs(int syncID, BattleGameState.Fields fields)
         {
+            Contract.Requires<ArgumentNullException>(null != fields);
+
             SyncID = syncID;
             Fields = fields;
+        }
+
+        [ContractInvariantMethod]
+        private void Invariants()
+        {
+            Contract.Invariant(null != Fields);
         }
     }
 }

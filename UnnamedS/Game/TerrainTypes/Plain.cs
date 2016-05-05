@@ -6,9 +6,12 @@ using System.Threading.Tasks;
 
 namespace UnnamedStrategyGame.Game.TerrainTypes
 {
-    public sealed class Plain : TerrainType
+    public sealed class Plain : Land
     {
-        private Plain() : base("plain", new Dictionary<string, object>()) { }
+        public override TerrainHeight Height { get { return TerrainHeight.Normal; } }
+        public override TerrainDifficulty Difficultly { get { return TerrainDifficulty.Natural; } }
+
+        private Plain() : base("plain") { }
         public static Plain Instance { get; } = new Plain();
     }
 }

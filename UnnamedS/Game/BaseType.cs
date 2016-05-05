@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -7,12 +8,15 @@ using System.Threading.Tasks;
 
 namespace UnnamedStrategyGame.Game
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public abstract class BaseType
     {
         public string Key { get; }
 
         protected BaseType(string key)
         {
+            Contract.Requires<ArgumentNullException>(null != key);
+
             Key = key;
         }
 
@@ -23,6 +27,7 @@ namespace UnnamedStrategyGame.Game
         /// <typeparam name="T">The Base Type of the Types to generate a list of.</typeparam>
         /// <param name="nameSpace">The namespace to search.</param>
         /// <returns>Dictionary listing of the Types.</returns>
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
         public static Dictionary<string, T> BuildTypeListing<T>(string nameSpace) where T : BaseType
         {
             var listing = new Dictionary<string, T>();
@@ -33,10 +38,10 @@ namespace UnnamedStrategyGame.Game
 
             foreach (var t in types)
             {
-                if (t.IsSealed == false)
-                {
-                    throw new Exceptions.InvalidDefinitionException(String.Format("Game Type {0} must be declared as sealed", t));
-                }
+                //if (t.IsSealed == false)
+                //{
+                //    throw new Exceptions.InvalidDefinitionException(String.Format("Game Type {0} must be declared as sealed", t));
+                //}
 
                 var prop = t.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static);
 
@@ -55,6 +60,12 @@ namespace UnnamedStrategyGame.Game
         public override string ToString()
         {
             return Key;
+        }
+
+        [ContractInvariantMethod]
+        private void Invariants()
+        {
+            Contract.Invariant(null != Key);
         }
     }
 }

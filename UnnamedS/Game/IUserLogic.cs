@@ -1,6 +1,4 @@
 ﻿
-using UnnamedStrategyGame.Game.Event;
-
 namespace UnnamedStrategyGame.Game
 {
     /// <summary>
@@ -47,7 +45,7 @@ namespace UnnamedStrategyGame.Game
 
         void OnGameStart(object sender, Event.GameStartEventArgs e);
 
-        void OnTurnEnded(object sender, Event.TurnEndedEventArgs args);
-        void OnSync(object sender, SyncEventArgs args);
+        void OnTurnChanged(object sender, Event.TurnChangedEventArgs args);
+        void OnSync(object sender, Event.SyncEventArgs args);
     }
 }

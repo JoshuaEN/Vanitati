@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace UnnamedStrategyGame.Game.Action
 {
+    /// <summary>
+    /// Represents a sequence of actions
+    /// </summary>
     public class ActionChain
     {
         private List<Link> Actions { get; } = new List<Link>();
@@ -22,19 +25,28 @@ namespace UnnamedStrategyGame.Game.Action
         {
             Contract.Requires<ArgumentNullException>(null != actions);
 
-            Actions = actions;
+            foreach(var link in actions)
+            {
+                AddAction(link);
+            }
         }
 
         public ActionChain(params Link[] actions)
         {
-            Actions = actions.ToList();
+            Contract.Requires<ArgumentNullException>(null != actions);
+
+            foreach(var link in actions)
+            {
+                AddAction(link);
+            }
         }
 
-        public void AddAction(ActionType type, Location source, Location target)
+        public void AddAction(ActionType type, Context source, Context target)
         {
             Contract.Requires<ArgumentNullException>(null != type);
             Contract.Requires<ArgumentNullException>(null != source);
             Contract.Requires<ArgumentNullException>(null != target);
+            Contract.Requires<ArgumentException>(type.CanUserTrigger == true);
 
             Actions.Add(new Link(type, source, target));
         }
@@ -42,34 +54,40 @@ namespace UnnamedStrategyGame.Game.Action
         public void AddAction(Link link)
         {
             Contract.Requires<ArgumentNullException>(null != link);
+            Contract.Ensures(Actions.Contains(link));
 
             Actions.Add(link);
         }
 
-        public List<ActionInfo> GetActionsInfo(int commanderID, ActionType.ActionTriggers trigger)
+        public List<ActionInfo> GetActionsInfo(int commanderID)
         {
-            var list = new List<ActionInfo>(Actions.Count);
+            Contract.Ensures(Contract.Result<List<ActionInfo>>() != null);
+            Contract.Ensures(Contract.Result<List<ActionInfo>>().Count == Actions.Count);
 
-            foreach(var link in Actions)
-            {
-                list.Add(new ActionInfo(commanderID, link.Action, link.Source, link.Target, trigger));
-            }
-
-            return list;
+            return Actions.Select(link => new ActionInfo(link.Action, new ActionContext(commanderID, ActionContext.TriggerAutoDetermineMode.ManuallyByUser, link.Source, link.Target))).ToList();
         }
 
         public List<ActionType> GetActions()
         {
+            Contract.Ensures(Contract.Result<List<ActionType>>() != null);
+            Contract.Ensures(Contract.Result<List<ActionType>>().Count == Actions.Count);
+
             return Actions.Select(a => a.Action).ToList();
+        }
+
+        [ContractInvariantMethod]
+        private void Invariants()
+        {
+            Contract.Invariant(null != Actions);
         }
 
         public class Link
         {
             public ActionType Action { get; }
-            public Location Source { get; }
-            public Location Target { get; }
+            public Context Source { get; }
+            public Context Target { get; }
 
-            public Link(ActionType action, Location source, Location target)
+            public Link(ActionType action, Context source, Context target)
             {
                 Contract.Requires<ArgumentNullException>(null != action);
                 Contract.Requires<ArgumentNullException>(null != source);
@@ -78,6 +96,14 @@ namespace UnnamedStrategyGame.Game.Action
                 Action = action;
                 Source = source;
                 Target = target;
+            }
+
+            [ContractInvariantMethod]
+            private void Invariants()
+            {
+                Contract.Invariant(null != Action);
+                Contract.Invariant(null != Source);
+                Contract.Invariant(null != Target);
             }
         }
     }

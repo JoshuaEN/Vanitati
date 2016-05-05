@@ -46,7 +46,7 @@
     
     mimetype: application/x-microsoft.net.object.binary.base64
     value   : The object must be serialized with 
-            : System.Serialization.Formatters.Binary.BinaryFormatter
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
             : and then encoded with base64 encoding.
     
     mimetype: application/x-microsoft.net.object.soap.base64
@@ -60,6 +60,7 @@
             : and then encoded with base64 encoding.
     -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
@@ -68,9 +69,10 @@
               <xsd:sequence>
                 <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="name" use="required" type="xsd:string" />
               <xsd:attribute name="type" type="xsd:string" />
               <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
@@ -85,9 +87,10 @@
                 <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
                 <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
               <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
               <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
@@ -109,9 +112,285 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="action_commander_end_turn" xml:space="preserve">
+    <value>End Turn</value>
+  </data>
+  <data name="action_modifier_attacking_unit_actual_accuracy" xml:space="preserve">
+    <value>{0:0%;-0%} Attacker's Overall Accuracy</value>
+  </data>
+  <data name="action_modifier_attacking_unit_armor_penetration" xml:space="preserve">
+    <value>Attacker's Armor Penetration ({0})</value>
+  </data>
+  <data name="action_modifier_attacking_unit_base_damage" xml:space="preserve">
+    <value>Base Damage: {0}</value>
+  </data>
+  <data name="action_modifier_attack_no_damage_from_armor" xml:space="preserve">
+    <value>Defending unit's armor of {1} exceeds armor pentration of {0}.</value>
+  </data>
+  <data name="action_modifier_base_accuracy" xml:space="preserve">
+    <value>{0:+0%;-0%} from Attacker's Base Accuracy</value>
+  </data>
+  <data name="action_modifier_base_unit_armor" xml:space="preserve">
+    <value>Defender's Armor ({0})</value>
+  </data>
+  <data name="action_modifier_base_unit_concealment" xml:space="preserve">
+    <value>{0:+0%;-0%} from Defender's Base Concealment</value>
+  </data>
+  <data name="action_modifier_defending_unit_armor_effectiveness" xml:space="preserve">
+    <value>Defender's Effective Armor: {0}</value>
+  </data>
+  <data name="action_modifier_dig_in_concealment_bonus" xml:space="preserve">
+    <value>{0:+0%;-0%} from Defender's Dig In Concealment Bonus</value>
+  </data>
+  <data name="action_modifier_operator_divide" xml:space="preserve">
+    <value>÷</value>
+  </data>
+  <data name="action_modifier_operator_left_parenthese" xml:space="preserve">
+    <value>(</value>
+  </data>
+  <data name="action_modifier_operator_minus" xml:space="preserve">
+    <value>-</value>
+  </data>
+  <data name="action_modifier_operator_multiply" xml:space="preserve">
+    <value>x</value>
+  </data>
+  <data name="action_modifier_operator_plus" xml:space="preserve">
+    <value>+</value>
+  </data>
+  <data name="action_modifier_operator_right_parenthese" xml:space="preserve">
+    <value>)</value>
+  </data>
+  <data name="action_modifier_potential_damage" xml:space="preserve">
+    <value>Potential Damage: {0}</value>
+  </data>
+  <data name="action_modifier_terrain_accuracy_modifier" xml:space="preserve">
+    <value>{0:+0%;-0%} from Attacker's Terrain Modifier</value>
+  </data>
+  <data name="action_modifier_terrain_concealment_modifier" xml:space="preserve">
+    <value>{0:+0%;-0%} from Defender's Terrain Concealment Modifier</value>
+  </data>
+  <data name="action_modifier_unit_damage" xml:space="preserve">
+    <value>Total Damage: {0}</value>
+  </data>
+  <data name="action_terrain_build_land_unit" xml:space="preserve">
+    <value>Build</value>
+  </data>
+  <data name="action_unit_attack_anti_tank_rocket" xml:space="preserve">
+    <value>Attack w/ AT Rocket</value>
+  </data>
+  <data name="action_unit_attack_artillery_barrage" xml:space="preserve">
+    <value>Attack w/ Artillery Barrage</value>
+  </data>
+  <data name="action_unit_attack_heavy_machine_gun" xml:space="preserve">
+    <value>Attack w/ HMG</value>
+  </data>
+  <data name="action_unit_attack_light_machine_gun" xml:space="preserve">
+    <value>Attack w/ LMG</value>
+  </data>
+  <data name="action_unit_attack_rifle" xml:space="preserve">
+    <value>Attack w/ Rifles</value>
+  </data>
+  <data name="action_unit_attack_tank_main_gun" xml:space="preserve">
+    <value>Attack w/ Tank Main Gun</value>
+  </data>
+  <data name="action_unit_capture" xml:space="preserve">
+    <value>Capture</value>
+  </data>
+  <data name="action_unit_clear_repeated_action_automatically" xml:space="preserve">
+    <value>Auto-Clear Repeat Action</value>
+  </data>
+  <data name="action_unit_clear_repeated_action_manually" xml:space="preserve">
+    <value>Clear Repeat Action</value>
+  </data>
+  <data name="action_unit_dig_in" xml:space="preserve">
+    <value>Dig In</value>
+  </data>
+  <data name="action_unit_null_unit_action" xml:space="preserve">
+    <value>No Action</value>
+  </data>
+  <data name="movement_boots" xml:space="preserve">
+    <value>Boots</value>
+  </data>
+  <data name="movement_treads" xml:space="preserve">
+    <value>Treads</value>
+  </data>
+  <data name="movement_wheels" xml:space="preserve">
+    <value>Wheels</value>
+  </data>
+  <data name="state_Actions" xml:space="preserve">
+    <value>Remaining Actions</value>
+  </data>
+  <data name="state_Armor" xml:space="preserve">
+    <value>Armor</value>
+  </data>
+  <data name="state_CaptureProgress" xml:space="preserve">
+    <value>Capture Progress</value>
+  </data>
+  <data name="state_CommanderID" xml:space="preserve">
+    <value>Commander ID</value>
+  </data>
+  <data name="state_Credits" xml:space="preserve">
+    <value>Credits</value>
+  </data>
+  <data name="state_DigIn" xml:space="preserve">
+    <value>Dig In</value>
+  </data>
+  <data name="state_Health" xml:space="preserve">
+    <value>Health</value>
+  </data>
+  <data name="state_IsOwned" xml:space="preserve">
+    <value>Is Owned</value>
+  </data>
+  <data name="state_Location" xml:space="preserve">
+    <value>Location</value>
+  </data>
+  <data name="state_Movement" xml:space="preserve">
+    <value>Movement</value>
+  </data>
+  <data name="state_RepeatedAction" xml:space="preserve">
+    <value>Repeating Action</value>
+  </data>
+  <data name="state_Supplies" xml:space="preserve">
+    <value>Supplies</value>
+  </data>
+  <data name="state_TerrainType" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="state_UnitID" xml:space="preserve">
+    <value>Unit ID</value>
+  </data>
+  <data name="state_UnitType" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="supply_bullets" xml:space="preserve">
+    <value>Bullets</value>
+  </data>
+  <data name="supply_diesel" xml:space="preserve">
+    <value>Diesel</value>
+  </data>
+  <data name="supply_rations" xml:space="preserve">
+    <value>Rations</value>
+  </data>
+  <data name="supply_rockets" xml:space="preserve">
+    <value>Rockets</value>
+  </data>
+  <data name="supply_shells" xml:space="preserve">
+    <value>Shells</value>
+  </data>
+  <data name="terrain_city" xml:space="preserve">
+    <value>City</value>
+  </data>
+  <data name="terrain_factory" xml:space="preserve">
+    <value>Factory</value>
+  </data>
+  <data name="terrain_hill" xml:space="preserve">
+    <value>Hill</value>
+  </data>
+  <data name="terrain_mountain" xml:space="preserve">
+    <value>Mt.</value>
+  </data>
+  <data name="terrain_plain" xml:space="preserve">
+    <value>Plain</value>
+  </data>
+  <data name="unit_anti_tank_infantry" xml:space="preserve">
+    <value>AT Infantry</value>
+  </data>
+  <data name="unit_artillery" xml:space="preserve">
+    <value>Artillery</value>
+  </data>
+  <data name="unit_infantry" xml:space="preserve">
+    <value>Infantry</value>
+  </data>
+  <data name="unit_recon_car" xml:space="preserve">
+    <value>Jeep</value>
+  </data>
+  <data name="unit_tank" xml:space="preserve">
+    <value>Tank</value>
+  </data>
+  <data name="action_modifier_defending_unit_armor" xml:space="preserve">
+    <value>{0} from Defender's Armor</value>
+  </data>
+  <data name="action_modifier_dig_in_concealment_bonus_not_effected_by_dig_in_modifiers" xml:space="preserve">
+    <value>Defending unit cannot benefit from Dig In</value>
+  </data>
+  <data name="action_modifier_terrain_accuracy_modifier_not_effected_by_terrain_modifiers" xml:space="preserve">
+    <value>Attacking unit's Accuracy is not impacted by Terrain</value>
+  </data>
+  <data name="action_modifier_terrain_concealment_modifier_not_effected_by_terrain_modifiers" xml:space="preserve">
+    <value>Defending unit's Concealment is not impacted by Terrain</value>
+  </data>
+  <data name="action_modifier_attackers_pen" xml:space="preserve">
+    <value>{0} attack pen</value>
+  </data>
+  <data name="action_modifier_damage_blocked_by_armor" xml:space="preserve">
+    <value>{0} stopped by Defender's Armor</value>
+  </data>
+  <data name="action_modifier_damage_blocked_by_armor_overmatched" xml:space="preserve">
+    <value>Defender's Armor ({1}) is completely ineffective against the Attacker's Armor Penetration ({0})</value>
+  </data>
+  <data name="action_modifier_damage_penetration" xml:space="preserve">
+    <value>{0:0%} damage pen</value>
+  </data>
+  <data name="action_modifier_defenders_armor" xml:space="preserve">
+    <value>{0} defener's armor</value>
+  </data>
+  <data name="action_modifier_terrain_high_difference_modifier" xml:space="preserve">
+    <value>{0:+0%;-0%} from Terrain Height Difference</value>
+  </data>
+  <data name="action_modifier_terrain_high_difference_modifier_not_effected_by_terrain_modifiers" xml:space="preserve">
+    <value>Both units cannot benefit from Terrain Modifiers</value>
+  </data>
+  <data name="action_unit_attack_anti_aircraft_cannon_vs_air" xml:space="preserve">
+    <value>Anti-Air Cannon (vs. Air)</value>
+  </data>
+  <data name="action_unit_attack_anti_aircraft_cannon_vs_ground" xml:space="preserve">
+    <value>Anti-Air Cannon (vs. Ground)</value>
+  </data>
+  <data name="action_unit_attack_dive_bomb" xml:space="preserve">
+    <value>Dive Bomb</value>
+  </data>
+  <data name="action_unit_attack_fighter_heavy_machine_gun" xml:space="preserve">
+    <value>Wing Mounted HMGs</value>
+  </data>
+  <data name="action_unit_attack_quad_hmg_vs_air" xml:space="preserve">
+    <value>Quad HMG (vs. Air)</value>
+  </data>
+  <data name="action_unit_attack_quad_hmg_vs_ground" xml:space="preserve">
+    <value>Quad HMG (vs. Ground)</value>
+  </data>
+  <data name="action_unit_attack_rocket_artillery_barrage" xml:space="preserve">
+    <value>Rocket Artillery Barrage</value>
+  </data>
+  <data name="action_unit_attack_saturation_bombing" xml:space="preserve">
+    <value>Attack w/ Saturation Bombing</value>
+  </data>
+  <data name="unit_anti_aircraft_artillery" xml:space="preserve">
+    <value>Anti-Air Tank</value>
+  </data>
+  <data name="unit_anti_air_half_track" xml:space="preserve">
+    <value>Anti-Air HalfTrack</value>
+  </data>
+  <data name="unit_bomber" xml:space="preserve">
+    <value>Bomber</value>
+  </data>
+  <data name="unit_dive_bomber" xml:space="preserve">
+    <value>Dive Bomber</value>
+  </data>
+  <data name="unit_fighter" xml:space="preserve">
+    <value>Fighter</value>
+  </data>
+  <data name="unit_rocket_artillery" xml:space="preserve">
+    <value>Rocket Artillery</value>
+  </data>
+  <data name="unit_transport_half_track" xml:space="preserve">
+    <value>Transport Half-Track</value>
+  </data>
+  <data name="unit_transport_truck" xml:space="preserve">
+    <value>Transport Truck</value>
+  </data>
 </root>

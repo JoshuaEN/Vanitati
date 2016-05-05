@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 
 namespace UnnamedStrategyGame.Network
 {
-    public class Client : IClientNotifier
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    public class Client : IClient, IClientNotifier
     {
         private NetworkStream NetworkStream { get; }
         public bool IsDisconnected { get; private set; }
@@ -20,6 +21,8 @@ namespace UnnamedStrategyGame.Network
 
         protected void OnMessageReceived(MessageReceivedEventArgs e)
         {
+            Contract.Requires<ArgumentNullException>(null != e);
+
             var handler = MessageReceived;
             if(handler != null)
             {
@@ -29,6 +32,8 @@ namespace UnnamedStrategyGame.Network
 
         protected void OnDisconnected(DisconnectedEventArgs e)
         {
+            Contract.Requires<ArgumentNullException>(null != e);
+
             var handler = Disconnected;
             if(handler != null)
             {
@@ -38,6 +43,8 @@ namespace UnnamedStrategyGame.Network
 
         protected void OnException(ExceptionEventArgs e)
         {
+            Contract.Requires<ArgumentNullException>(null != e);
+
             var handler = Exception;
             if (handler != null)
             {
@@ -47,19 +54,22 @@ namespace UnnamedStrategyGame.Network
 
         public Client(NetworkStream networkStream)
         {
+            Contract.Requires<ArgumentNullException>(null != networkStream);
+
             NetworkStream = networkStream;
-            
         }
 
         public Client(System.Net.IPEndPoint remoteEP)
         {
+            Contract.Requires<ArgumentNullException>(null != remoteEP);
+
             var tcpClient = new TcpClient();
             tcpClient.Connect(remoteEP);
             NetworkStream = tcpClient.GetStream();
         }
 
         private bool _reading = false;
-        public async Task Listen()
+        public virtual async Task Listen()
         {
             if(_reading)
             {
@@ -78,12 +88,12 @@ namespace UnnamedStrategyGame.Network
             }
         }
 
-        protected async Task StartReading()
+        protected virtual async Task StartReading()
         {
-            while (true)
+            while (IsDisconnected == false)
             {
                 byte[] headerBuffer = BitConverter.GetBytes(new Int32());
-                int headerBufferRes = await NetworkStream.ReadAsync(headerBuffer, 0, headerBuffer.Length);
+                int headerBufferRes = await Read(headerBuffer);
 
                 if(headerBufferRes == 0)
                 {
@@ -92,45 +102,55 @@ namespace UnnamedStrategyGame.Network
 
                 if(headerBufferRes != headerBuffer.Length)
                 {
-                    throw new Exceptions.IncompleteHeaderException(String.Format("Expected to receive {0} bytes, got {1} bytes", headerBuffer.Length, headerBufferRes));
+                    throw new Exceptions.IncompleteHeaderException(string.Format("Expected to receive {0} bytes, got {1} bytes", headerBuffer.Length, headerBufferRes));
                 }
 
                 byte[] messageBuffer = new byte[BitConverter.ToInt32(headerBuffer, 0)];
-                var messageBufferOffset = 0;
 
-                
+                int messageBufferRes = await Read(messageBuffer);
 
-                while (messageBufferOffset < messageBuffer.Length)
+                if (messageBufferRes == 0)
                 {
-                    int messageBufferRes = await NetworkStream.ReadAsync(messageBuffer, messageBufferOffset, messageBuffer.Length - messageBufferOffset);
-
-                    if (messageBufferRes == 0)
-                    {
-                        throw new Exceptions.ConnectionClosedException("Connection closed while sending Message");
-                    }
-
-                    messageBufferOffset += messageBufferRes;
+                    throw new Exceptions.ConnectionClosedException("Connection closed while sending Message");
                 }
 
-                if(messageBufferOffset != messageBuffer.Length)
+                if(messageBufferRes != messageBuffer.Length)
                 {
-                    throw new Exceptions.IncompleteMessageException(string.Format("Expected to receive {0} bytes, got {1} bytes", messageBuffer.Length, messageBufferOffset));
+                    throw new Exceptions.IncompleteMessageException(string.Format("Expected to receive {0} bytes, got {1} bytes", messageBuffer.Length, messageBufferRes));
                 }
 
 #if NETWORK_LAG
-                await Task.Delay(150);
+                await Task.Delay(300);
 #endif
 
                 OnMessageReceived(new MessageReceivedEventArgs(Encoding.Unicode.GetString(messageBuffer)));
             }
         }
 
-        //private readonly SemaphoreSlim semaphore = new SemaphoreSlim(1, 1);
-
-        public void Write(string message)
+        private async Task<int> Read(byte[] buffer)
         {
-            Contract.Requires<ArgumentNullException>(null != message);
+            Contract.Requires<ArgumentNullException>(null != buffer);
+            Contract.Requires<ArgumentException>(buffer.Length >= 1);
 
+            var offset = 0;
+            var length = buffer.Length;
+            while (offset < length)
+            {
+                int result = await NetworkStream.ReadAsync(buffer, offset, length - offset);
+
+                if (result == 0)
+                {
+                    throw new Exceptions.ConnectionClosedException("Incomplete read");
+                }
+
+                offset += result;
+            }
+
+            return offset;
+        }
+
+        public virtual void Write(string message)
+        {
             try
             {
                 var messageBuffer = Encoding.Unicode.GetBytes(message);
@@ -145,17 +165,17 @@ namespace UnnamedStrategyGame.Network
             }
         }
 
-        public void Send(object obj)
+        public virtual void Send(object obj)
         {
             Write(Serializers.Serializer.Serialize(obj));
         }
 
-        public void Disconnect()
+        public virtual void Disconnect()
         {
             Disconnect(null);
         }
 
-        protected void Disconnect(Exception disconnectCause)
+        protected virtual void Disconnect(Exception disconnectCause)
         {
             try
             {
@@ -167,6 +187,9 @@ namespace UnnamedStrategyGame.Network
             }
             finally
             {
+                if (disconnectCause != null)
+                    OnException(new ExceptionEventArgs(disconnectCause));
+
                 OnDisconnected(new DisconnectedEventArgs(disconnectCause));
             }
         }
@@ -190,6 +213,12 @@ namespace UnnamedStrategyGame.Network
         ~Client()
         {
             Close();
+        }
+
+        [ContractInvariantMethod]
+        private void Invariants()
+        {
+            Contract.Invariant(null != NetworkStream);
         }
     }
 }

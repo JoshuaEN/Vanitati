@@ -1,12 +1,26 @@
-﻿namespace UnnamedStrategyGame.Game.Event
+﻿using System;
+using System.Diagnostics.Contracts;
+
+namespace UnnamedStrategyGame.Game.Event
 {
-    public class TerrainChangedEventArgs : System.EventArgs
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+    public class TerrainChangedEventArgs : System.EventArgs, ITurnAwareEvent
     {
+        public int TurnID { get; }
         public StateChanges.TerrainStateChange ChangeInfo { get; }
 
-        public TerrainChangedEventArgs(StateChanges.TerrainStateChange changeInfo)
+        public TerrainChangedEventArgs(int turnID, StateChanges.TerrainStateChange changeInfo)
         {
+            Contract.Requires<ArgumentNullException>(null != changeInfo);
+
+            TurnID = turnID;
             ChangeInfo = changeInfo;
+        }
+
+        [ContractInvariantMethod]
+        private void Invariants()
+        {
+            Contract.Invariant(null != ChangeInfo);
         }
     }
 }

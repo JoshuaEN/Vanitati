@@ -8,6 +8,9 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("xunit.runner.visualstudio.testadapter.dll")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("xunit.runner.utility.desktop.dll")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("xunit.abstractions.dll")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/vanilla/images/terrain_hit_reference.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/vanilla/images/unit_infantry.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/vanilla/images/unit_missing.png")]

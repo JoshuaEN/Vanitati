@@ -3,11 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnnamedStrategyGame.Properties;
 
 namespace UnnamedStrategyGame
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public static class Globals
     {
+        public static string GetResource(string key)
+        {
+            if (null == key)
+                return null;
+
+            return Resources.ResourceManager.GetString(key) ?? key;
+        }
+
         public static int DEFAULT_PORT { get; } = 4000;
 
         public static string ATTRIBUTE_NAME_UNIT_TYPE { get; } = "type";

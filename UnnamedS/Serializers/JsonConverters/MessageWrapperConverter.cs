@@ -30,6 +30,7 @@ namespace UnnamedStrategyGame.Serializers.JsonConverters
             //            return serializer.Deserialize(reader, type);
         }
 
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
         public override bool CanWrite
         {
             get
@@ -38,6 +39,7 @@ namespace UnnamedStrategyGame.Serializers.JsonConverters
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
         public override void WriteJson(JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
         {
             throw new NotSupportedException();

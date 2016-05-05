@@ -32,19 +32,9 @@ namespace UnnamedStrategyGame
         {
             InitializeComponent();
 
-            {
-                object v;
+            Preloader.Preload();
 
-                v = SupplyType.TYPES;
-                v = MovementType.TYPES;
-                v = ActionType.TYPES;
-                v = UnitType.TYPES;
-
-                v = TerrainType.TYPES;
-
-            }
-
-            Content = new UI.BattleView();
+            Content = new UI.DamageTable(); // new UI.BattleView();
             return;
 
             //var view = new UI.NetworkLogViewer();
@@ -99,15 +89,6 @@ namespace UnnamedStrategyGame
         {
             Application.Current.Shutdown(0);
             Environment.Exit(0);
-        }
-    }
-
-    public class TestPropertyGet
-    {
-        public string Prop { get; }
-        public TestPropertyGet(string str)
-        {
-            Prop = str;
         }
     }
 }

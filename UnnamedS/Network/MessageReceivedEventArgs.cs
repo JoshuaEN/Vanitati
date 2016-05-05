@@ -7,15 +7,17 @@ using System.Threading.Tasks;
 
 namespace UnnamedStrategyGame.Network
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public class MessageReceivedEventArgs : EventArgs
     {
         public string MessageString { get; }
 
         private MessageWrappers.MessageWrapper _message = null;
-        public MessageWrappers.MessageWrapper Message
+        public virtual MessageWrappers.MessageWrapper Message
         {
             get
             {
+                Contract.Ensures(Contract.Result<MessageWrappers.MessageWrapper>() != null);
                 if(_message == null)
                 {
                     _message = Serializers.Serializer.Deserialize<MessageWrappers.MessageWrapper>(MessageString);

@@ -1,26 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnnamedStrategyGame.Game.Action;
 
 namespace UnnamedStrategyGame.Game
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public class ActionInfo
     {
         public ActionType Type { get; }
-        public Location Source { get; }
-        public Location Target { get; }
-        public int CommanderID { get; }
-        public ActionType.ActionTriggers Trigger { get; }
+        public ActionContext Context { get; }
 
-        public ActionInfo(int commanderID, ActionType type, Location source, Location target, ActionType.ActionTriggers trigger)
+        public ActionInfo(ActionType type, ActionContext context)
         {
+            Contract.Requires<ArgumentNullException>(null != type);
+            Contract.Requires<ArgumentNullException>(null != context);
+
             Type = type;
-            Source = source;
-            Target = target;
-            CommanderID = commanderID;
-            Trigger = trigger;
+            Context = context;
+        }
+
+        [ContractInvariantMethod]
+        private void Invariants()
+        {
+            Contract.Invariant(null != Type);
+            Contract.Invariant(null != Context);
         }
     }
 }

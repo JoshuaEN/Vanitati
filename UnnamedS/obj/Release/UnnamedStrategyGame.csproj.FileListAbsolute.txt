@@ -28,7 +28,6 @@ e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\Unname
 e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedS\bin\Release\Resources\vanilla\images\unit_none.png
 e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedS\bin\Release\Resources\vanilla\images\testImgA.png
 e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedS\bin\Release\Newtonsoft.Json.dll
-e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedS\bin\Release\Newtonsoft.Json.pdb
 e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedS\bin\Release\Newtonsoft.Json.xml
 e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedS\obj\Release\UI\BattleView.baml
 e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedS\obj\Release\UI\LogView.baml
@@ -36,3 +35,8 @@ e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\Unname
 e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedS\obj\Release\UI\PropView.baml
 e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedS\obj\Release\UI\TileView.baml
 e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedS\obj\Release\UnnamedSstrategyGame.rewritten
+e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedS\obj\Release\UI\ActionView.g.cs
+e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedS\bin\Release\xunit.runner.visualstudio.testadapter.dll
+e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedS\bin\Release\xunit.runner.utility.desktop.dll
+e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedS\bin\Release\xunit.abstractions.dll
+e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedS\obj\Release\UI\ActionView.baml

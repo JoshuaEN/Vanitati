@@ -6,18 +6,36 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using UnnamedStrategyGame.Game.ActionTypes;
+using UnnamedStrategyGame.Game.ActionTypes.ForUnits;
 using UnnamedStrategyGame.Game.Event;
 
 namespace UnnamedStrategyGame.Game
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public abstract class UnitType : BaseType
     {
-        public MovementType MovementType { get; }
-        public IReadOnlyDictionary<SupplyType, int> SupplyLimits { get; }
-        public IReadOnlyList<ActionType> Actions { get; }
-        public int MaxMovement { get; } = -1;
-        public int MaxAttacks { get; } = -1;
-        public int MaxHealth { get; } = -1;
+        protected static readonly IReadOnlyList<UnitAction> DEFAULT_ACTIONS = new List<UnitAction>()
+        {
+            ClearRepeatedActionManually.Instance,
+            ReplenishUnitTurnResources.Instance,
+            TriggerRepeatedActionAutomatically.Instance,
+            ClearRepeatedActionAutomatically.Instance
+        };
+
+        public abstract MovementType MovementType { get; }
+        public abstract IReadOnlyDictionary<SupplyType, int> SupplyLimits { get; }
+        public abstract IReadOnlyDictionary<SupplyType, int> MovementSupplyUsage { get; }
+        public abstract IReadOnlyDictionary<SupplyType, int> TurnSupplyUsage { get; }
+        public abstract IReadOnlyList<UnitAction> Actions { get; }
+        public abstract int MaxMovement { get; }
+        public virtual int MaxActions { get; } = 1;
+        public virtual int MaxHealth { get; } = 10;
+        public abstract double MaxArmor { get; }
+        public abstract int Concealment { get; }
+        public abstract int BuildCost { get; }
+
+        public virtual bool EffectedByTerrainModifiers { get; } = true;
 
         public static IReadOnlyDictionary<string, UnitType> TYPES { get; }
 
@@ -26,32 +44,24 @@ namespace UnnamedStrategyGame.Game
             TYPES = BuildTypeListing<UnitType>("UnnamedStrategyGame.Game.UnitTypes");
         }
 
-        protected UnitType(
-            string key,
-            MovementType movementType, 
-            List<ActionType> actions, 
-            Dictionary<SupplyType, int> supplyLimits,
-            int maxMovement,
-            int maxAttacks = 1,
-            int maxHealth = 10) : base("unit_" + key)
+        protected UnitType(string key) : base("unit_" + key) { }
+
+        public sealed class ArmorProtectionFrom
         {
-            Contract.Requires<ArgumentNullException>(key != null);
-            Contract.Requires<ArgumentNullException>(movementType != null);
-            Contract.Requires<ArgumentNullException>(actions != null);
-            Contract.Requires<ArgumentNullException>(supplyLimits != null);
-            Contract.Requires<ArgumentException>(maxMovement > -1);
-            Contract.Requires<ArgumentException>(maxAttacks > -1);
-            Contract.Requires<ArgumentException>(maxHealth > -1);
+            public const double
+                Nothing = 0,
 
-            actions.Insert(0, ActionTypes.Move.Instance);
-            actions.Add(ActionTypes.ReplenishUnitTurnResources.Instance);
+                SmallArms = 2, LightMachineGuns = 3, HeavyMachineGuns = 6,
 
-            MovementType = movementType;
-            Actions = actions;
-            SupplyLimits = supplyLimits;
-            MaxMovement = maxMovement;
-            MaxAttacks = maxAttacks;
-            MaxHealth = maxHealth;
+                AutoCannon = 12,
+
+                SmallCaliberTankGuns = 16, LargeCaliberTankGuns = 25, AntiTankRockets = 30,
+
+                Bombs = 40,
+                
+                LandArtillery = 40, LandRocketArtillery = 45,
+
+                SmallCaliberNavalArtillery = 60, LargeCaliberNavalArtillery = 80;
         }
 
         [ContractInvariantMethod]
@@ -59,9 +69,14 @@ namespace UnnamedStrategyGame.Game
         {
             Contract.Invariant(MovementType != null);
             Contract.Invariant(SupplyLimits != null);
+            Contract.Invariant(MovementSupplyUsage != null);
+            Contract.Invariant(TurnSupplyUsage != null);
             Contract.Invariant(Actions != null);
             Contract.Invariant(MaxMovement > -1);
             Contract.Invariant(MaxHealth > -1);
+            Contract.Invariant(MaxArmor >= 0);
+            Contract.Invariant(MaxActions > -1);
+            Contract.Invariant(BuildCost > -1);
         }
 
     }

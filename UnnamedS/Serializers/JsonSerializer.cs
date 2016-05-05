@@ -15,9 +15,13 @@ namespace UnnamedStrategyGame.Serializers
         static JsonSerializer()
         {
             SERIALIZER = new Newtonsoft.Json.JsonSerializer();
+
+            SERIALIZER.NullValueHandling = NullValueHandling.Ignore;
             SERIALIZER.Converters.Add(new JsonConverters.XTypeJsonConverter());
             SERIALIZER.Converters.Add(new JsonConverters.XTypeDictionaryConverter());
             SERIALIZER.Converters.Add(new JsonConverters.MessageWrapperConverter());
+            SERIALIZER.Converters.Add(new JsonConverters.ContextConverter());
+            SERIALIZER.Converters.Add(new JsonConverters.GenericContextConverter());
 
             //SERIALIZER.ReferenceLoopHandling = ReferenceLoopHandling.Serialize;
             //SERIALIZER.PreserveReferencesHandling = PreserveReferencesHandling.All;

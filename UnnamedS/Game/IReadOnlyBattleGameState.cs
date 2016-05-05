@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace UnnamedStrategyGame.Game
 {
+    /// <summary>
+    /// Read only interface for BattleGameState
+    /// </summary>
     [ContractClass(typeof(ContractClassForIReadOnlyBattleGameState))]
     public interface IReadOnlyBattleGameState : Properties.IPropertyContainer
     {
@@ -19,7 +22,12 @@ namespace UnnamedStrategyGame.Game
 
         IReadOnlyDictionary<int, Commander> Commanders { get; }
 
+        int TurnID { get; }
+        int CreditsPerCity { get; }
+
         Commander CurrentCommander { get; }
+
+        int GetNextUnitID();
 
         Unit GetUnit(Location loc);
         Unit GetUnit(int x, int y);
@@ -30,6 +38,9 @@ namespace UnnamedStrategyGame.Game
 
         Tile GetTile(Location loc);
         Tile GetTile(int x, int y);
+
+        Commander GetCommander(int commanderID);
+        Commander SafeGetCommander(int commanderID);
 
         bool LocationsAdjacent(Location a, Location b);
 
@@ -43,16 +54,20 @@ namespace UnnamedStrategyGame.Game
     }
 
     [ContractClassFor(typeof(IReadOnlyBattleGameState))]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     internal abstract class ContractClassForIReadOnlyBattleGameState : IReadOnlyBattleGameState
     {
         public abstract IReadOnlyDictionary<int, Commander> Commanders { get; }
+        public abstract int CreditsPerCity { get; }
         public abstract Commander CurrentCommander { get; }
         public abstract int Height { get; }
         public abstract IReadOnlyCollection<Terrain> Terrain { get; }
+        public abstract int TurnID { get; }
         public abstract IReadOnlyDictionary<int, Unit> Units { get; }
         public abstract int Width { get; }
 
         public abstract BattleGameState Fork();
+        public abstract Commander GetCommander(int commanderID);
 
         public BattleGameState.Fields GetFields()
         {
@@ -60,6 +75,7 @@ namespace UnnamedStrategyGame.Game
             return null;
         }
 
+        public abstract int GetNextUnitID();
         public abstract IDictionary<string, object> GetProperties();
         public abstract Terrain GetTerrain(Location loc);
         public abstract Terrain GetTerrain(int x, int y);
@@ -85,6 +101,7 @@ namespace UnnamedStrategyGame.Game
             Contract.Ensures(Contract.Result<List<Location>>() != null);
             return null;
         }
+
         public List<Location> LocationsAroundPoint(Location point, int minimum, int maximum)
         {
             Contract.Requires<ArgumentNullException>(null != point);
@@ -92,6 +109,12 @@ namespace UnnamedStrategyGame.Game
             Contract.Ensures(Contract.Result<List<Location>>() != null);
             return null;
         }
+
+        public Commander SafeGetCommander(int commanderID)
+        {
+            throw new NotImplementedException();
+        }
+
         public abstract void SetProperties(IDictionary<string, object> values);
     }
 }

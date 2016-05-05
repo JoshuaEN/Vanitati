@@ -38,20 +38,33 @@ namespace UnnamedStrategyGame.UI
             }
         }
 
-        public bool Highlight
+        private HighlightMode _highlight = HighlightMode.None;
+        public HighlightMode Highlight
         {
+            get { return _highlight; }
             set
             {
-                if(value == true)
-                {
-                    OverlayHighlight.Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    OverlayHighlight.Visibility = Visibility.Collapsed;
-                }
+                _highlight = value;
+                UpdateHighlights();
             }
         }
+
+        public enum HighlightMode { None, Ally, Enemy, Neutral, Selected }
+
+        private class BrushSet
+        {
+            public Brush OverlayBrush { get; set; } = new SolidColorBrush(Colors.Transparent);
+            public Brush BorderBrush { get; set; } = new SolidColorBrush(Colors.Transparent);
+        }
+
+        private Dictionary<HighlightMode, BrushSet> HighlightBrushSets = new Dictionary<HighlightMode, BrushSet>()
+        {
+            { HighlightMode.None, new BrushSet() },
+            { HighlightMode.Ally, new BrushSet() { OverlayBrush = new SolidColorBrush(Color.FromArgb(50, 0, 255, 0)) } },
+            { HighlightMode.Enemy, new BrushSet() { OverlayBrush = new SolidColorBrush(Color.FromArgb(50, 255, 0, 0)) } },
+            { HighlightMode.Neutral, new BrushSet() { OverlayBrush = new SolidColorBrush(Color.FromArgb(50, 0, 0, 255)) } },
+            { HighlightMode.Selected, new BrushSet() {OverlayBrush = new SolidColorBrush(Color.FromArgb(50, 200, 200, 200)) } }
+        };
 
         private BitmapImage TerrainBitmap { get; set; }
         private BitmapImage UnitBitmap { get; set; }
@@ -60,7 +73,21 @@ namespace UnnamedStrategyGame.UI
         private ImageDrawing UnitImage { get; set; }
 
         private DrawingGroup Collection { get; } = new DrawingGroup();
+
+
         private Polygon OverlayHighlight { get; }
+        private Polyline BorderHighlight { get; }
+        private Polygon TerrainPoly { get; }
+        private Polyline GridPolyline { get; }
+        private TextBlock TerrainLabel { get; } = new TextBlock();
+        private Border TerrainBorder { get; }
+        private TextBlock UnitLabel { get; } = new TextBlock();
+        private Border UnitBorder { get; }
+
+        private TextBlock XYTopLeftLabel { get; } = new TextBlock();
+        private TextBlock XYTopRightLabel { get; } = new TextBlock();
+
+        private static readonly bool TEXT_MODE = true;
 
         public TileView(BattleView view, Location location)
         {
@@ -70,52 +97,158 @@ namespace UnnamedStrategyGame.UI
             View = view;
             Location = location;
 
-            UpdateTerrain();
-            UpdateUnit();
-            UpdateScale();
+            if (TEXT_MODE)
+            {
+                UpdateScale();
+                TerrainPoly = GetHexPoly();
+            }
+            else
+            { 
+                UpdateTerrain();
+                UpdateUnit();
+                UpdateScale();
+            }
 
-            Collection.Children.Add(TerrainImage);
-            Collection.Children.Add(UnitImage);
-            
+            if (TEXT_MODE)
+            {
+                TerrainPoly.IsHitTestVisible = true;
+                TerrainPoly.SnapsToDevicePixels = false;
+                TerrainPoly.MouseEnter += ImageContainer_MouseEnter;
+                TerrainPoly.MouseLeave += ImageContainer_MouseLeave;
+                TerrainPoly.MouseUp += ImageContainer_MouseUp;
+                TerrainPoly.MouseDown += ImageContainer_MouseDown;
+                RenderOptions.SetEdgeMode(TerrainPoly, EdgeMode.Aliased);
 
-            imageContainer.Source = new DrawingImage(Collection); // new DrawingImage(new ImageDrawing(TerrainBitmap, new Rect(0, 0, Width, Height)));
+                contentGrid.Children.Add(TerrainPoly);
 
+                GridPolyline = GetHexPolyline();
+                GridPolyline.IsHitTestVisible = false;
+                GridPolyline.Stroke = Brushes.Beige;
+                GridPolyline.StrokeLineJoin = PenLineJoin.Miter;
+                GridPolyline.StrokeThickness = 1;
+                contentGrid.Children.Add(GridPolyline);
 
-            //TerrainBitmap = new BitmapImage(new Uri(System.IO.Path.Combine(Globals.RESOURCE_IMAGE_PATH, "terrain_plain.png"), UriKind.Relative));
-            contentGrid.Children.Add(imageContainer);
-            contentGrid.Children.Add(new Label() { Content = location, VerticalAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Center, IsHitTestVisible = false });
+                TerrainLabel.VerticalAlignment = VerticalAlignment.Top;
+                TerrainLabel.HorizontalAlignment = HorizontalAlignment.Center;
+                TerrainLabel.IsHitTestVisible = false;
+                TerrainBorder = GetGenericBorder(TerrainLabel);
+                TerrainBorder.BorderThickness = new Thickness(0, 0, 0, 4);
+                contentGrid.Children.Add(TerrainBorder);
 
-            var poly = new Polygon();
-            poly.Points.Add(new Point(0, Height / 2));
-            poly.Points.Add(new Point(Width * 0.25, Height));
-            poly.Points.Add(new Point(Width * 0.75, Height));
-            poly.Points.Add(new Point(Width, Height / 2));
-            poly.Points.Add(new Point(Width * 0.75, 0));
-            poly.Points.Add(new Point(Width * 0.25, 0));
-            poly.Fill = new SolidColorBrush(Color.FromArgb(50, 0, 0, 255));
-            poly.IsHitTestVisible = false;
-            OverlayHighlight = poly;
+                UnitLabel.VerticalAlignment = VerticalAlignment.Center;
+                UnitLabel.HorizontalAlignment = HorizontalAlignment.Center;
+                UnitLabel.IsHitTestVisible = false;
+                UnitLabel.FontSize = 14;
+                UnitBorder = GetGenericBorder(UnitLabel);
+                UnitBorder.BorderThickness = new Thickness(0, 0, 0, 4);
+                contentGrid.Children.Add(UnitBorder);
 
-            OverlayHighlight.Visibility = Visibility.Collapsed;
+                UpdateTerrain();
+                UpdateUnit();
+                UpdateScale();
+            }
+            else
+            {
+                Collection.Children.Add(TerrainImage);
+                Collection.Children.Add(UnitImage);
+
+                imageContainer.Source = new DrawingImage(Collection);
+                imageContainer.Stretch = Stretch.None;
+                RenderOptions.SetBitmapScalingMode(imageContainer, BitmapScalingMode.Fant);
+                imageContainer.MouseEnter += ImageContainer_MouseEnter;
+                imageContainer.MouseLeave += ImageContainer_MouseLeave;
+                imageContainer.MouseUp += ImageContainer_MouseUp;
+                imageContainer.MouseDown += ImageContainer_MouseDown;
+                RenderOptions.SetEdgeMode(imageContainer, EdgeMode.Aliased);
+
+                contentGrid.Children.Add(imageContainer);
+
+                GridPolyline = GetHexPolyline();
+                GridPolyline.IsHitTestVisible = false;
+                GridPolyline.Stroke = Brushes.Beige;
+                GridPolyline.StrokeLineJoin = PenLineJoin.Miter;
+                GridPolyline.StrokeThickness = 1;
+                GridPolyline.SnapsToDevicePixels = false;
+                contentGrid.Children.Add(GridPolyline);
+            }
+
+            //contentGrid.Children.Add(new Label() { Content = location, VerticalAlignment = VerticalAlignment.Bottom, HorizontalAlignment = HorizontalAlignment.Center, IsHitTestVisible = false });
+
+            XYTopLeftLabel.VerticalAlignment = VerticalAlignment.Bottom;
+            XYTopLeftLabel.HorizontalAlignment = HorizontalAlignment.Center;
+            XYTopLeftLabel.IsHitTestVisible = false;
+            XYTopLeftLabel.Text = Location.ToString();
+            contentGrid.Children.Add(XYTopLeftLabel);
+
+            XYTopRightLabel.VerticalAlignment = VerticalAlignment.Bottom;
+            XYTopRightLabel.HorizontalAlignment = HorizontalAlignment.Right;
+            XYTopRightLabel.IsHitTestVisible = false;
+            contentGrid.Children.Add(XYTopRightLabel);
+
+            OverlayHighlight = GetHexPoly();
+            OverlayHighlight.IsHitTestVisible = false;
             contentGrid.Children.Add(OverlayHighlight);
 
-            imageContainer.Stretch = Stretch.None;
-            RenderOptions.SetBitmapScalingMode(imageContainer, BitmapScalingMode.Fant);
-            imageContainer.MouseEnter += ImageContainer_MouseEnter;
-            imageContainer.MouseLeave += ImageContainer_MouseLeave;
-            imageContainer.MouseUp += ImageContainer_MouseUp;
-            imageContainer.MouseDown += ImageContainer_MouseDown;
+            BorderHighlight = GetHexPolyline();
+            BorderHighlight.IsHitTestVisible = false;
+            BorderHighlight.StrokeThickness = 4;
+            contentGrid.Children.Add(BorderHighlight);
+
+            UpdateHighlights();
 
             UpdateScale();
             UpdatePosition();
         }
+
+        private Polygon GetHexPoly()
+        {
+            var poly = new Polygon();
+
+            foreach (var point in GetHexPoints())
+                poly.Points.Add(point);
+
+            return poly;
+        }
+
+        private Polyline GetHexPolyline()
+        {
+            var polyline = new Polyline();
+
+            foreach (var point in GetHexPoints())
+                polyline.Points.Add(point);
+
+            // Close the line.
+            polyline.Points.Add(GetHexPoints()[0]);
+
+            return polyline;
+        }
+
+        private Border GetGenericBorder(FrameworkElement elm)
+        {
+            return new Border() { BorderBrush = Brushes.Black, BorderThickness = new Thickness(1), Child = elm, Width = double.NaN, Height = double.NaN, Padding = new Thickness(2), Margin = new Thickness(0), HorizontalAlignment = elm.HorizontalAlignment, VerticalAlignment = elm.VerticalAlignment, IsHitTestVisible = false, Background = Brushes.AntiqueWhite};
+        }
+
+        private Point[] GetHexPoints()
+        {
+            return new Point[]
+            {
+                new Point(0, Height / 2),
+                new Point(Width * 0.25, Height),
+                new Point(Width * 0.75, Height),
+                new Point(Width, Height / 2),
+                new Point(Width * 0.75, 0),
+                new Point(Width * 0.25, 0)
+            };
+        }
+
+        #region Event Handlers
 
         private void ImageContainer_MouseDown(object sender, MouseButtonEventArgs e)
         {
             var handler = TileViewMouseDown;
             if(null != handler)
             {
-                handler(this, new TileViewEventArgs(this, e));
+                handler(this, new TileViewMouseButtonEventArgs(this, e));
             }
         }
 
@@ -124,12 +257,24 @@ namespace UnnamedStrategyGame.UI
             var handler = TileViewMouseUp;
             if (null != handler)
             {
-                handler(this, new TileViewEventArgs(this, e));
+                handler(this, new TileViewMouseButtonEventArgs(this, e));
             }
         }
 
-        public event EventHandler<TileViewEventArgs> TileViewMouseDown;
-        public event EventHandler<TileViewEventArgs> TileViewMouseUp;
+        private void ImageContainer_MouseLeave(object sender, MouseEventArgs e)
+        {
+            TileViewMouseLeave?.Invoke(this, new TileViewMouseEventArgs(this, e));
+        }
+
+        private void ImageContainer_MouseEnter(object sender, MouseEventArgs e)
+        {
+            TileViewMouseEnter?.Invoke(this, new TileViewMouseEventArgs(this, e));
+        }
+
+        public event EventHandler<TileViewMouseButtonEventArgs> TileViewMouseDown;
+        public event EventHandler<TileViewMouseButtonEventArgs> TileViewMouseUp;
+        public event EventHandler<TileViewMouseEventArgs> TileViewMouseEnter;
+        public event EventHandler<TileViewMouseEventArgs> TileViewMouseLeave;
 
         public new event MouseEventHandler MouseEnter
         {
@@ -161,43 +306,86 @@ namespace UnnamedStrategyGame.UI
             remove { imageContainer.MouseMove -= value; }
         }
 
-        private void ImageContainer_MouseLeave(object sender, MouseEventArgs e)
-        {
-            //TerrainBitmap = new BitmapImage(new Uri(System.IO.Path.Combine(Globals.RESOURCE_IMAGE_PATH, "terrain_plain.png"), UriKind.Relative));
-            //UpdatePosition();
-        }
+        #endregion
 
-        private void ImageContainer_MouseEnter(object sender, MouseEventArgs e)
+        private void UpdateHighlights()
         {
-            //TerrainBitmap = new BitmapImage(new Uri(System.IO.Path.Combine(Globals.RESOURCE_IMAGE_PATH, "terrain_road.png"), UriKind.Relative));
-           //UpdatePosition();
+            BrushSet set = HighlightBrushSets[Highlight];
+
+            OverlayHighlight.Fill = set.OverlayBrush;
+            BorderHighlight.Stroke = set.BorderBrush;
         }
 
         public void UpdateTerrain()
         {
             var terrain = View.State.GetTerrain(Location);
-            TerrainBitmap = Resource.SPRITES[terrain.TerrainType.Key];
-            UpdateTerrainImage();
+
+            if (TEXT_MODE)
+            {
+                TerrainPoly.Fill = Resource.BRUSHES[terrain.TerrainType.Key];
+                TerrainPoly.InvalidateVisual();
+                TerrainLabel.Text = Globals.GetResource(terrain.TerrainType.Key);
+
+                var bytes = new byte[3];
+
+                if (terrain.IsOwned)
+                {
+                    new Random(terrain.CommanderID).NextBytes(bytes);
+                    TerrainBorder.BorderBrush = new SolidColorBrush(Color.FromArgb(255, bytes[0], bytes[1], bytes[2]));
+                }
+                else
+                {
+                    TerrainBorder.BorderBrush = Brushes.Transparent;
+                }
+            }
+            else
+            {
+                TerrainBitmap = Resource.SPRITES[terrain.TerrainType.Key];
+                UpdateTerrainImage();
+            }
         }
 
         public void UpdateUnit()
         {
             var unit = View.State.GetUnit(Location);
 
-            if (null != unit)
+            if (TEXT_MODE)
             {
-                UnitBitmap = Resource.SPRITES[unit.UnitType.Key];
+                if(null != unit)
+                {
+                    UnitLabel.Text = Globals.GetResource(unit.UnitType.Key);
+                    
+                    var bytes = new byte[3];
+                    new Random(unit.CommanderID).NextBytes(bytes);
+                    UnitBorder.BorderBrush = new SolidColorBrush(Color.FromArgb(255, bytes[0], bytes[1], bytes[2]));
+                    UnitBorder.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    UnitLabel.Text = "";
+                    UnitBorder.Visibility = Visibility.Collapsed;
+                }
             }
             else
             {
-                UnitBitmap = Resource.BITMAP_NO_UNIT;
-            }
+                if (null != unit)
+                {
+                    UnitBitmap = Resource.SPRITES[unit.UnitType.Key];
+                }
+                else
+                {
+                    UnitBitmap = Resource.BITMAP_NO_UNIT;
+                }
 
-            UpdateUnitImage();
+                UpdateUnitImage();
+            }
         }
 
         private void UpdateTerrainImage()
         {
+            if (TEXT_MODE)
+                return;
+
             TerrainImage = new ImageDrawing(TerrainBitmap, new Rect(0, 0, Width, Height));
 
             if(Collection.Children.Count == 2)
@@ -207,16 +395,27 @@ namespace UnnamedStrategyGame.UI
 
         private void UpdateUnitImage()
         {
+            if (TEXT_MODE)
+                return;
+
             UnitImage = new ImageDrawing(UnitBitmap, new Rect(0, 0, UnitBitmap.PixelWidth * View.Scale, UnitBitmap.PixelHeight * View.Scale));
             if (Collection.Children.Count == 2)
                 Collection.Children[1] = UnitImage;
-
         }
 
         public void UpdateScale()
         {
-            Height = TerrainBitmap.PixelHeight * View.Scale;
-            Width = TerrainBitmap.PixelWidth * View.Scale;
+            if (true)
+            {
+                var x1 = Math.Floor(512 * View.Scale);
+                Width = x1 * 2; // Resource.BITMAP_HIT_REFERENCE.PixelHeight * View.Scale;
+                Height = Math.Floor(Math.Sqrt(3) * x1); //Resource.BITMAP_HIT_REFERENCE.PixelWidth * View.Scale;
+            }
+            else
+            {
+                Height = Resource.BITMAP_HIT_REFERENCE.PixelHeight * View.Scale;
+                Width = Resource.BITMAP_HIT_REFERENCE.PixelWidth * View.Scale;
+            }
 
             UpdateTerrainImage();
             UpdateUnitImage();
@@ -226,24 +425,46 @@ namespace UnnamedStrategyGame.UI
 
         public void UpdatePosition()
         {
-            var X = Location.X * Width * 0.75 + -View.XOffset;
+            var offset_x = Math.Floor(Location.X * 0.0);
+            var offset_y = Math.Floor(Location.Y * 0.0);
+            var X = (Location.X * Math.Round(Width * 0.75)  + offset_x ) - Math.Round(View.XOffset);
             var Y = Location.Y * Height * 1 + -View.YOffset;
 
-            if (Location.X % 2 == 0)
+            if (Location.X % 2 != 0)
             {
-                Canvas.SetLeft(this, X);
-                Canvas.SetTop(this, Y);
+                //X -= 1;
+                Y = Y + Height * 0.5;
             }
-            else
-            {
-                Canvas.SetLeft(this, X);// + Width * 0.75);
-                Canvas.SetTop(this, Y + Height * 0.5);
-            }
+
+            //X = Math.Floor(X);
+            Y = Math.Floor(Y);
+
+            Canvas.SetLeft(this, X);
+            Canvas.SetTop(this, Y);
+
+            //if (Location.X % 2 != 0)
+            //    XYTopLeftLabel.Content = $"{X + (Width / 4)},{Y}\n{X + (Width * 0.75)},{Y + Height}";
+            //else
+            //    XYTopLeftLabel.Content = $"{X},{Y}\n{X + Width},{Y + Height}";
 
         }
 
         public static TileView GetTileView(IInputElement elm)
         {
+            var control = (elm as FrameworkElement);
+
+            while(control != null)
+            {
+                var tile = (control as TileView);
+
+                if (tile != null)
+                    return tile;
+
+                control = (FrameworkElement)control.Parent;
+            }
+
+            return null;
+
             var opaqueImg = (elm as OpaqueClickableImage);
 
             if (opaqueImg == null)
@@ -289,12 +510,24 @@ namespace UnnamedStrategyGame.UI
             }
         }
 
-        public class TileViewEventArgs
+        public class TileViewMouseButtonEventArgs
         {
             public TileView TileView { get; }
             public MouseButtonEventArgs Args { get; }
 
-            public TileViewEventArgs(TileView tileView, MouseButtonEventArgs args)
+            public TileViewMouseButtonEventArgs(TileView tileView, MouseButtonEventArgs args)
+            {
+                TileView = tileView;
+                Args = args;
+            }
+        }
+
+        public class TileViewMouseEventArgs
+        {
+            public TileView TileView { get; }
+            public MouseEventArgs Args { get; }
+
+            public TileViewMouseEventArgs(TileView tileView, MouseEventArgs args)
             {
                 TileView = tileView;
                 Args = args;

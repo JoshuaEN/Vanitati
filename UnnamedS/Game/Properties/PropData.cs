@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -19,9 +20,17 @@ namespace UnnamedStrategyGame.Game.Properties
 
         public PropData(PropertyInfo info, bool readable, bool writeable)
         {
+            Contract.Requires<ArgumentNullException>(null != info);
+
             Info = info;
             Readable = readable;
             Writeable = writeable;
+        }
+
+        [ContractInvariantMethod]
+        private void Invariants()
+        {
+            Contract.Invariant(null != Info);
         }
     }
 }

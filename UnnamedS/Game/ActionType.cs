@@ -9,160 +9,205 @@ using UnnamedStrategyGame.Game.Action;
 namespace UnnamedStrategyGame.Game
 {
     [ContractClass(typeof(ContractClassForActionType))]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public abstract class ActionType : BaseType
     {
-        private readonly ActionTarget _targets;
-        public ActionTarget Targets { get { return _targets; } }
+        public abstract Category ActionCategory { get; }
+        public abstract TargetCategory ActionTargetCategory { get; }
 
-        private readonly ActionTriggers _triggers;
-        public ActionTriggers Triggers { get { return _triggers; } }
+        public abstract bool CanUserTrigger { get; }
+        public virtual bool CanRetaliate { get; } = false;
 
-        private readonly bool _causesMovement;
-        public bool CausesMovement { get { return _causesMovement; } }
+        protected ActionType(string key) : base("action_" + key) {  }
 
-        public bool TriggerOnTurnStart { get { return Triggers.HasFlag(ActionTriggers.TurnStart); } }
-        public bool TriggerOnTurnEnd { get { return Triggers.HasFlag(ActionTriggers.TurnEnd); } }
-        public bool TriggerOnAttributeChange { get { return Triggers.HasFlag(ActionTriggers.AttributeChange); } }
-        public bool TriggerOnUnitCreated { get { return Triggers.HasFlag(ActionTriggers.UnitCreated); } }
-        public bool TriggerOnUnitDestroyed { get { return Triggers.HasFlag(ActionTriggers.UnitDestroyed); } }
-
-        private readonly bool _availableDuringTurn;
-        public bool AvailableDuringTurn { get { return _availableDuringTurn; } }
-
-        protected ActionType(string key, ActionTarget targets, ActionTriggers triggers, bool availableDuringTurn = false, bool causesMovement = false) : base("action_" + key)
-        {
-            Contract.Requires<ArgumentException>(availableDuringTurn == true || triggers != ActionTriggers.None, "An action cannot both be unavailable during the turn and have no triggers");
-
-            _targets = targets;
-            _availableDuringTurn = availableDuringTurn;
-            _triggers = triggers;
-            _causesMovement = causesMovement;
-        }
-
-        protected ActionType(string key, ActionTriggers triggers, bool availableDuringTurn = false, bool causesMovement = false) : this(key, ActionTarget.Unset, triggers, availableDuringTurn, causesMovement) { }
-        protected ActionType(string key, ActionTarget targets, bool causesMovement = false) : this(key, targets, ActionTriggers.None, true, causesMovement) { }
-        protected ActionType(string key) : this(key, ActionTarget.Unset) { }
-
+        /// <summary>
+        /// Determines if the given Source Tile can perform this action on the Target Tile.
+        /// </summary>
+        /// <param name="state">Game State</param>
+        /// <param name="context">Context under which the Action is being performed</param>
+        /// <param name="sourceTile">Source of the Action</param>
+        /// <param name="targetTile">Target of the Action</param>
+        /// <returns>True if the Action can be performed, false otherwise.</returns>
         [Pure]
-        public virtual bool CanPerformOn(IReadOnlyBattleGameState state, Action.ActionContext context, Tile sourceTile, Tile targetTile)
+        public abstract bool CanPerformOn(IReadOnlyBattleGameState state, ActionContext context);
+
+        /// <summary>
+        /// Performs the given action and returns the resulting state changes.
+        /// </summary>
+        /// <param name="state">Game State</param>
+        /// <param name="context">Context under which the Action is being performed</param>
+        /// <param name="sourceTile">Source of the Action</param>
+        /// <param name="targetTile">Target of the Action</param>
+        /// <returns>List of State Changes as a result of the Action</returns>
+        [Pure]
+        public abstract IReadOnlyList<StateChange> PerformOn(IReadOnlyBattleGameState state, ActionContext context);
+
+        /// <summary>
+        /// Determines all possible locations this Action can be performed given the Source Tile
+        /// Takes into account possible chaining of several Actions together
+        /// </summary>
+        /// <param name="state">Game State</param>
+        /// <param name="context">Context under which the Action is being performed</param>
+        /// <returns></returns>
+        [Pure]
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+        public virtual IReadOnlyDictionary<Location, ActionChain> ActionableLocations(IReadOnlyBattleGameState state, ActionContext context)
         {
             Contract.Requires<ArgumentNullException>(null != state);
             Contract.Requires<ArgumentNullException>(null != context);
-            Contract.Requires<ArgumentNullException>(null != sourceTile);
-            Contract.Requires<ArgumentNullException>(null != targetTile);
+            Contract.Ensures(Contract.Result<IReadOnlyDictionary<Location, ActionChain>>() != null);
 
-            if (ActionTarget.Unset == Targets)
-            {
-                throw new NotSupportedException("Either override CanPerformOn or set the ActionTarget");
-            }
-
-            if(ActionTarget.Any == Targets)
-            {
-                return true;
-            }
-
-            if (null != sourceTile.Unit)
-            {
-                if (sourceTile.Unit.UnitType.Actions.Contains(this) != true)
-                {
-                    return false;
-                }
-
-                switch (Targets)
-                {
-                    case ActionTarget.AnyOtherUnit:
-                        return targetTile.Unit != null && IsTargetingSelf(sourceTile, targetTile) == false;
-                    case ActionTarget.AnyUnit:
-                        return targetTile.Unit != null;
-                    case ActionTarget.Captureable:
-                        return targetTile.Terrain.TerrainType.Captureable;
-                    case ActionTarget.Empty:
-                        return targetTile.Unit == null;
-                    case ActionTarget.EnemyUnit:
-                        // TODO Support allies
-                        return targetTile.Unit != null && targetTile.Unit.CommanderID != context.CommanderID;
-                    case ActionTarget.AllyUnit:
-                        // TODO Support allies
-                        return targetTile.Unit != null && targetTile.Unit.CommanderID == context.CommanderID;
-                    case ActionTarget.Self:
-                        return IsTargetingSelf(sourceTile, targetTile);
-                    default:
-                        throw new InvalidOperationException(string.Format("Unknown Action Target of {0}", Targets));
-                }
-            }
+            if (ActionTargetCategory == TargetCategory.Tile)
+                throw new NotImplementedException();
             else
+                throw new NotSupportedException();
+        }
+
+        [Pure]
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+        public virtual IReadOnlyList<object> AvailableOptions(IReadOnlyBattleGameState state, ActionContext context)
+        {
+            Contract.Requires<ArgumentNullException>(null != state);
+            Contract.Requires<ArgumentNullException>(null != context);
+            Contract.Ensures(Contract.Result<IReadOnlyList<object>>() != null);
+
+            if (ActionTargetCategory == TargetCategory.Generic)
+                throw new NotImplementedException();
+            else
+                throw new NotSupportedException();
+        }
+
+        [Pure]
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+        public abstract IReadOnlyList<Modifier> Modifiers(IReadOnlyBattleGameState state, ActionContext context);
+
+        public static IReadOnlyDictionary<string, ActionType> TYPES { get; private set; }
+
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+        public static void InitActionType()
+        {
+            if (TYPES != null)
+                return;
+
+            TYPES = BuildTypeListing<ActionType>("UnnamedStrategyGame.Game.ActionTypes.ForCommanders").
+                Concat(BuildTypeListing<ActionType>("UnnamedStrategyGame.Game.ActionTypes.ForTerrain")).
+                Concat(BuildTypeListing<ActionType>("UnnamedStrategyGame.Game.ActionTypes.ForUnits")).
+                Concat(BuildTypeListing<ActionType>("UnnamedStrategyGame.Game.ActionTypes.ForGame")).ToDictionary(kp => kp.Key, kp => kp.Value);
+
+            InitGenericActionTypeValues();
+        }
+
+        public static IReadOnlyDictionary<string, Type> GENERIC_ACTION_TYPE_VALUES { get; private set; }
+
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+        private static void InitGenericActionTypeValues()
+        {
+            var dic = new Dictionary<string, Type>();
+
+            foreach(var actionType in TYPES.Values)
             {
-                // TODO Support constructing units with buildings
-                return false;
+                var type = actionType.GetType();
+
+                while (type != null && type != typeof(ActionType))
+                {
+                    if (type.IsGenericType == true)
+                    {
+                        var typeArg = type.GetGenericArguments()[0];
+
+                        dic[typeArg.FullName] = typeArg;
+
+                        break;
+                    }
+                    type = type.BaseType;
+                }
             }
 
-
-            throw new InvalidOperationException(string.Format("Unknown Action Target of {0}", Targets));
+            GENERIC_ACTION_TYPE_VALUES = dic;
         }
 
-        [Pure]
-        public abstract IReadOnlyList<StateChange> PerformOn(IReadOnlyBattleGameState state, Action.ActionContext context, Tile sourceTile, Tile targetTile);
-
-        [Pure]
-        public abstract IReadOnlyDictionary<Location, Action.ActionChain> ActionableLocations(IReadOnlyBattleGameState state, Action.ActionContext context, Tile sourceTile);
-
-        public enum ActionTarget { Unset, Any, Self, AllyUnit, EnemyUnit, AnyOtherUnit, AnyUnit, Empty, Captureable };
-
-        [Flags]
-        public enum ActionTriggers { TurnStart = 1, TurnEnd = 2, AttributeChange = 4, UnitCreated = 8, UnitDestroyed = 16, None = 0 }
-
-        public static IReadOnlyDictionary<string, ActionType> TYPES { get; }
-
-        static ActionType()
-        {
-            TYPES = BuildTypeListing<ActionType>("UnnamedStrategyGame.Game.ActionTypes");
-        }
-
-        [Pure]
-        private bool IsTargetingSelf(Tile sourceTile, Tile targetTile)
-        {
-            Contract.Requires<ArgumentNullException>(null != sourceTile);
-            Contract.Requires<ArgumentNullException>(null != targetTile);
-
-            var locA = sourceTile.Terrain.Location;
-            var locB = targetTile.Terrain.Location;
-            Contract.Assert(null != locA);
-            Contract.Assert(null != locB);
-            return locA.Equals(locB);
-        }
+        public enum Category { Unit, Terrain, Commander, Game }
+        public enum TargetCategory { Tile, Commander, Generic, Other }
 
         [ContractInvariantMethod]
         private void Invariants()
         {
-            Contract.Invariant(CausesMovement == false || this is ActionTypes.ICausesMovement);
+#if ACTION_TYPE_TEST_MODE
+            Contract.Invariant(ActionCategory != Category.Unit || this is ActionTypes.UnitAction);
+            Contract.Invariant(ActionCategory != Category.Terrain || this is ActionTypes.TerrainAction);
+            Contract.Invariant(ActionCategory != Category.Commander || this is ActionTypes.CommanderAction);
+#endif
+        }
+
+        public class Modifier
+        {
+            public string Key { get; }
+            public object Value { get; }
+
+            public IReadOnlyList<Modifier> Items { get; }
+
+            public Modifier(string key, object value, params Modifier[] items)
+            {
+                Key = key;
+                Value = value;
+                Items = items.ToList();
+            }
+        }
+
+        public class ModifierForumla : Modifier
+        {
+            public static readonly Modifier OPERATOR_PLUS = new Modifier("operator_plus", "+");
+            public static readonly Modifier OPERATOR_MINUS = new Modifier("operator_minus", "-");
+            public static readonly Modifier OPERATOR_MULTIPLY = new Modifier("operator_multiply", "*");
+            public static readonly Modifier OPERATOR_DIVIDE = new Modifier("operator_divide", "/");
+            public static readonly Modifier OPERATOR_LEFT_PARENTHESE = new Modifier("operator_left_parenthese", "(");
+            public static readonly Modifier OPERATOR_RIGHT_PARENTHESE = new Modifier("operator_right_parenthese", ")");
+
+
+            public ModifierForumla(string key, object value, params Modifier[] forumla) : base(key, value, forumla ?? new Modifier[0])
+            {
+            }
+        }
+
+        public class ModifierList : Modifier
+        {
+            public IEnumerable<object> Values { get; }
+            public ModifierList(string key, params object[] values) : base(key, Array.AsReadOnly(values))
+            {
+                Values = Array.AsReadOnly(values);
+            }
         }
     }
 
     [ContractClassFor(typeof(ActionType))]
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     internal abstract class ContractClassForActionType : ActionType
     {
         [Pure]
-        public override IReadOnlyList<StateChange> PerformOn(IReadOnlyBattleGameState state, Action.ActionContext context, Tile sourceTile, Tile targetTile)
+        public override bool CanPerformOn(IReadOnlyBattleGameState state, ActionContext context)
         {
             Contract.Requires<ArgumentNullException>(null != state);
             Contract.Requires<ArgumentNullException>(null != context);
-            Contract.Requires<ArgumentNullException>(null != sourceTile);
-            Contract.Requires<ArgumentNullException>(null != targetTile);
-#if DEBUG
-            Contract.Requires<NotSupportedException>(CanPerformOn(state, context, sourceTile, targetTile));
-#endif
+
+            return false;
+        }
+
+        [Pure]
+        public override IReadOnlyList<StateChange> PerformOn(IReadOnlyBattleGameState state, ActionContext context)
+        {
+            Contract.Requires<ArgumentNullException>(null != state);
+            Contract.Requires<ArgumentNullException>(null != context);
+            Contract.Requires<NotSupportedException>(CanPerformOn(state, context));
             Contract.Ensures(Contract.Result<IReadOnlyList<StateChange>>() != null);
 
             return null;
         }
 
-        [Pure]
-        public override IReadOnlyDictionary<Location, ActionChain> ActionableLocations(IReadOnlyBattleGameState state, Action.ActionContext context, Tile sourceTile)
+        public override IReadOnlyList<Modifier> Modifiers(IReadOnlyBattleGameState state, ActionContext context)
         {
             Contract.Requires<ArgumentNullException>(null != state);
             Contract.Requires<ArgumentNullException>(null != context);
-            Contract.Requires<ArgumentNullException>(null != sourceTile);
-            Contract.Ensures(Contract.Result<IReadOnlyDictionary<Location, ActionChain>>() != null);
+            Contract.Requires<NotSupportedException>(CanPerformOn(state, context));
+            Contract.Ensures(Contract.Result<IReadOnlyList<Modifier>>() != null);
 
             return null;
         }

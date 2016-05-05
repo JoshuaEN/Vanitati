@@ -7,19 +7,48 @@
       xmlns:local="clr-namespace:UnnamedStrategyGame.UI"
       mc:Ignorable="d" 
       d:DesignHeight="300" d:DesignWidth="300"
-      Title="BattleView" SnapsToDevicePixels="True" Loaded="Page_Loaded">
+      Title="BattleView" Loaded="Page_Loaded">
 
     <Grid>
-        <Canvas x:Name="canvas" SnapsToDevicePixels="True" ContextMenuOpening="canvasContextMenu_ContextMenuOpening">
+        <Canvas x:Name="canvas" ContextMenuOpening="canvasContextMenu_ContextMenuOpening">
             <Canvas.ContextMenu>
                 <ContextMenu x:Name="canvasContextMenu" />
             </Canvas.ContextMenu>
 
         </Canvas>
 
-        <local:PropView x:Name="gameStatePropView" HorizontalAlignment="Right" VerticalAlignment="Top" IsHitTestVisible="False" Background="White"></local:PropView>
-        <local:PropView x:Name="unitStatePropView" HorizontalAlignment="Right" VerticalAlignment="Bottom" IsHitTestVisible="False" Background="White"></local:PropView>
-        <Button x:Name="endTurnButton" Content="End Turn" Click="endTurnButton_Click" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-        <TextBox x:Name="debugText" HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <local:PropView x:Name="gameStatePropView" HorizontalAlignment="Right" VerticalAlignment="Top" IsHitTestVisible="False" Background="White" Visibility="Collapsed"></local:PropView>
+
+        <Border BorderBrush="#FF858585" BorderThickness="2,2,0,0" HorizontalAlignment="Right" VerticalAlignment="Bottom" Background="White">
+            <StackPanel Orientation="Horizontal" Margin="10">
+                <StackPanel Visibility="Collapsed">
+                    <TextBlock TextAlignment="Center">Selected Tile</TextBlock>
+                    <local:PropView x:Name="unitStatePropView" IsHitTestVisible="False" Background="White"></local:PropView>
+                    <local:PropView x:Name="terrainStatePropView" IsHitTestVisible="False" Background="White"></local:PropView>
+                </StackPanel>
+                <StackPanel>
+                    <Border BorderBrush="#FF858585" BorderThickness="0,0,0,1" Padding="0,0,0,2">
+                        <TextBlock TextAlignment="Center">Hovered Unit</TextBlock>
+                    </Border>
+                    <local:PropView x:Name="unitHoveredStatePropView" IsHitTestVisible="False" Background="White"></local:PropView>
+                    <Border BorderBrush="#FF858585" BorderThickness="0,0,0,1" Padding="0,0,0,2">
+                        <TextBlock TextAlignment="Center">Hovered Terrain</TextBlock>
+                    </Border>
+                    <local:PropView x:Name="terrainHoveredStatePropView" IsHitTestVisible="False" Background="White"></local:PropView>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <Border BorderBrush="#FF858585" BorderThickness="0,0,2,2" HorizontalAlignment="Left" VerticalAlignment="Top" Background="White">
+            <WrapPanel x:Name="currentCommanderActionList" Orientation="Horizontal">
+
+            </WrapPanel>
+        </Border>
+
+        <Border BorderBrush="#FF858585" BorderThickness="0,2,2,0" HorizontalAlignment="Left" VerticalAlignment="Bottom" Background="White">
+            <WrapPanel x:Name="selectedEntryActionList" Orientation="Horizontal">
+
+            </WrapPanel>
+        </Border>
     </Grid>
 </Page>

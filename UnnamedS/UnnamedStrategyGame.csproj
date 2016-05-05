@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props" Condition="Exists('..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -15,6 +16,8 @@
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <CodeContractsAssemblyMode>1</CodeContractsAssemblyMode>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -22,7 +25,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NETWORK_LAG</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NETWORK_PREDICTION NETWORK_LAG DEBUG_TEST</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
@@ -40,7 +43,7 @@
     <CodeContractsRedundantTests>True</CodeContractsRedundantTests>
     <CodeContractsMissingPublicRequiresAsWarnings>True</CodeContractsMissingPublicRequiresAsWarnings>
     <CodeContractsMissingPublicEnsuresAsWarnings>False</CodeContractsMissingPublicEnsuresAsWarnings>
-    <CodeContractsInferRequires>True</CodeContractsInferRequires>
+    <CodeContractsInferRequires>False</CodeContractsInferRequires>
     <CodeContractsInferEnsures>False</CodeContractsInferEnsures>
     <CodeContractsInferEnsuresAutoProperties>True</CodeContractsInferEnsuresAutoProperties>
     <CodeContractsInferObjectInvariants>False</CodeContractsInferObjectInvariants>
@@ -74,7 +77,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;NETWORK_PREDICTION</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
@@ -122,8 +125,9 @@
     <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>vendor\Newtonsoft.Json\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -150,29 +154,145 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Game\ActionInfo.cs" />
-    <Compile Include="Game\ActionTypes\ICausesMovement.cs" />
-    <Compile Include="Game\ActionTypes\Move.cs" />
-    <Compile Include="Game\ActionTypes\ReplenishUnitTurnResources.cs" />
+    <Compile Include="Game\ActionTypes\CommanderAction.cs" />
+    <Compile Include="Game\ActionTypes\ForCommanders\CommanderTargetCommanderAction.cs" />
+    <Compile Include="Game\ActionTypes\ForCommanders\CommanderTargetGenericAction.cs" />
+    <Compile Include="Game\ActionTypes\ForCommanders\CommanderTargetOtherAction.cs" />
+    <Compile Include="Game\ActionTypes\ForCommanders\CommanderTargetTileAction.cs" />
+    <Compile Include="Game\ActionTypes\ForCommanders\EndTurn.cs" />
+    <Compile Include="Game\ActionTypes\ForCommanders\ProvideCommanderEarnings.cs" />
+    <Compile Include="Game\ActionTypes\ForTerrain\BuildAirUnit.cs" />
+    <Compile Include="Game\ActionTypes\ForTerrain\BuildLandUnit.cs" />
+    <Compile Include="Game\ActionTypes\ForTerrain\BuildUnit.cs" />
+    <Compile Include="Game\ActionTypes\ForTerrain\TerrainTargetCommanderAction.cs" />
+    <Compile Include="Game\ActionTypes\ForTerrain\TerrainTargetGenericAction.cs" />
+    <Compile Include="Game\ActionTypes\ForTerrain\TerrainTargetOtherAction.cs" />
+    <Compile Include="Game\ActionTypes\ForTerrain\TerrainTargetTileAction.cs" />
+    <Compile Include="Game\ActionTypes\ForUnits\AttackAntiAircraftCannonBase.cs" />
+    <Compile Include="Game\ActionTypes\ForUnits\AttackAntiAircraftCannonVsAir.cs" />
+    <Compile Include="Game\ActionTypes\ForUnits\AttackAntiAircraftCannonVsGround.cs" />
+    <Compile Include="Game\ActionTypes\ForUnits\AttackAntiTankRocket.cs" />
+    <Compile Include="Game\ActionTypes\ForUnits\AttackArtilleryBarrage.cs" />
+    <Compile Include="Game\ActionTypes\ForUnits\AttackDiveBomb.cs" />
+    <Compile Include="Game\ActionTypes\ForUnits\AttackFighterHeavyMachineGun.cs" />
+    <Compile Include="Game\ActionTypes\ForUnits\AttackHeavyMachineGun.cs" />
+    <Compile Include="Game\ActionTypes\ForUnits\AttackLightMachineGun.cs" />
+    <Compile Include="Game\ActionTypes\ForUnits\AttackQuadHMGBase.cs" />
+    <Compile Include="Game\ActionTypes\ForUnits\AttackQuadHMGVsAir.cs" />
+    <Compile Include="Game\ActionTypes\ForUnits\AttackQuadHMGVsGround.cs" />
+    <Compile Include="Game\ActionTypes\ForUnits\AttackRocketArtilleryBarrage.cs" />
+    <Compile Include="Game\ActionTypes\ForUnits\AttackSaturationBombing.cs" />
+    <Compile Include="Game\ActionTypes\ForUnits\AttackTankMainGun.cs" />
+    <Compile Include="Game\ActionTypes\ForUnits\Capture.cs" />
+    <Compile Include="Game\ActionTypes\ForUnits\ClearRepeatedActionAutomatically.cs" />
+    <Compile Include="Game\ActionTypes\ForUnits\ClearRepeatedActionManually.cs" />
+    <Compile Include="Game\ActionTypes\ForUnits\DigIn.cs" />
+    <Compile Include="Game\ActionTypes\ForUnits\ICausesMovement.cs" />
+    <Compile Include="Game\ActionTypes\ForUnits\Move.cs" />
+    <Compile Include="Game\ActionTypes\ForUnits\NullUnitAction.cs" />
+    <Compile Include="Game\ActionTypes\ForUnits\ReplenishUnitTurnResources.cs" />
+    <Compile Include="Game\ActionTypes\ForUnits\TriggerRepeatedActionAutomatically.cs" />
+    <Compile Include="Game\ActionTypes\ForUnits\UnitTargetCommanderAction.cs" />
+    <Compile Include="Game\ActionTypes\ForUnits\UnitTargetGenericAction.cs" />
+    <Compile Include="Game\ActionTypes\ForUnits\UnitTargetOtherAction.cs" />
+    <Compile Include="Game\ActionTypes\ForUnits\UnitTargetTileAction.cs" />
+    <Compile Include="Game\ActionTypes\GameAction.cs" />
+    <Compile Include="Game\ActionTypes\TerrainAction.cs" />
+    <Compile Include="Game\ActionTypes\TileAction.cs" />
+    <Compile Include="Game\ActionTypes\UnitAction.cs" />
     <Compile Include="Game\Action\ActionChain.cs" />
+    <Compile Include="Game\Action\CommanderTargetCommanderContext.cs" />
+    <Compile Include="Game\Action\CommanderTargetGenericContext.cs" />
+    <Compile Include="Game\Action\CommanderTargetOtherContext.cs" />
+    <Compile Include="Game\Action\CommanderTargetTileContext.cs" />
+    <Compile Include="Game\Action\Context.cs" />
+    <Compile Include="Game\Action\CommanderContext.cs" />
+    <Compile Include="Game\Action\GameContext.cs" />
+    <Compile Include="Game\Action\GenericContext.cs" />
+    <Compile Include="Game\Action\NullContext.cs" />
+    <Compile Include="Game\Action\OtherContext.cs" />
+    <Compile Include="Game\Action\TargetContextBase.cs" />
+    <Compile Include="Game\Action\TerrainContext.cs" />
+    <Compile Include="Game\Action\TerrainTargetCommanderContext.cs" />
+    <Compile Include="Game\Action\TerrainTargetGenericContext.cs" />
+    <Compile Include="Game\Action\TerrainTargetOtherContext.cs" />
+    <Compile Include="Game\Action\TerrainTargetTileContext.cs" />
+    <Compile Include="Game\Action\TileContext.cs" />
+    <Compile Include="Game\Action\TileTargetCommanderContext.cs" />
+    <Compile Include="Game\Action\TileTargetGenericContext.cs" />
+    <Compile Include="Game\Action\TileTargetOtherContext.cs" />
+    <Compile Include="Game\Action\TileTargetTileContext.cs" />
+    <Compile Include="Game\Action\UnitContext.cs" />
+    <Compile Include="Game\Action\UnitTargetCommanderContext.cs" />
+    <Compile Include="Game\Action\UnitTargetGenericContext.cs" />
+    <Compile Include="Game\Action\UnitTargetOtherContext.cs" />
+    <Compile Include="Game\Action\UnitTargetTileContext.cs" />
+    <Compile Include="Game\CommanderType.cs" />
+    <Compile Include="Game\CommanderTypes\BasicCommander.cs" />
     <Compile Include="Game\Event\GameStartEventArgs.cs" />
+    <Compile Include="Game\Event\ITurnAwareEvent.cs" />
     <Compile Include="Game\Event\SyncEventArgs.cs" />
-    <Compile Include="Game\Event\TurnEndedEventArgs.cs" />
+    <Compile Include="Game\Event\TurnChangedEventArgs.cs" />
     <Compile Include="Game\Event\UserAddedEventArgs.cs" />
     <Compile Include="Game\Event\UserAssignedToCommanderEventArgs.cs" />
     <Compile Include="Game\Event\UserRemovedEventArgs.cs" />
+    <Compile Include="Game\Exceptions\IllegalExternalActionCall.cs" />
+    <Compile Include="Game\Exceptions\NotHostException.cs" />
     <Compile Include="Game\Exceptions\NotYourTurnException.cs" />
     <Compile Include="Game\Exceptions\StateMismatchException.cs" />
+    <Compile Include="Game\Exceptions\UnknownCommanderException.cs" />
     <Compile Include="Game\Exceptions\UnknownPlayerException.cs" />
     <Compile Include="Game\IReadOnlyBattleGameState.cs" />
     <Compile Include="Game\LocalGameLogic.cs" />
+    <Compile Include="Game\MovementTypes\HalfTrack.cs" />
+    <Compile Include="Game\MovementTypes\Propeller.cs" />
+    <Compile Include="Game\MovementTypes\Treads.cs" />
+    <Compile Include="Game\MovementTypes\Wheels.cs" />
     <Compile Include="Game\NetworkedGameLogic.cs" />
+    <Compile Include="Game\Preloader.cs" />
     <Compile Include="Game\Properties\PropData.cs" />
     <Compile Include="Game\StateChanges\GameStarted.cs" />
+    <Compile Include="Game\StateChanges\TurnChanged.cs" />
+    <Compile Include="Game\StateChanges\TurnEnd.cs" />
     <Compile Include="Game\StateChanges\UpdateStateChange.cs" />
+    <Compile Include="Game\SupplyTypes\Bombs.cs" />
+    <Compile Include="Game\SupplyTypes\Diesel.cs" />
+    <Compile Include="Game\SupplyTypes\Kerosene.cs" />
+    <Compile Include="Game\SupplyTypes\Rockets.cs" />
+    <Compile Include="Game\SupplyTypes\Shells.cs" />
+    <Compile Include="Game\TerrainTypes\Airfield.cs" />
+    <Compile Include="Game\TerrainTypes\City.cs" />
+    <Compile Include="Game\TerrainTypes\Factory.cs" />
+    <Compile Include="Game\TerrainTypes\Hill.cs" />
+    <Compile Include="Game\TerrainTypes\Land.cs" />
+    <Compile Include="Game\TerrainTypes\Mountain.cs" />
+    <Compile Include="Game\TerrainTypes\LandStructure.cs" />
+    <Compile Include="Game\TerrainTypes\Runway.cs" />
+    <Compile Include="Game\UnitTypes\Bombers\AirTransport.cs" />
+    <Compile Include="Game\UnitTypes\Bombers\Bomber.cs" />
+    <Compile Include="Game\UnitTypes\Chassis\BomberChassis.cs" />
+    <Compile Include="Game\UnitTypes\Tanks\AntiAircraftArtillery.cs" />
+    <Compile Include="Game\UnitTypes\HalfTracks\AntiAirHalfTrack.cs" />
+    <Compile Include="Game\UnitTypes\Boots\AntiTankInfantry.cs" />
+    <Compile Include="Game\UnitTypes\Tanks\Artillery.cs" />
+    <Compile Include="Game\UnitTypes\Chassis\BootsChassis.cs" />
+    <Compile Include="Game\UnitTypes\Chassis\CarChassis.cs" />
+    <Compile Include="Game\UnitTypes\Fighters\DiveBomber.cs" />
+    <Compile Include="Game\UnitTypes\Fighters\Fighter.cs" />
+    <Compile Include="Game\UnitTypes\Chassis\FighterChassis.cs" />
+    <Compile Include="Game\UnitTypes\Chassis\HalfTrackChassis.cs" />
+    <Compile Include="Game\UnitTypes\Cars\ReconCar.cs" />
+    <Compile Include="Game\UnitTypes\Trucks\TransportTruck.cs" />
+    <Compile Include="Game\UnitTypes\Trucks\RocketArtillery.cs" />
+    <Compile Include="Game\UnitTypes\Tanks\Tank.cs" />
+    <Compile Include="Game\UnitTypes\Chassis\TankChassis.cs" />
+    <Compile Include="Game\UnitTypes\HalfTracks\TransportHalfTrack.cs" />
+    <Compile Include="Game\UnitTypes\Chassis\TruckChassis.cs" />
     <Compile Include="Game\User.cs" />
     <Compile Include="Network\ExceptionEventArgs.cs" />
     <Compile Include="Network\Exceptions\IllegalCallAttempt.cs" />
     <Compile Include="Network\Exceptions\InvalidMessageOrderException.cs" />
+    <Compile Include="Network\IClient.cs" />
     <Compile Include="Network\IClientNotifier.cs" />
     <Compile Include="Network\IClientProtocolLogic.cs" />
     <Compile Include="Network\IProtocolLogic.cs" />
@@ -184,7 +304,6 @@
     <Compile Include="Network\MessageWrappers\ClientToServerProtocolMessageWrapper.cs" />
     <Compile Include="Network\MessageWrappers\CommanderTypeCallWrapper.cs" />
     <Compile Include="Network\MessageWrappers\DoActionsCallWrapper.cs" />
-    <Compile Include="Network\MessageWrappers\EndTurnCallWrapper.cs" />
     <Compile Include="Network\MessageWrappers\MessageWrapper.cs" />
     <Compile Include="Network\MessageWrappers\NotifyMessageWrapper.cs" />
     <Compile Include="Network\MessageWrappers\OnActionsTakenNotifyWrapper.cs" />
@@ -193,7 +312,7 @@
     <Compile Include="Network\MessageWrappers\OnCommanderChangedNotifyWrapper.cs" />
     <Compile Include="Network\MessageWrappers\OnSyncNotifyWrapper.cs" />
     <Compile Include="Network\MessageWrappers\OnTerrainChangedNotifyWrapper.cs" />
-    <Compile Include="Network\MessageWrappers\OnTurnEndedNotifyWrapper.cs" />
+    <Compile Include="Network\MessageWrappers\OnTurnChangedNotifyWrapper.cs" />
     <Compile Include="Network\MessageWrappers\OnUnitChangedNotifyWrapper.cs" />
     <Compile Include="Network\MessageWrappers\OnUserAddedNotifyWrapper.cs" />
     <Compile Include="Network\MessageWrappers\OnUserAssignedToCommanderNotifyWrapper.cs" />
@@ -206,12 +325,24 @@
     <Compile Include="Network\MessageWrappers\StartGameCallWrapper.cs" />
     <Compile Include="Network\MessageWrappers\SyncCallWrapper.cs" />
     <Compile Include="Network\Protocol\ClientHelloData.cs" />
+    <Compile Include="Serializers\JsonConverters\ActionTriggerEnumConverter.cs" />
+    <Compile Include="Serializers\JsonConverters\ContextConverter.cs" />
     <Compile Include="Serializers\JsonConverters\DynamicProperitesConverter.cs" />
+    <Compile Include="Serializers\JsonConverters\GenericContextConverter.cs" />
     <Compile Include="Serializers\JsonConverters\MessageWrapperConverter.cs" />
     <Compile Include="Serializers\JsonConverters\XTypeDictionaryConverter.cs" />
     <Compile Include="Serializers\Serializer.cs" />
+    <Compile Include="UI\ActionDetails.xaml.cs">
+      <DependentUpon>ActionDetails.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\ActionView.xaml.cs">
+      <DependentUpon>ActionView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\BattleView.xaml.cs">
       <DependentUpon>BattleView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\DamageTable.xaml.cs">
+      <DependentUpon>DamageTable.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\LogView.xaml.cs">
       <DependentUpon>LogView.xaml</DependentUpon>
@@ -245,17 +376,16 @@
     <Compile Include="Serializers\JsonSerializer.cs" />
     <Compile Include="Game\Action\ActionContext.cs" />
     <Compile Include="Game\ActionType.cs" />
-    <Compile Include="Game\ActionTypes\AttackBase.cs" />
-    <Compile Include="Game\ActionTypes\AttackRifle.cs" />
+    <Compile Include="Game\ActionTypes\ForUnits\AttackBase.cs" />
+    <Compile Include="Game\ActionTypes\ForUnits\AttackRifle.cs" />
     <Compile Include="Game\Event\ActionsTakenEventArgs.cs" />
-    <Compile Include="Game\Event\INetworkableEvent.cs" />
+    <Compile Include="Game\Event\GameEvent.cs" />
     <Compile Include="Game\Event\GameStateChangedArgs.cs" />
     <Compile Include="Game\Event\CommanderChangedEventArgs.cs" />
     <Compile Include="Game\Event\TerrainChangedEventArgs.cs" />
     <Compile Include="Game\Event\UnitChangedEventArgs.cs" />
     <Compile Include="Game\Exceptions\PropertyExceptions.cs" />
     <Compile Include="Game\Exceptions\ValidatorException.cs" />
-    <Compile Include="Game\Event\AttributeChangedEventArgs.cs" />
     <Compile Include="Game\Exceptions\GameException.cs" />
     <Compile Include="Game\Exceptions\InvalidDefinitionException.cs" />
     <Compile Include="Game\GameLogic.cs" />
@@ -269,7 +399,7 @@
     <Compile Include="Game\StateChanges\TerrainStateChange.cs" />
     <Compile Include="Game\StateChanges\UnitStateChange.cs" />
     <Compile Include="Game\SupplyTypes\Rations.cs" />
-    <Compile Include="Game\SupplyTypes\RifleRounds.cs" />
+    <Compile Include="Game\SupplyTypes\Bullets.cs" />
     <Compile Include="Game\Terrain.cs" />
     <Compile Include="Game\StateChanges\StateChange.cs" />
     <Compile Include="Game\BaseType.cs" />
@@ -281,12 +411,24 @@
     <Compile Include="Game\Tile.cs" />
     <Compile Include="Game\Unit.cs" />
     <Compile Include="Game\UnitType.cs" />
-    <Compile Include="Game\UnitTypes\Infantry.cs" />
+    <Compile Include="Game\UnitTypes\Boots\Infantry.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="UI\ActionDetails.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\ActionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UI\BattleView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\DamageTable.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -337,9 +479,13 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="Diagrams\AttributesClassDiagram.cd" />
+    <None Include="Diagrams\LogicalGameTypesDiagram.cd" />
+    <None Include="Diagrams\LogicalGameTypes_ActionTypes_Diagram.cd" />
     <None Include="Diagrams\MainClassDiagram.cd" />
     <None Include="Diagrams\MessageWrapperDiagram.cd" />
     <None Include="Diagrams\Networking.cd" />
+    <None Include="Diagrams\NewClassDiagram.cd" />
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -350,12 +496,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Game\ActionTypes\ForGame\" />
     <Folder Include="Game\Helpers\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="vendor\Newtonsoft.Json\license.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
+    <Folder Include="vendor\Newtonsoft.Json\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\vanilla\images\terrain_hit_reference.png">
@@ -384,6 +527,12 @@
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

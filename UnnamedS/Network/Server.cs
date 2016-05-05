@@ -10,8 +10,10 @@ using System.Threading.Tasks;
 
 namespace UnnamedStrategyGame.Network
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public class Server : IClientNotifier
     {
+        private readonly object serverLock = new object();
         private TcpListener _listener;
 
         private Dictionary<ServerClient, Task> ConnectedClients = new Dictionary<ServerClient, Task>();
@@ -60,7 +62,7 @@ namespace UnnamedStrategyGame.Network
                         break;
                     }
 
-                    var client = new ServerClient(new NetworkStream(tcpClient), Logic, new Game.User(nextUserID++, null));
+                    var client = new ServerClient(new NetworkStream(tcpClient), Logic, new Game.User(nextUserID++, null), serverLock);
                     client.Disconnected += Client_Disconnected;
                     client.Exception += Client_Exception;
 #if DEBUG
@@ -91,6 +93,9 @@ namespace UnnamedStrategyGame.Network
 
         private void Client_MessageReceived(object sender, MessageReceivedEventArgs e)
         {
+            Contract.Requires<ArgumentNullException>(null != sender);
+            Contract.Requires<ArgumentNullException>(null != e);
+
             var handler = MessageReceived;
             if(handler != null)
             {
@@ -100,6 +105,9 @@ namespace UnnamedStrategyGame.Network
 
         private void Client_Exception(object sender, ExceptionEventArgs e)
         {
+            Contract.Requires<ArgumentNullException>(null != sender);
+            Contract.Requires<ArgumentNullException>(null != e);
+
             var handler = Exception;
             if (handler != null)
             {
@@ -109,6 +117,9 @@ namespace UnnamedStrategyGame.Network
 
         private void Client_Disconnected(object sender, DisconnectedEventArgs e)
         {
+            Contract.Requires<ArgumentNullException>(null != sender);
+            Contract.Requires<ArgumentNullException>(null != e);
+
             var handler = Disconnected;
             if (handler != null)
             {
@@ -119,6 +130,14 @@ namespace UnnamedStrategyGame.Network
         ~Server()
         {
             _listener.Stop();
+        }
+
+        [ContractInvariantMethod]
+        private void Invariants()
+        {
+            Contract.Invariant(null != _listener);
+            Contract.Invariant(null != ConnectedClients);
+            Contract.Invariant(null != Logic);
         }
     }
 }

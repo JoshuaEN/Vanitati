@@ -13,6 +13,7 @@ namespace UnnamedStrategyGame.Serializers.JsonConverters
     {
         private static readonly IReadOnlyDictionary<string, Type> propertyData;
 
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
         static DynamicProperitesConverter()
         {
             Dictionary<string, Type> tmpPropertyData = new Dictionary<string, Type>();
@@ -25,6 +26,7 @@ namespace UnnamedStrategyGame.Serializers.JsonConverters
             propertyData = tmpPropertyData;
         }
 
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
         private static void AddPropertyData(IReadOnlyDictionary<string, Game.Properties.PropData> data, ref Dictionary<string, Type> refPropertyData)
         {
             foreach(var v in data)
@@ -42,6 +44,7 @@ namespace UnnamedStrategyGame.Serializers.JsonConverters
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
         public override bool CanConvert(Type objectType)
         {
             throw new NotImplementedException();
@@ -60,12 +63,13 @@ namespace UnnamedStrategyGame.Serializers.JsonConverters
                 if (propertyData.TryGetValue(child.Name, out propType) == false)
                     throw new ArgumentException(string.Format("Invalid property key of {0} for type {1}", child.Name, objectType.Name));
 
-                dic.Add(child.Name, child.Value.ToObject(propType));
+                dic.Add(child.Name, child.Value.ToObject(propType, serializer));
             }
 
             return dic;
         }
 
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
         public override bool CanWrite
         {
             get
@@ -74,6 +78,7 @@ namespace UnnamedStrategyGame.Serializers.JsonConverters
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
         public override void WriteJson(JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
         {
             throw new NotImplementedException();

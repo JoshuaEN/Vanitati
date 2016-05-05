@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace UnnamedStrategyGame.Game.StateChanges
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public class CommanderStateChange : UpdateStateChange
     {
         public int CommanderID { get; }
@@ -16,6 +18,6 @@ namespace UnnamedStrategyGame.Game.StateChanges
             ChangeCause = cause;
         }
 
-        public enum Cause { Added, Removed, Changed }
+        public enum Cause { Changed }
     }
 }

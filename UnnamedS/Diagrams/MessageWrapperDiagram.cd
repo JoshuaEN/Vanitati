@@ -9,8 +9,15 @@
   </Class>
   <Class Name="UnnamedStrategyGame.Network.MessageWrappers.CallMessageWrapper">
     <Position X="5.25" Y="2.5" Width="1.75" />
+    <Members>
+      <Method Name="CallMessageWrapper" Hidden="true" />
+      <Property Name="RequiresHost" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Properties" Collapsed="true" />
+    </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAgQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Network\MessageWrappers\CallMessageWrapper.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -21,20 +28,6 @@
       <FileName>Network\MessageWrappers\NotifyMessageWrapper.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="UnnamedStrategyGame.Network.MessageWrappers.DoActionsCallWrapper" Collapsed="true">
-    <Position X="5" Y="6" Width="2.25" />
-    <Members>
-      <Method Name="DoActionsCallWrapper" Hidden="true" />
-    </Members>
-    <Compartments>
-      <Compartment Name="Properties" Collapsed="true" />
-      <Compartment Name="Methods" Collapsed="true" />
-    </Compartments>
-    <TypeIdentifier>
-      <HashCode>AAAAQAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Network\MessageWrappers\DoActionsCallWrapper.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="UnnamedStrategyGame.Network.MessageWrappers.ProtocolMessageWrapper" Collapsed="true">
     <Position X="9.5" Y="2.5" Width="2" />
     <TypeIdentifier>
@@ -43,14 +36,14 @@
     </TypeIdentifier>
   </Class>
   <Class Name="UnnamedStrategyGame.Network.MessageWrappers.ServerToClientProtocolMessageWrapper">
-    <Position X="7.5" Y="4.25" Width="2.75" />
+    <Position X="5.5" Y="4.75" Width="2.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
       <FileName>Network\MessageWrappers\ServerToClientProtocolMessageWrapper.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="UnnamedStrategyGame.Network.MessageWrappers.ClientToServerProtocolMessageWrapper">
-    <Position X="10.5" Y="4.25" Width="2.75" />
+    <Position X="8.5" Y="4.75" Width="2.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
       <FileName>Network\MessageWrappers\ClientToServerProtocolMessageWrapper.cs</FileName>

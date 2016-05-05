@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace UnnamedStrategyGame.Game.Exceptions
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     class InvalidDefinitionException : GameException
     {
         public InvalidDefinitionException() : base("Invalid Definition") { }

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace UnnamedStrategyGame.Game.StateChanges
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public class UnitStateChange : UpdateStateChange
     {
         public int UnitID { get; }
@@ -19,6 +21,8 @@ namespace UnnamedStrategyGame.Game.StateChanges
 
         public UnitStateChange(int unitID, IDictionary<string, object> updatedProperties, Location location, Cause changeCause = Cause.Changed, Location previousLocation = null) : base(updatedProperties)
         {
+            Contract.Requires<ArgumentNullException>(null != location);
+
             UnitID = unitID;
             ChangeCause = changeCause;
             Location = location;
@@ -26,5 +30,12 @@ namespace UnnamedStrategyGame.Game.StateChanges
         }
 
         public enum Cause { Created, Destroyed, Changed }
+
+        [ContractInvariantMethod]
+        private void Invariants()
+        {
+            Contract.Invariant(null != Location);
+            Contract.Invariant(null != PreviousLocation);
+        }
     }
 }
