@@ -18,6 +18,8 @@ namespace UnnamedStrategyGame.UI.Settings
         public InputBindSet ZoomIn { get; set; } = new InputBindSet(new InputBind(new KeyInput(Key.PageUp)));
         public InputBindSet ZoomOut { get; set; } = new InputBindSet(new InputBind(new KeyInput(Key.PageDown)));
 
+        public InputBindSet CancelSelection { get; set; } = new InputBindSet(new InputBind(new MouseInput(MouseButton.Right)));
+
         public class InputBindSet
         {
             public IList<InputBind> BindSet { get; }

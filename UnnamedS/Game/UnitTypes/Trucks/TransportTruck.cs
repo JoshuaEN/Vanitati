@@ -11,9 +11,13 @@ namespace UnnamedStrategyGame.Game.UnitTypes
     {
         public override int BuildCost { get; } = 5000;
 
+        public override IReadOnlyList<MovementType> EmbarkableMovementTypes { get; } = MovementType.LAND_INFANTRY_TYPES;
+        public override int MaxEmbarkedUnits { get; } = 1;
+
         public override IReadOnlyList<UnitAction> Actions { get; } = new List<UnitAction>()
         {
             ActionTypes.ForUnits.Move.Instance,
+            ActionTypes.ForUnits.UnloadEmbarkedUnit.Instance,
             ActionTypes.ForUnits.DigIn.Instance
         }.Concat(DEFAULT_ACTIONS).ToList();
 

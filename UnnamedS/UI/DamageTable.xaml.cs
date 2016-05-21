@@ -103,7 +103,7 @@ namespace UnnamedStrategyGame.UI
             {
                 new Commander(Game.CommanderTypes.BasicCommander.Instance, 0, 0),
                 new Commander(Game.CommanderTypes.BasicCommander.Instance, 1, 0)
-            }, new Dictionary<string, object>(), -1));
+            }, new Dictionary<string, object>(), -1), BattleGameState.StartMode.NewGame);
 
             DataTable dt = new DataTable();
             dt.Columns.Add("source_unit");
@@ -136,7 +136,7 @@ namespace UnnamedStrategyGame.UI
 
                     var context = new Game.Action.ActionContext(
                         sourceUnitID, Game.ActionTypes.UnitAction.ActionTriggers.AttackRetaliation, 
-                        new Game.Action.UnitContext(sourceLocation), new Game.Action.UnitContext(targetLocation));
+                        new Game.Action.UnitContext(sourceLocation), new Game.Action.GenericContext(targetLocation));
                     var specialContext = new Game.Action.UnitTargetTileContext(logic.State, context);
 
                     foreach (var targetUnitType in foreachOrder.ToArray())

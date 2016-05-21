@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnnamedStrategyGame.Game.Action;
 using UnnamedStrategyGame.Game.ActionTypes;
+using UnnamedStrategyGame.Game.Event;
 using UnnamedStrategyGame.Game.StateChanges;
 
 namespace UnnamedStrategyGame.Game
@@ -79,26 +80,21 @@ namespace UnnamedStrategyGame.Game
             }
         }
 
-        public override void AssignUserToCommander(int? userID, int commanderID)
-        {
-            AssignUserToCommander(userID, commanderID, false);
-        }
-
-        public void AssignUserToCommander(int? userID, int commanderID, bool isHost)
+        public void AssignUserToCommander(int? userID, int commanderID, int performedByUserID, bool isHost)
         {
             Contract.Requires<ArgumentException>(userID == null || Users.ContainsKey((int)userID));
 
             int? currentUserID;
             if(_commanderAssignments.TryGetValue(commanderID, out currentUserID))
             {
-                if(currentUserID != null && isHost != true)
+                if(currentUserID != null && (isHost != true && currentUserID != performedByUserID))
                 {
                     // TODO Better exception
                     throw new Exceptions.NotHostException();
                 }
                 _commanderAssignments[commanderID] = userID;
 
-                var args = new Event.UserAssignedToCommanderEventArgs(userID, commanderID);
+                var args = new Event.UserAssignedToCommanderEventArgs(userID, commanderID, performedByUserID, isHost);
                 foreach (var l in UsersToNotify())
                 {
                     l.OnUserAssignedToCommander(this, args);
@@ -113,10 +109,15 @@ namespace UnnamedStrategyGame.Game
 
         public override void DoActions(List<ActionInfo> actions)
         {
-            DoActions(actions, true);
+            DoActions(null, actions, true);
         }
 
-        private void DoActions(List<ActionInfo> actions, bool external)
+        public void DoActions(ActionIdentifyingInfo actionIdentifyingInfo, List<ActionInfo> actions)
+        {
+            DoActions(actionIdentifyingInfo, actions, true);
+        }
+
+        private void DoActions(ActionIdentifyingInfo actionIdentifyingInfo, List<ActionInfo> actions, bool external)
         {
             if (actions.Count < 1)
                 return;
@@ -141,7 +142,7 @@ namespace UnnamedStrategyGame.Game
                     unit = State.GetUnit((action.Context.Source as UnitContext).Location);
                 }
 
-                ApplyChanges(action, changes);
+                ApplyChanges(actionIdentifyingInfo, action, changes);
 
                 if (null != unit)
                 {
@@ -150,53 +151,64 @@ namespace UnnamedStrategyGame.Game
                     {
 
                         var triggeredActions = unit.UnitType.Actions.
-                            Where(a => a.Triggers.HasFlag(UnitAction.ActionTriggers.ActionPerformedByUser)).
+                            Where(a => a.Triggers.HasFlag(UnitAction.ActionTriggers.OnActionPerformedByUser)).
                             Select(a =>
-                                new ActionInfo(a, new ActionContext(null, UnitAction.ActionTriggers.ActionPerformedByUser, new UnitContext(unit.Location), new GenericContext(action)))
+                                new ActionInfo(a, new ActionContext(null, UnitAction.ActionTriggers.OnActionPerformedByUser, new UnitContext(unit.Location), new GenericContext(action)))
                             );
 
                         if (triggeredActions.Count() > 0)
-                            DoActions(triggeredActions.ToList(), false);
+                            DoActions(actionIdentifyingInfo, triggeredActions.ToList(), false);
                     }
                 }
             }
         }
 
-        public override void DoAction(ActionInfo action)
-        {
-            DoAction(action, true);
-        }
-
-        private void DoAction(ActionInfo action, bool external)
-        {
-            DoActions(new List<ActionInfo>(1) { action }, external);
-        }
-
         public override void Sync(int syncID)
         {
             var fields = InternalState.GetFields();
-            var args = new Event.SyncEventArgs(syncID, fields);
+            var args = new Event.SyncEventArgs(syncID, fields, GetFields());
             NotifyOfSync(args);
         }
 
-        public void Sync(int syncID, BattleGameState.Fields fields)
+        public override void Sync(int syncID, BattleGameState.Fields fields, Fields logicFields)
         {
             Contract.Requires<ArgumentNullException>(null != fields);
 
-            Sync(fields);
-            NotifyOfSync(new Event.SyncEventArgs(syncID, fields));
+            Sync(fields, logicFields);
+            NotifyOfSync(new Event.SyncEventArgs(syncID, fields, GetFields()));
         }
 
-        private void Sync(BattleGameState.Fields fields)
+        private void Sync(BattleGameState.Fields fields, Fields logicFields)
         {
             Contract.Requires<ArgumentNullException>(null != fields);
 
-            InternalState.Sync(fields);
-            _commanderAssignments.Clear();
-            foreach (var commander in fields.Commanders)
+            var newUserSets = new List<UserSet>();
+
+            foreach (var user in logicFields.Users)
             {
-                _commanderAssignments.Add(commander.CommanderID, null);
+                UserSet existingUser;
+                if(UserList.TryGetValue(user.UserID, out existingUser))
+                {
+                    newUserSets.Add(new UserSet(existingUser.Logic, user));
+                }
+                else
+                {
+                    newUserSets.Add(new UserSet(new List<IUserLogic>(0), user));
+                }
             }
+
+            UserList.Clear();
+
+            foreach (var userSet in newUserSets)
+                UserList.Add(userSet.State.UserID, userSet);
+
+            _commanderAssignments.Clear();
+            
+            foreach(var kp in logicFields.UserCommanderAssignments)
+                _commanderAssignments.Add(kp.Key, kp.Value);
+
+            InternalState.Sync(fields);
+            
         }
 
         private void NotifyOfSync(Event.SyncEventArgs args)
@@ -209,40 +221,49 @@ namespace UnnamedStrategyGame.Game
             }
         }
 
-        public override void StartGame(BattleGameState.Fields fields)
+        public override void StartGame(BattleGameState.Fields fields, BattleGameState.StartMode startMode)
         {
-            Sync(fields);
-            InternalState.StartGame(fields);
+            _commanderAssignments.Clear();
+            foreach (var commander in fields.Commanders)
+            {
+                _commanderAssignments.Add(commander.CommanderID, null);
+            }
 
-            var args = new Event.GameStartEventArgs(fields);
+            Sync(fields, GetFields());
+            InternalState.StartGame(fields, startMode);
+
+            var args = new Event.GameStartEventArgs(fields, startMode);
 
             foreach (var l in UsersToNotify())
             {
                 l.OnGameStart(this, args);    
             }
 
-            var args2 = new Event.TurnChangedEventArgs(-1, new TurnChanged(-1, State.TurnID, -1, State.CurrentCommander.CommanderID, TurnChanged.Cause.GameStart));
-            foreach (var l in UsersToNotify())
+            if (startMode == BattleGameState.StartMode.NewGame)
             {
-                l.OnTurnChanged(this, args2);
-            }
+                var args2 = new Event.TurnChangedEventArgs(-1, null, new TurnChanged(-1, State.TurnID, -1, State.CurrentCommander.CommanderID, TurnChanged.Cause.GameStart));
+                foreach (var l in UsersToNotify())
+                {
+                    l.OnTurnChanged(this, args2);
+                }
 
-            DoActions(ActionsForTurnStart(State.CurrentCommander.CommanderID).ToList(), false);
+                DoActions(null, ActionsForTurnStart(State.CurrentCommander.CommanderID).ToList(), false);
+            }
         }
 
-        public void EndTurn(int commanderID)
+        public void EndTurn(ActionIdentifyingInfo actionIdentifyingInfo, int commanderID)
         {
             var previousTurnID = InternalState.TurnID;
             InternalState.EndTurn(commanderID);
 
-            var args = new Event.TurnChangedEventArgs(previousTurnID, new TurnChanged(previousTurnID, State.TurnID, commanderID, State.CurrentCommander.CommanderID, TurnChanged.Cause.TurnEnded));
+            var args = new Event.TurnChangedEventArgs(previousTurnID, actionIdentifyingInfo, new TurnChanged(previousTurnID, State.TurnID, commanderID, State.CurrentCommander.CommanderID, TurnChanged.Cause.TurnEnded));
             foreach(var l in UsersToNotify())
             {
                 l.OnTurnChanged(this, args);
             }
 
             // Ensure that the end of turn actions are all run first, followed by the start of turn actions.
-            DoActions(
+            DoActions(actionIdentifyingInfo,
                 ActionsForTurnEnd(commanderID).Concat(
                     ActionsForTurnStart(State.CurrentCommander.CommanderID)
                     ).ToList(),
@@ -287,8 +308,16 @@ namespace UnnamedStrategyGame.Game
                     throw new Exceptions.IllegalExternalActionCall();
                 else if(action.Context.ActionCategory != action.Type.ActionCategory)
                     throw new Exceptions.IllegalExternalActionCall();
-                else if(action.Context.ActionTargetCategory != action.Type.ActionTargetCategory)
-                    throw new Exceptions.IllegalExternalActionCall();
+
+                try
+                {
+                    if (action.Type.CheckTargetContext(action.Context.Target) == false)
+                        throw new Exceptions.IllegalExternalActionCall();
+                }
+                catch(ArgumentException e)
+                {
+                    throw new Exceptions.IllegalExternalActionCall(null, e);
+                }
 
                 var source = action.Context.Source;
 
@@ -329,7 +358,7 @@ namespace UnnamedStrategyGame.Game
             }
         }
 
-        private void ApplyChanges(ActionInfo actionInfo, IEnumerable<StateChange> changes)
+        private void ApplyChanges(ActionIdentifyingInfo actionIdentifyingInfo, ActionInfo actionInfo, IEnumerable<StateChange> changes)
         { 
             foreach(var change in changes)
             {
@@ -338,7 +367,7 @@ namespace UnnamedStrategyGame.Game
                     var castedChange = (change as GameStateChange);
                     InternalState.UpdateGame(castedChange);
 
-                    var args = new Event.GameStateChangedArgs(State.TurnID, castedChange);
+                    var args = new Event.GameStateChangedArgs(State.TurnID, actionIdentifyingInfo, castedChange);
                     foreach (var l in UsersToNotify())
                     {
                         l.OnGameStateChanged(this, args);
@@ -349,7 +378,7 @@ namespace UnnamedStrategyGame.Game
                     var castedChange = (change as CommanderStateChange);
                     InternalState.UpdateCommander(castedChange);
 
-                    var args = new Event.CommanderChangedEventArgs(State.TurnID, castedChange);
+                    var args = new Event.CommanderChangedEventArgs(State.TurnID, actionIdentifyingInfo, castedChange);
                     foreach (var l in UsersToNotify())
                     {
                         l.OnCommanderChanged(this, args);
@@ -363,25 +392,25 @@ namespace UnnamedStrategyGame.Game
 
                     InternalState.UpdateUnit(castedChange);
 
-                    var args = new Event.UnitChangedEventArgs(State.TurnID, castedChange);
+                    var args = new Event.UnitChangedEventArgs(State.TurnID, actionIdentifyingInfo, castedChange);
                     foreach(var l in UsersToNotify())
                     {
                         l.OnUnitChanged(this, args);
                     }
 
-                    if(castedChange.ChangeCause != UnitStateChange.Cause.Destroyed)
+                    if(castedChange.ChangeCause != UnitStateChange.Cause.Destroyed && castedChange.ChangeCause != UnitStateChange.Cause.Removed)
                     {
-                        if (castedChange.ChangeCause == UnitStateChange.Cause.Created)
+                        if (castedChange.ChangeCause == UnitStateChange.Cause.Created || castedChange.ChangeCause == UnitStateChange.Cause.Added)
                             unit = State.GetUnit(castedChange.UnitID);
 
                         var actions = unit.UnitType.Actions.
-                            Where(a => a.Triggers.HasFlag(UnitAction.ActionTriggers.PropertyChanged)).
+                            Where(a => a.Triggers.HasFlag(UnitAction.ActionTriggers.OnPropertyChanged)).
                             Select(a =>
-                                new ActionInfo(a, new ActionContext(null, UnitAction.ActionTriggers.PropertyChanged, new UnitContext(unit.Location), new GenericContext(castedChange.UpdatedProperties)))
+                                new ActionInfo(a, new ActionContext(null, UnitAction.ActionTriggers.OnPropertyChanged, new UnitContext(unit.Location), new GenericContext(castedChange.UpdatedProperties)))
                             );
 
                         if (actions.Count() > 0)
-                            DoActions(actions.ToList(), false);
+                            DoActions(actionIdentifyingInfo, actions.ToList(), false);
                     }
 
                     if(castedChange.ChangeCause == UnitStateChange.Cause.Created || castedChange.ChangeCause == UnitStateChange.Cause.Destroyed)
@@ -393,11 +422,11 @@ namespace UnnamedStrategyGame.Game
 
                         if (castedChange.ChangeCause == UnitStateChange.Cause.Created)
                         {
-                            trigger = UnitAction.ActionTriggers.UnitCreated;
+                            trigger = UnitAction.ActionTriggers.OnUnitCreated;
                         }
                         else if (castedChange.ChangeCause == UnitStateChange.Cause.Destroyed)
                         {
-                            trigger = UnitAction.ActionTriggers.UnitDestroyed;
+                            trigger = UnitAction.ActionTriggers.OnUnitDestroyed;
                         }
                         else
                         {
@@ -410,7 +439,8 @@ namespace UnnamedStrategyGame.Game
                         Contract.Assert(trigger != UnitAction.ActionTriggers.ManuallyByUser);
 
                         var unitContext = new UnitContext(unit.Location);
-                        DoActions(actions.Select(a => new ActionInfo(a, new ActionContext(null, trigger, unitContext, unitContext))).ToList(), false);
+                        var targetContext = new GenericContext(unit.Location);
+                        DoActions(actionIdentifyingInfo, actions.Select(a => new ActionInfo(a, new ActionContext(null, trigger, unitContext, targetContext))).ToList(), false);
                     }
                 }
                 else if (change is TerrainStateChange)
@@ -418,7 +448,7 @@ namespace UnnamedStrategyGame.Game
                     var castedChange = (change as TerrainStateChange);
                     InternalState.UpdateTerrain(castedChange);
 
-                    var args = new Event.TerrainChangedEventArgs(State.TurnID, castedChange);
+                    var args = new Event.TerrainChangedEventArgs(State.TurnID, actionIdentifyingInfo, castedChange);
                     foreach(var l in UsersToNotify())
                     {
                         l.OnTerrainChanged(this, args);
@@ -426,7 +456,18 @@ namespace UnnamedStrategyGame.Game
                 }
                 else if(change is TurnEnd)
                 {
-                    EndTurn((change as TurnEnd).CommanderID);
+                    EndTurn(actionIdentifyingInfo, (change as TurnEnd).CommanderID);
+                }
+                else if(change is VictoryConditionAchieved)
+                {
+                    var castedChange = (change as VictoryConditionAchieved);
+
+
+                    var args = new Event.VictoryConditionAchievedEventArgs(actionIdentifyingInfo, castedChange);
+                    foreach(var l in UsersToNotify())
+                    {
+                        l.OnVictoryConditionAchieved(this, args);
+                    }
                 }
                 else
                 {
@@ -441,9 +482,9 @@ namespace UnnamedStrategyGame.Game
             {
                 var unitContext = new UnitContext(unit.Location);
                 var otherContext = new OtherContext();
-                foreach (var action in unit.UnitType.Actions.Where(u => u.Triggers.HasFlag(UnitAction.ActionTriggers.TurnStart)))
+                foreach (var action in unit.UnitType.Actions.Where(u => u.Triggers.HasFlag(UnitAction.ActionTriggers.OnTurnStart)))
                 {
-                    yield return new ActionInfo(action, new ActionContext(null, UnitAction.ActionTriggers.TurnStart, unitContext, otherContext));
+                    yield return new ActionInfo(action, new ActionContext(null, UnitAction.ActionTriggers.OnTurnStart, unitContext, otherContext));
                 }
             }
 
@@ -452,20 +493,20 @@ namespace UnnamedStrategyGame.Game
                 foreach (var action in terrain.TerrainType.Actions)
                 {
                     var terrainContext = new TerrainContext(terrain.Location);
-                    if (action.Triggers.HasFlag(TerrainAction.ActionTriggers.AnyTurnStart))
+                    if (action.Triggers.HasFlag(TerrainAction.ActionTriggers.OnAnyTurnStart))
                     {
-                        yield return new ActionInfo(action, new ActionContext(null, TerrainAction.ActionTriggers.AnyTurnStart, terrainContext, new OtherContext()));
+                        yield return new ActionInfo(action, new ActionContext(null, TerrainAction.ActionTriggers.OnAnyTurnStart, terrainContext, new OtherContext()));
                     }
-                    if (action.Triggers.HasFlag(TerrainAction.ActionTriggers.OccupyingUnitTurnStart) &&
+                    if (action.Triggers.HasFlag(TerrainAction.ActionTriggers.OnOccupyingUnitTurnStart) &&
                              State.GetTile(terrain.Location)?.Unit?.CommanderID == currentTurnCommanderID)
                     {
-                        yield return new ActionInfo(action, new ActionContext(null, TerrainAction.ActionTriggers.OccupyingUnitTurnStart, terrainContext, new UnitContext(terrain.Location)));
+                        yield return new ActionInfo(action, new ActionContext(null, TerrainAction.ActionTriggers.OnOccupyingUnitTurnStart, terrainContext, new GenericContext(terrain.Location)));
                     }
-                    if (action.Triggers.HasFlag(TerrainAction.ActionTriggers.OwnerTurnStart) &&
+                    if (action.Triggers.HasFlag(TerrainAction.ActionTriggers.OnOwnerTurnStart) &&
                              terrain.IsOwned == true &&
                              terrain.CommanderID == currentTurnCommanderID)
                     {
-                        yield return new ActionInfo(action, new ActionContext(null, TerrainAction.ActionTriggers.OwnerTurnStart, terrainContext, terrainContext));
+                        yield return new ActionInfo(action, new ActionContext(null, TerrainAction.ActionTriggers.OnOwnerTurnStart, terrainContext, new GenericContext(terrainContext.Location)));
                     }
                 }
             }
@@ -473,8 +514,23 @@ namespace UnnamedStrategyGame.Game
             foreach(var action in State.GetCommander(currentTurnCommanderID).CommanderType.Actions)
             {
                 var commanderContext = new CommanderContext(currentTurnCommanderID);
-                if (action.Triggers.HasFlag(CommanderAction.ActionTriggers.TurnStart))
-                    yield return new ActionInfo(action, new ActionContext(null, CommanderAction.ActionTriggers.TurnStart, commanderContext, new OtherContext()));
+                if (action.Triggers.HasFlag(CommanderAction.ActionTriggers.OnTurnStart))
+                    yield return new ActionInfo(action, new ActionContext(null, CommanderAction.ActionTriggers.OnTurnStart, commanderContext, new OtherContext()));
+            }
+
+            foreach(var action in State.Actions)
+            {
+                if (action.Triggers.HasFlag(GameAction.ActionTriggers.OnAnyTurnStart))
+                    yield return new ActionInfo(action, new ActionContext(null, GameAction.ActionTriggers.OnAnyTurnStart, new GameContext(), new OtherContext()));
+            }
+
+            if (InternalState.CurrentCommanderIndex == 0)
+            {
+                foreach (var action in State.Actions)
+                {
+                    if (action.Triggers.HasFlag(GameAction.ActionTriggers.OnRoundStart))
+                        yield return new ActionInfo(action, new ActionContext(null, GameAction.ActionTriggers.OnRoundStart, new GameContext(), new OtherContext()));
+                }
             }
         }
 
@@ -483,9 +539,9 @@ namespace UnnamedStrategyGame.Game
             foreach (var unit in State.Units.Values.Where(u => u.CommanderID == currentTurnCommanderID))
             {
                 var unitContext = new UnitContext(unit.Location);
-                foreach (var action in unit.UnitType.Actions.Where(u => u.Triggers.HasFlag(UnitAction.ActionTriggers.TurnEnd)))
+                foreach (var action in unit.UnitType.Actions.Where(u => u.Triggers.HasFlag(UnitAction.ActionTriggers.OnTurnEnd)))
                 {
-                    yield return new ActionInfo(action, new ActionContext(null, UnitAction.ActionTriggers.TurnEnd, unitContext, unitContext));
+                    yield return new ActionInfo(action, new ActionContext(null, UnitAction.ActionTriggers.OnTurnEnd, unitContext, new GenericContext(unitContext.Location)));
                 }
             }
 
@@ -494,20 +550,20 @@ namespace UnnamedStrategyGame.Game
                 foreach (var action in terrain.TerrainType.Actions)
                 {
                     var terrainContext = new TerrainContext(terrain.Location);
-                    if (action.Triggers.HasFlag(TerrainAction.ActionTriggers.AnyTurnEnd))
+                    if (action.Triggers.HasFlag(TerrainAction.ActionTriggers.OnAnyTurnEnd))
                     {
-                        yield return new ActionInfo(action, new ActionContext(null, TerrainAction.ActionTriggers.AnyTurnEnd, terrainContext, new OtherContext()));
+                        yield return new ActionInfo(action, new ActionContext(null, TerrainAction.ActionTriggers.OnAnyTurnEnd, terrainContext, new OtherContext()));
                     }
-                    if (action.Triggers.HasFlag(TerrainAction.ActionTriggers.OccupyingUnitTurnEnd) &&
+                    if (action.Triggers.HasFlag(TerrainAction.ActionTriggers.OnOccupyingUnitTurnEnd) &&
                              State.GetTile(terrain.Location)?.Unit?.CommanderID == currentTurnCommanderID)
                     {
-                        yield return new ActionInfo(action, new ActionContext(null, TerrainAction.ActionTriggers.OccupyingUnitTurnEnd, terrainContext, new UnitContext(terrain.Location)));
+                        yield return new ActionInfo(action, new ActionContext(null, TerrainAction.ActionTriggers.OnOccupyingUnitTurnEnd, terrainContext, new GenericContext(terrain.Location)));
                     }
-                    if (action.Triggers.HasFlag(TerrainAction.ActionTriggers.OwnerTurnEnd) &&
+                    if (action.Triggers.HasFlag(TerrainAction.ActionTriggers.OnOwnerTurnEnd) &&
                              terrain.IsOwned == true &&
                              terrain.CommanderID == currentTurnCommanderID)
                     {
-                        yield return new ActionInfo(action, new ActionContext(null, TerrainAction.ActionTriggers.OwnerTurnEnd, terrainContext, terrainContext));
+                        yield return new ActionInfo(action, new ActionContext(null, TerrainAction.ActionTriggers.OnOwnerTurnEnd, terrainContext, new GenericContext(terrainContext.Location)));
                     }
                 }
             }
@@ -515,8 +571,14 @@ namespace UnnamedStrategyGame.Game
             foreach (var action in State.GetCommander(currentTurnCommanderID).CommanderType.Actions)
             {
                 var commanderContext = new CommanderContext(currentTurnCommanderID);
-                if (action.Triggers.HasFlag(CommanderAction.ActionTriggers.TurnEnd))
-                    yield return new ActionInfo(action, new ActionContext(null, CommanderAction.ActionTriggers.TurnEnd, commanderContext, new OtherContext()));
+                if (action.Triggers.HasFlag(CommanderAction.ActionTriggers.OnTurnEnd))
+                    yield return new ActionInfo(action, new ActionContext(null, CommanderAction.ActionTriggers.OnTurnEnd, commanderContext, new OtherContext()));
+            }
+
+            foreach (var action in State.Actions)
+            {
+                if (action.Triggers.HasFlag(GameAction.ActionTriggers.OnAnyTurnEnd))
+                    yield return new ActionInfo(action, new ActionContext(null, GameAction.ActionTriggers.OnAnyTurnEnd, new GameContext(), new OtherContext()));
             }
         }
 
@@ -530,5 +592,6 @@ namespace UnnamedStrategyGame.Game
             Contract.Invariant(null != _state);
             Contract.Invariant(null != InternalState);
         }
+
     }
 }

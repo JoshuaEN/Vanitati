@@ -8,7 +8,7 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
 {
     public sealed class AttackAntiAircraftCannonVsAir : AttackAntiAircraftCannonBase
     {
-        public override IReadOnlyList<MovementType> TargetableMovementTypes { get; } = TARGETABLE_AIR_VEHICLE_MOVEMENT_TYPES;
+        public override IReadOnlyList<MovementType> TargetableMovementTypes { get; } = MovementType.AIR_VEHICLE_MOVEMENT_TYPES;
         public override int MaximumRange { get; } = 2;
         public override int MinimumRange { get; } = 1;
 

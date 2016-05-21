@@ -31,15 +31,17 @@ namespace UnnamedStrategyGame.Game
         public UnitType UnitType { get; private set; }
         public Location Location { get; private set; }
         public IDictionary<SupplyType, int> Supplies { get; private set; }
+        public List<Unit> EmbarkedUnits { get; private set; } = new List<Unit>(0); 
         public int CommanderID { get; private set; } = -1;
         public int Movement { get; private set; } = -1;
         public int Actions { get; private set; } = -1;
         public int Health { get; private set; } = -1;
         public double Armor { get; private set; } = -1;
         public ActionInfo RepeatedAction { get; private set; }
+        public bool Embarked { get; private set; }
 
         [Newtonsoft.Json.JsonConstructor]
-        public Unit(int unitID, UnitType unitType, Location location, int commanderID, IDictionary<SupplyType, int> supplies = null, int? health = null, double? armor = null, ActionInfo repeatedAction = null, int movement = 0, int actions = 0)
+        public Unit(int unitID, UnitType unitType, Location location, int commanderID, IDictionary<SupplyType, int> supplies = null, int? health = null, double? armor = null, ActionInfo repeatedAction = null, int movement = 0, int actions = 0, bool embarked = false, List<Unit> embarkedUnits = null)
         {
             Contract.Requires<ArgumentNullException>(unitType != null);
             Contract.Requires<ArgumentNullException>(location != null);
@@ -56,6 +58,8 @@ namespace UnnamedStrategyGame.Game
             Health = health ?? UnitType.MaxHealth;
             Armor = armor ?? UnitType.MaxArmor;
             RepeatedAction = repeatedAction ?? ActionTypes.ForUnits.NullUnitAction.ActionInfoInstance;
+            Embarked = embarked;
+            EmbarkedUnits = embarkedUnits ?? new List<Unit>(0);
 
             // Per a turn attributes
             Movement = movement;
@@ -67,12 +71,38 @@ namespace UnnamedStrategyGame.Game
             SetProperties(values);
         }
 
+        public int GetEffectiveConcealment(IReadOnlyBattleGameState state, Terrain currentTerrain)
+        {
+            return GetConcealmentBase(state, currentTerrain) + GetConcealmentTerrainModifier(state, currentTerrain) + GetConcealmentDigInBonus(state, currentTerrain);
+        }
+
+        public int GetConcealmentDigInBonus(IReadOnlyBattleGameState state, Terrain currentTerrain)
+        {
+            if (UnitType.EffectedByTerrainModifiers)
+                return ((int)Math.Round(GetConcealmentBase(state, currentTerrain) * (currentTerrain.DigIn * 2.0 / 5.0)));
+            else
+                return 0;
+        }
+
+        public int GetConcealmentBase(IReadOnlyBattleGameState state, Terrain currentTerrain)
+        {
+            return UnitType.Concealment;
+        }
+
+        public int GetConcealmentTerrainModifier(IReadOnlyBattleGameState state, Terrain currentTerrain)
+        {
+            if (UnitType.EffectedByTerrainModifiers)
+                return currentTerrain.TerrainType.ConcealmentModifier;
+            else
+                return 0;
+        }
+
         public IDictionary<Location, ActionType> GetAvailableMovement(IReadOnlyBattleGameState state)
         {
             Contract.Requires<ArgumentNullException>(null != state);
             var sourceTile = state.GetTile(Location);
 
-            return GetAvailableMovement(state, new UnitTargetTileContext(state, new ActionContext(state.CurrentCommander.CommanderID, ActionTypes.UnitAction.ActionTriggers.ManuallyByUser, new UnitContext(sourceTile.Location), new UnitContext(sourceTile.Location))), sourceTile);
+            return GetAvailableMovement(state, new UnitTargetTileContext(state, new ActionContext(state.CurrentCommander.CommanderID, ActionTypes.UnitAction.ActionTriggers.ManuallyByUser, new UnitContext(sourceTile.Location), new GenericContext(sourceTile.Location))), sourceTile);
         }
 
         public IDictionary<Location, ActionType> GetAvailableMovement(IReadOnlyBattleGameState state, UnitTargetTileContext context, Tile sourceTile)

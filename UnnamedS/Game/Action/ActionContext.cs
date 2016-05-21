@@ -15,9 +15,8 @@ namespace UnnamedStrategyGame.Game.Action
     {
         public int? TriggeredByCommanderID { get; }
         public ActionType.Category ActionCategory { get { return Source.ActionCategory; } }
-        public ActionType.TargetCategory ActionTargetCategory { get { return Target.ActionTargetCategory; } }
-        public Context Source { get; }
-        public Context Target { get; }
+        public SourceContext Source { get; }
+        public TargetContext Target { get; }
 
         [Newtonsoft.Json.JsonConverter(typeof(Serializers.JsonConverters.ActionTriggerEnumConverter))]
         public GenericActionTrigger ActionTrigger { get; }
@@ -28,7 +27,7 @@ namespace UnnamedStrategyGame.Game.Action
         [JsonIgnore]
         public bool TriggeredManuallyByUser { get { return ActionTrigger.TriggeredManuallyByUser; } }
 
-        public ActionContext(int? triggeredByCommanderID, TriggerAutoDetermineMode mode, Context source, Context target) : this(triggeredByCommanderID, source, target)
+        public ActionContext(int? triggeredByCommanderID, TriggerAutoDetermineMode mode, SourceContext source, TargetContext target) : this(triggeredByCommanderID, source, target)
         {
             Contract.Requires<ArgumentException>(mode == TriggerAutoDetermineMode.ManuallyByUser, "Invalid Mode");
 
@@ -43,33 +42,33 @@ namespace UnnamedStrategyGame.Game.Action
         }
 
         [JsonConstructor]
-        public ActionContext(int? triggeredByCommanderID, GenericActionTrigger actionTrigger, Context source, Context target) : this(triggeredByCommanderID, source, target)
+        public ActionContext(int? triggeredByCommanderID, GenericActionTrigger actionTrigger, SourceContext source, TargetContext target) : this(triggeredByCommanderID, source, target)
         {
             Contract.Requires<ArgumentNullException>(null != actionTrigger);
             ActionTrigger = actionTrigger;
         }
 
-        public ActionContext(int? triggeredByCommanderID, ActionTypes.UnitAction.ActionTriggers trigger, Context source, Context target) : this(triggeredByCommanderID, source, target)
+        public ActionContext(int? triggeredByCommanderID, ActionTypes.UnitAction.ActionTriggers trigger, SourceContext source, TargetContext target) : this(triggeredByCommanderID, source, target)
         {
             ActionTrigger = new GenericActionTrigger(trigger);
         }
 
-        public ActionContext(int? triggeredByCommanderID, ActionTypes.TerrainAction.ActionTriggers trigger, Context source, Context target) : this(triggeredByCommanderID, source, target)
+        public ActionContext(int? triggeredByCommanderID, ActionTypes.TerrainAction.ActionTriggers trigger, SourceContext source, TargetContext target) : this(triggeredByCommanderID, source, target)
         {
             ActionTrigger = new GenericActionTrigger(trigger);
         }
 
-        public ActionContext(int? triggeredByCommanderID, ActionTypes.CommanderAction.ActionTriggers trigger, Context source, Context target) : this(triggeredByCommanderID, source, target)
+        public ActionContext(int? triggeredByCommanderID, ActionTypes.CommanderAction.ActionTriggers trigger, SourceContext source, TargetContext target) : this(triggeredByCommanderID, source, target)
         {
             ActionTrigger = new GenericActionTrigger(trigger);
         }
 
-        public ActionContext(int? triggeredByCommanderID, ActionTypes.GameAction.ActionTriggers trigger, Context source, Context target) : this(triggeredByCommanderID, source, target)
+        public ActionContext(int? triggeredByCommanderID, ActionTypes.GameAction.ActionTriggers trigger, SourceContext source, TargetContext target) : this(triggeredByCommanderID, source, target)
         {
             ActionTrigger = new GenericActionTrigger(trigger);
         }
 
-        private ActionContext(int? triggeredByCommanderID, Context source, Context target)
+        private ActionContext(int? triggeredByCommanderID, SourceContext source, TargetContext target)
         {
             Contract.Requires<ArgumentNullException>(null != source);
             Contract.Requires<ArgumentNullException>(null != target);

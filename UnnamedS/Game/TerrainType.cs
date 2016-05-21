@@ -19,6 +19,14 @@ namespace UnnamedStrategyGame.Game
         public virtual int MaxCapturePoints { get; } = 20;
         public virtual int MaxHealth { get; } = 100;
 
+        public virtual bool CanSupply { get; }
+        public virtual bool CanRepair { get; }
+
+        public virtual bool IsVictoryPoint { get; }
+
+        public virtual IReadOnlyDictionary<SupplyType, int> ResuppliesPerTurn { get; } = new Dictionary<SupplyType, int>(0);
+        public virtual IReadOnlyDictionary<MovementType, int> RepairsPerTurn { get; } = new Dictionary<MovementType, int>(0);
+
         public abstract TerrainHeight Height { get; }
         public abstract TerrainClassifications Classification { get; }
         public abstract TerrainDifficulty Difficultly { get; }
@@ -196,6 +204,10 @@ namespace UnnamedStrategyGame.Game
             Contract.Invariant(MaxCapturePoints >= 0);
             Contract.Invariant(null != Actions);
             Contract.Invariant(MaxHealth >= 0);
+            Contract.Invariant(RepairsPerTurn != null);
+            Contract.Invariant(null != ResuppliesPerTurn);
+            Contract.Invariant(CanRepair == true || RepairsPerTurn.Count == 0);
+            Contract.Invariant(CanSupply == true || ResuppliesPerTurn.Count == 0);
         }
     }
 }

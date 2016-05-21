@@ -10,22 +10,28 @@ using UnnamedStrategyGame.Game.Action;
 namespace UnnamedStrategyGame.Network.MessageWrappers
 {
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
-    public class DoActionsCallWrapper : CommanderTypeCallWrapper
+    public class DoActionsCallWrapper : CommanderTypeCallWrapper, AuthInterfaces.IUserAuth
     {
+        public override bool RequiresHost { get; } = false;
+        public Game.Event.ActionIdentifyingInfo ActionIdentifyingInfo { get; }
         public List<ActionInfo> Actions { get; }
 
-        public DoActionsCallWrapper(List<ActionInfo> actions) : base(-1)
+        public int UserIDForAuth { get { return ActionIdentifyingInfo.UserID; } }
+
+        public DoActionsCallWrapper(Game.Event.ActionIdentifyingInfo actionIdentifyingInfo, List<ActionInfo> actions) : base(-1)
         {
             Contract.Requires<ArgumentNullException>(null != actions);
+            Contract.Requires<ArgumentNullException>(null != actionIdentifyingInfo);
+            ActionIdentifyingInfo = actionIdentifyingInfo;
             Actions = actions;
         }
 
         public override void Call(LocalGameLogic logic)
         {
-            logic.DoActions(Actions);
+            logic.DoActions(ActionIdentifyingInfo, Actions);
         }
 
-        public override bool AuthCheck(LocalGameLogic logic, User user)
+        public override bool CommanderAuthCheck(LocalGameLogic logic, User user)
         {
             int? commanderID = null;
 
@@ -60,6 +66,13 @@ namespace UnnamedStrategyGame.Network.MessageWrappers
             {
                 return false;
             }
+        }
+
+        [ContractInvariantMethod]
+        private void Invariants()
+        {
+            Contract.Invariant(null != Actions);
+            Contract.Invariant(null != ActionIdentifyingInfo);
         }
     }
 }

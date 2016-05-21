@@ -42,7 +42,7 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
                 {
                     new StateChanges.UnitStateChange(sourceTile.Unit.UnitID, new Dictionary<string, object>()
                     {
-                        {"RepeatedAction", new ActionInfo(this, new ActionContext(null, ActionTriggers.DirectlyByGameLogic, new UnitContext(sourceTile.Location), new TileContext(targetTile.Location))) }
+                        {"RepeatedAction", new ActionInfo(this, new ActionContext(null, ActionTriggers.DirectlyByGameLogic, new UnitContext(sourceTile.Location), new GenericContext(targetTile.Location))) }
                     }, sourceTile.Unit.Location)
                 };
             }
@@ -62,8 +62,15 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
             }
         }
 
-        public override IReadOnlyDictionary<Location, ActionChain> ActionableLocations(IReadOnlyBattleGameState state, UnitTargetTileContext context, Tile sourceTile)
+        protected override bool RangeBasedValidTargetCanPerform(IReadOnlyBattleGameState state, UnitTargetTileContext context, Tile sourceTile, Tile targetTile)
         {
+            return CanPerformOn(state, context, sourceTile, targetTile);
+        }
+
+        public override IReadOnlyDictionary<Location, ActionChain> ValidTargets(IReadOnlyBattleGameState state, UnitTargetTileContext context, Tile sourceTile)
+        {
+            return RangeBasedValidTargets(state, context, sourceTile, 0, 0);
+
             var listing = new Dictionary<Location, ActionChain>();
 
             var movement = sourceTile.Unit.GetAvailableMovement(state, context, sourceTile);
@@ -80,9 +87,9 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
                 var chain = new ActionChain();
 
                 if (action != null)
-                    chain.AddAction(new ActionChain.Link(action, new UnitContext(sourceTile.Location), new TileContext(location)));
+                    chain.AddAction(new ActionChain.Link(action, new UnitContext(sourceTile.Location), new GenericContext(location)));
 
-                chain.AddAction(new ActionChain.Link(this, new UnitContext(location), new TerrainContext(location)));
+                chain.AddAction(new ActionChain.Link(this, new UnitContext(location), new GenericContext(location)));
 
                 listing.Add(location, chain);
             }

@@ -35,17 +35,26 @@ namespace UnnamedStrategyGame.UI
 
         private void NotifySource_MessageReceived(object sender, Network.MessageReceivedEventArgs e)
         {
-            Items.Add(e);
+            Dispatcher.Invoke(() =>
+            {
+                Items.Add(e);
+            });
         }
 
         private void NotifySource_Disconnected(object sender, Network.DisconnectedEventArgs e)
         {
-            Items.Add(e);
+            Dispatcher.Invoke(() =>
+            {
+                Items.Add(e);
+            });
         }
 
         private void NotifySource_Exception(object sender, Network.ExceptionEventArgs e)
         {
-            Items.Add(e);
+            Dispatcher.Invoke(() =>
+            {
+                Items.Add(e);
+            });
         }
 
         private void listBox_SelectionChanged(object sender, SelectionChangedEventArgs e)

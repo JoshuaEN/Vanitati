@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
@@ -11,7 +12,9 @@ namespace UnnamedStrategyGame.Game
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public abstract class GameState
     {
+        [JsonIgnore]
         public virtual int Height { get; protected set; }
+        [JsonIgnore]
         public virtual int Width { get; protected set; }
 
         [Pure]

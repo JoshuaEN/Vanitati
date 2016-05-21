@@ -13,7 +13,7 @@ namespace UnnamedStrategyGame.Serializers.JsonConverters
     {
         public override bool CanConvert(Type objectType)
         {
-            return typeof(Context) == objectType;
+            return typeof(Context) == objectType || typeof(SourceContext) == objectType || typeof(TargetContext) == objectType;
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)

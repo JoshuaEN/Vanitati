@@ -30,3 +30,17 @@ e:\Users\Joshua\Documents\Visual Studio 2015\Projects\UnnamedStrategyGame\Unname
 e:\Users\Joshua\Documents\Visual Studio 2015\Projects\UnnamedStrategyGame\UnnamedStrategyGameTests\obj\Debug\UnnamedStrategyGameTests.dll
 e:\Users\Joshua\Documents\Visual Studio 2015\Projects\UnnamedStrategyGame\UnnamedStrategyGameTests\obj\Debug\UnnamedStrategyGameTests.pdb
 e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedStrategyGameTests\bin\Debug\Newtonsoft.Json.dll
+e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedStrategyGameTests\bin\Debug\UI\Help\RtfSections\GettingStarted_Intro.rtf
+e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedStrategyGameTests\bin\Debug\UI\Help\RtfSections\GettingStarted_CreatingAGame.rtf
+e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedStrategyGameTests\bin\Debug\UI\Help\RtfSections\GettingStarted_GettingIntoABattle.rtf
+e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedStrategyGameTests\bin\Debug\UI\Help\RtfSections\GettingStarted_JoiningAGame.rtf
+e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedStrategyGameTests\bin\Debug\UI\Help\RtfSections\GettingStarted_HostingDetails.rtf
+e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedStrategyGameTests\bin\Debug\UI\Help\RtfSections\GettingStarted_ControlRundown.rtf
+e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedStrategyGameTests\bin\Debug\UI\Help\RtfSections\GettingStarted_InterfaceOverview.rtf
+e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedStrategyGameTests\bin\Debug\UI\Help\RtfSections\GettingStarted_InterfaceTileDetails.rtf
+e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedStrategyGameTests\bin\Debug\UI\Help\RtfSections\GettingStarted_InterfaceTileHighlights.rtf
+e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedStrategyGameTests\bin\Debug\UI\Help\RtfSections\GettingStarted_Game-playBasics.rtf
+e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedStrategyGameTests\bin\Debug\UI\Help\RtfSections\GettingStarted_Game-playCombat.rtf
+e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedStrategyGameTests\bin\Debug\UI\Help\RtfSections\GettingStarted_Game-playWinning.rtf
+e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedStrategyGameTests\bin\Debug\UI\Help\RtfSections\Troubleshooting_NetworkedGames.rtf
+e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedStrategyGameTests\bin\Debug\UI\Help\RtfSections\Troubleshooting_NetworkedGames_OpeningPorts.rtf

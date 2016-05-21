@@ -14,15 +14,20 @@ namespace UnnamedStrategyGame.Network
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public class ServerClient : Client, IUserLogic, IServerProtocolLogic
     {
-        private readonly object serverLock;
-        public LocalGameLogic GameLogic { get; }
+        private readonly QueuedLock serverLock;
+        private volatile LocalGameLogic _gameLogic;
+        public LocalGameLogic GameLogic
+        {
+            get { return _gameLogic; }
+            set { _gameLogic = value; }
+        }
         public User User { get; }
 
         private bool clientIdentificationReceivedFlag = false;
 
-        public ServerClient(NetworkStream networkStream, LocalGameLogic gameLogic, User user, object serverLock) : base(networkStream)
+        public ServerClient(TcpClient tcpClient, LocalGameLogic gameLogic, User user, QueuedLock serverLock) : base(tcpClient)
         {
-            Contract.Requires<ArgumentNullException>(null != networkStream);
+            Contract.Requires<ArgumentNullException>(null != tcpClient);
             Contract.Requires<ArgumentNullException>(null != gameLogic);
             Contract.Requires<ArgumentNullException>(null != user);
             Contract.Requires<ArgumentNullException>(null != serverLock);
@@ -42,38 +47,82 @@ namespace UnnamedStrategyGame.Network
 
             if(clientIdentificationReceivedFlag != true && msg is MessageWrappers.ClientHelloProtocolWrapper == false)
             {
-                throw new Exceptions.InvalidMessageOrderException(
+                NotifyOfException(new Exceptions.InvalidMessageOrderException(
                         string.Format(
                             "{0} message must be received before ANY {1} messages",
                             typeof(MessageWrappers.ClientHelloProtocolWrapper).Name,
                             typeof(MessageWrappers.MessageWrapper).Name
                         )
-                   );
+                   )
+                );
+                return;
             }
 
             if (msg is MessageWrappers.ClientToServerProtocolMessageWrapper)
             {
-                lock(serverLock)
+                try
                 {
+                    serverLock.Enter();
                     (msg as MessageWrappers.ClientToServerProtocolMessageWrapper).Run(this);
+                }
+                finally
+                {
+                    serverLock.Exit();
                 }
             }
             else if (msg is MessageWrappers.CallMessageWrapper)
             {
-                if (msg is MessageWrappers.CommanderTypeCallWrapper &&
-                    (msg as MessageWrappers.CommanderTypeCallWrapper).AuthCheck(GameLogic, User) != true)
+                if (msg is MessageWrappers.AuthInterfaces.ICommanderAuth &&
+                    (msg as MessageWrappers.AuthInterfaces.ICommanderAuth).CommanderAuthCheck(GameLogic, User) != true)
                 {
-                    throw new Exceptions.IllegalCallAttempt();
+                    NotifyOfException(new Exceptions.IllegalCallAttempt($"User {User.UserID} claimed to be in command of commander they were not"));
+                    return;
                 }
 
-                lock(serverLock)
+                if(msg is MessageWrappers.AuthInterfaces.IUserAuth &&
+                    (msg as MessageWrappers.AuthInterfaces.IUserAuth).UserIDForAuth != User.UserID)
                 {
+                    NotifyOfException(new Exceptions.IllegalCallAttempt($"User {User.UserID} claimed to be another user"));
+                    return;
+                }
+
+                if((msg as MessageWrappers.CallMessageWrapper).RequiresHost == true && User.IsHost == false)
+                {
+                    NotifyOfException(new Exceptions.IllegalCallAttempt("You are not the host!"));
+                    return;
+                }
+
+                try
+                {
+                    serverLock.Enter();
                     (msg as MessageWrappers.CallMessageWrapper).Call(GameLogic);
+                }
+                finally
+                {
+                    serverLock.Exit();
                 }
             }
             else
             {
                 throw new ArgumentException("Unacceptable Type Received of " + msg.GetType());
+            }
+        }
+
+        private void NotifyOfException(Exception ex)
+        {
+            Send(new MessageWrappers.OnExceptionNotifyWrapper(new Game.Event.ExceptionEventArgs(ex)));
+        }
+
+        protected override void Disconnect(Exception disconnectCause)
+        {
+            try
+            {
+                if (User != null)
+                    GameLogic.RemoveUser(User.UserID);
+            }
+            finally
+            {
+                base.Disconnect(disconnectCause);
             }
         }
 
@@ -136,6 +185,16 @@ namespace UnnamedStrategyGame.Network
             Send(new MessageWrappers.OnSyncNotifyWrapper(e));
         }
 
+        public void OnException(object sender, Game.Event.ExceptionEventArgs e)
+        {
+            Send(new MessageWrappers.OnExceptionNotifyWrapper(e));
+        }
+
+        public void OnVictoryConditionAchieved(object sender, VictoryConditionAchievedEventArgs args)
+        {
+            Send(new MessageWrappers.OnVictoryConditionAchievedNotifyWrapper(args));
+        }
+
         #endregion
 
         #region IServerProtocolLogic Handers
@@ -150,7 +209,7 @@ namespace UnnamedStrategyGame.Network
             User.Name = clientIdentification.Name;
             Send(new MessageWrappers.ClientInfoPacketProtocolWrapper(User));
             GameLogic.AddUser(User, new List<IUserLogic>() { this });
-            Send(new MessageWrappers.OnSyncNotifyWrapper(new SyncEventArgs(clientIdentification.InitialSyncID, GameLogic.State.GetFields())));
+            Send(new MessageWrappers.OnSyncNotifyWrapper(new SyncEventArgs(clientIdentification.InitialSyncID, GameLogic.State.GetFields(), GameLogic.GetFields())));
         }
 
         #endregion

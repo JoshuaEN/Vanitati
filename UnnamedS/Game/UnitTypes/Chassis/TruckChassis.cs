@@ -9,7 +9,7 @@ namespace UnnamedStrategyGame.Game.UnitTypes
     public abstract class TruckChassis : UnitType
     {
         public override MovementType MovementType { get; } = MovementTypes.Wheels.Instance;
-        public override int MaxMovement { get; } = 12;
+        public override int MaxMovement { get; } = 8;
 
         public override double MaxArmor { get; } = 0.5;
         public override int Concealment { get; } = 2;

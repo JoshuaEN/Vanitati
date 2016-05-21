@@ -1,0 +1,91 @@
+﻿<UserControl x:Class="UnnamedStrategyGame.UI.GameTypeViews.UnitTypeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:UnnamedStrategyGame.UI.GameTypeViews"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300" Background="White" HorizontalAlignment="Left">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Label FontSize="20" x:Name="lblHeader" Grid.ColumnSpan="2"></Label>
+        <Label x:Name="lblDesc" Grid.ColumnSpan="2" Grid.Row="1"></Label>
+
+        <Label Grid.Row="5">Max Health</Label>
+        <Label x:Name="lblMaxHealth" Grid.Column="1" Grid.Row="5"></Label>
+
+        <Label Grid.Row="6">Armor</Label>
+        <Label x:Name="lblArmor" Grid.Column="1" Grid.Row="6"></Label>
+
+        <Label Grid.Row="7">Concealment</Label>
+        <Label x:Name="lblConcealment" Grid.Column="1" Grid.Row="7"></Label>
+
+        <Label Grid.Row="8">Movement Type</Label>
+        <Button x:Name="lblMovementType" Grid.Column="1" Grid.Row="8" Click="lblMovementType_Click" HorizontalAlignment="Left" VerticalAlignment="Center"></Button>
+
+        <Label Grid.Row="9">Build Cost</Label>
+        <Label x:Name="lblBuildCost" Grid.Column="1" Grid.Row="9"></Label>
+
+        <Label Grid.Row="10">Supplies</Label>
+        <Grid x:Name="gridSupplies" Grid.Row="10" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+        </Grid>
+
+        <Label FontSize="16" Grid.ColumnSpan="2" Grid.Row="14">Per Turn Maximums</Label>
+        
+        <Label Grid.Row="15">Max Movement</Label>
+        <Label x:Name="lblMaxMovement" Grid.Column="1" Grid.Row="15"></Label>
+
+        <Label Grid.Row="16">Max Actions</Label>
+        <Label x:Name="lblMaxActions" Grid.Column="1" Grid.Row="16"></Label>
+
+        <Label FontSize="16" Grid.ColumnSpan="2" Grid.Row="24">Actions</Label>
+        <StackPanel x:Name="actionList" Grid.Row="25" Grid.ColumnSpan="2" HorizontalAlignment="Left">
+            
+        </StackPanel>
+
+    </Grid>
+</UserControl>

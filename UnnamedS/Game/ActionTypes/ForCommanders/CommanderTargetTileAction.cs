@@ -12,10 +12,10 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForCommanders
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public abstract class CommanderTargetTileAction : CommanderAction
     {
-        public sealed override TargetCategory ActionTargetCategory
+        public sealed override Type[] TargetValueTypes { get; } = new Type[]
         {
-            get { return TargetCategory.Tile; }
-        }
+            typeof(Location)
+        };
 
         protected CommanderTargetTileAction(string key) : base(key) { }
 
@@ -33,12 +33,12 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForCommanders
         }
         public abstract IReadOnlyList<StateChange> PerformOn(IReadOnlyBattleGameState state, CommanderTargetTileContext context, Commander sourceCommander, Tile targetTile);
 
-        public sealed override IReadOnlyDictionary<Location, ActionChain> ActionableLocations(IReadOnlyBattleGameState state, ActionContext context)
+        public sealed override System.Collections.IEnumerable ValidTargets(IReadOnlyBattleGameState state, ActionContext context)
         {
             var convertedContext = new CommanderTargetTileContext(state, context, TargetContextBase.Load.Source);
-            return ActionableLocations(state, convertedContext, convertedContext.SourceCommander);
+            return ValidTargets(state, convertedContext, convertedContext.SourceCommander);
         }
-        public abstract IReadOnlyDictionary<Location, ActionChain> ActionableLocations(IReadOnlyBattleGameState state, CommanderTargetTileContext context, Commander sourceCommander);
+        public abstract IReadOnlyDictionary<Location, ActionChain> ValidTargets(IReadOnlyBattleGameState state, CommanderTargetTileContext context, Commander sourceCommander);
 
         public sealed override IReadOnlyList<Modifier> Modifiers(IReadOnlyBattleGameState state, ActionContext context)
         {
@@ -76,7 +76,7 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForCommanders
             throw new NotSupportedException();
         }
 
-        public override IReadOnlyDictionary<Location, ActionChain> ActionableLocations(IReadOnlyBattleGameState state, CommanderTargetTileContext context, Commander sourceCommander)
+        public override IReadOnlyDictionary<Location, ActionChain> ValidTargets(IReadOnlyBattleGameState state, CommanderTargetTileContext context, Commander sourceCommander)
         {
             Contract.Requires<ArgumentNullException>(null != state);
             Contract.Requires<ArgumentNullException>(null != context);

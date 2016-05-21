@@ -9,7 +9,7 @@ namespace UnnamedStrategyGame.Game.UnitTypes
 {
     public sealed class AntiAirHalfTrack : HalfTrackChassis
     {
-        public override int BuildCost { get; } = 7500;
+        public override int BuildCost { get; } = 10000;
 
         public override IReadOnlyList<UnitAction> Actions { get; } = new List<UnitAction>()
         {

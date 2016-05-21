@@ -4,6 +4,7 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnnamedStrategyGame.Game.ActionTypes;
 
 namespace UnnamedStrategyGame.Game
 {
@@ -16,6 +17,8 @@ namespace UnnamedStrategyGame.Game
         int Height { get; }
         int Width { get; }
 
+        IReadOnlyList<ActionTypes.GameAction> Actions { get; }
+
         IReadOnlyDictionary<int, Unit> Units { get; }
 
         IReadOnlyCollection<Terrain> Terrain { get; }
@@ -24,6 +27,12 @@ namespace UnnamedStrategyGame.Game
 
         int TurnID { get; }
         int CreditsPerCity { get; }
+        int VictoryPointsPerPoint { get; }
+        bool VictoryPointLimitEnabled { get; }
+        int VictoryPointLimit { get; }
+        bool VictoryPointGapEnabled { get; }
+        int VictoryPointGap { get; }
+        bool VictoryPointVictoryAchieved { get; }
 
         Commander CurrentCommander { get; }
 
@@ -42,6 +51,8 @@ namespace UnnamedStrategyGame.Game
         Commander GetCommander(int commanderID);
         Commander SafeGetCommander(int commanderID);
 
+        bool IsCommanderFriendly(int ourCommanderID, int otherCommanderID);
+
         bool LocationsAdjacent(Location a, Location b);
 
         List<Location> LocationsAroundPoint(Location point, int minimum, int maximum);
@@ -57,6 +68,7 @@ namespace UnnamedStrategyGame.Game
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     internal abstract class ContractClassForIReadOnlyBattleGameState : IReadOnlyBattleGameState
     {
+        public abstract IReadOnlyList<GameAction> Actions { get; }
         public abstract IReadOnlyDictionary<int, Commander> Commanders { get; }
         public abstract int CreditsPerCity { get; }
         public abstract Commander CurrentCommander { get; }
@@ -64,6 +76,12 @@ namespace UnnamedStrategyGame.Game
         public abstract IReadOnlyCollection<Terrain> Terrain { get; }
         public abstract int TurnID { get; }
         public abstract IReadOnlyDictionary<int, Unit> Units { get; }
+        public abstract int VictoryPointGap { get; }
+        public abstract bool VictoryPointGapEnabled { get; }
+        public abstract int VictoryPointLimit { get; }
+        public abstract bool VictoryPointLimitEnabled { get; }
+        public abstract int VictoryPointsPerPoint { get; }
+        public abstract bool VictoryPointVictoryAchieved { get; }
         public abstract int Width { get; }
 
         public abstract BattleGameState Fork();
@@ -85,6 +103,7 @@ namespace UnnamedStrategyGame.Game
         public abstract Unit GetUnit(Location loc);
         public abstract Unit GetUnit(int x, int y);
         public abstract IDictionary<string, object> GetWriteableProperties();
+        public abstract bool IsCommanderFriendly(int ourCommanderID, int otherCommanderID);
 
         public bool LocationsAdjacent(Location a, Location b)
         {

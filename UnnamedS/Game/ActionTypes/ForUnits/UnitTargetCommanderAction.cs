@@ -12,10 +12,10 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public abstract class UnitTargetCommanderAction : UnitAction
     {
-        public sealed override TargetCategory ActionTargetCategory
+        public sealed override Type[] TargetValueTypes { get; } = new Type[]
         {
-            get { return TargetCategory.Commander; }
-        }
+            typeof(Action.Wrapper.CommanderID)
+        };
 
         protected UnitTargetCommanderAction(string key) : base(key) { }
 
@@ -33,12 +33,24 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
         }
         public abstract IReadOnlyList<StateChange> PerformOn(IReadOnlyBattleGameState state, UnitTargetCommanderContext context, Tile sourceTile, Commander targetCommander);
 
+        public sealed override System.Collections.IEnumerable ValidTargets(IReadOnlyBattleGameState state, ActionContext context)
+        {
+            var convertedContext = new UnitTargetCommanderContext(state, context);
+            return ValidTargets(state, convertedContext, convertedContext.SourceTile);
+        }
+        public abstract IReadOnlyList<Action.Wrapper.CommanderID> ValidTargets(IReadOnlyBattleGameState state, UnitTargetCommanderContext context, Tile sourceTile);
+
         public sealed override IReadOnlyList<Modifier> Modifiers(IReadOnlyBattleGameState state, ActionContext context)
         {
             var convertedContext = new UnitTargetCommanderContext(state, context);
             return Modifiers(state, convertedContext, convertedContext.SourceTile, convertedContext.TargetCommander);
         }
         public abstract IReadOnlyList<Modifier> Modifiers(IReadOnlyBattleGameState state, UnitTargetCommanderContext context, Tile sourceTile, Commander targetCommander);
+
+        protected sealed override bool RangeBasedValidTargetCanPerform(IReadOnlyBattleGameState state, UnitTargetTileContext context, Tile sourceTile, Tile targetTile)
+        {
+            throw new NotSupportedException();
+        }
     }
 
 
@@ -67,6 +79,17 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
             Contract.Requires<ArgumentNullException>(null != sourceTile.Unit);
             Contract.Requires<ArgumentNullException>(null != targetCommander);
             Contract.Ensures(Contract.Result<IReadOnlyList<StateChange>>() != null);
+
+            throw new NotSupportedException();
+        }
+
+        public override IReadOnlyList<Action.Wrapper.CommanderID> ValidTargets(IReadOnlyBattleGameState state, UnitTargetCommanderContext context, Tile sourceTile)
+        {
+            Contract.Requires<ArgumentNullException>(null != state);
+            Contract.Requires<ArgumentNullException>(null != context);
+            Contract.Requires<ArgumentNullException>(null != sourceTile);
+            Contract.Requires<ArgumentNullException>(null != sourceTile.Unit);
+            Contract.Ensures(Contract.Result<IReadOnlyList<Action.Wrapper.CommanderID>>() != null);
 
             throw new NotSupportedException();
         }

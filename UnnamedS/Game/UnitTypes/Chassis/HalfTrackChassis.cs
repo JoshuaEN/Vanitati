@@ -9,7 +9,7 @@ namespace UnnamedStrategyGame.Game.UnitTypes
     public abstract class HalfTrackChassis : UnitType
     {
         public override MovementType MovementType { get; } = MovementTypes.HalfTrack.Instance;
-        public override int MaxMovement { get; } = 8;
+        public override int MaxMovement { get; } = 6;
 
         public override double MaxArmor { get; } = ArmorProtectionFrom.LightMachineGuns;
         public override int Concealment { get; } = 2;

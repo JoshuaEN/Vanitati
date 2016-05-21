@@ -54,9 +54,13 @@ namespace UnnamedStrategyGame.Game
         public bool Listening { get; private set; }
 
 #if NETWORK_PREDICTION
-        
-        private bool CurrentlyUserTurn { get; set; }
-        private int UserTurnID { get; set; }
+
+
+        private HashSet<int> PredictedActionIDs { get; set; } = new HashSet<int>();
+
+        private int RemoteTurnID { get; set; }
+
+        private int NextActionID { get; set; }
 #endif
 
         #endregion
@@ -64,6 +68,10 @@ namespace UnnamedStrategyGame.Game
         #region Events
 
         public event EventHandler<UserSetEventArgs> UserSetByServer;
+        public event EventHandler SyncStarted;
+        public event EventHandler SyncFinished;
+
+
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
         protected void OnUserSetByServer()
         {
@@ -141,26 +149,37 @@ namespace UnnamedStrategyGame.Game
 
         public override void DoActions(List<ActionInfo> actions)
         {
-#if NETWORK_PREDICTION
-            Logic.DoActions(actions);
-#endif
-            Client.Send(new Network.MessageWrappers.DoActionsCallWrapper(actions));
-        }
+            //if (State.TurnID > RemoteTurnID + 1)
+            //    throw new Exceptions.ServerTooFarBehindException($"The server is {State.TurnID - RemoteTurnID} turns behind");
 
-        public override void DoAction(ActionInfo action)
-        {
-            DoActions(new List<ActionInfo>() { action });
+            ActionIdentifyingInfo actionIdentifyingInfo = null;
+
+#if NETWORK_PREDICTION
+            var actionID = NextActionID++;
+            PredictedActionIDs.Add(actionID);
+            actionIdentifyingInfo = new ActionIdentifyingInfo(actionID, User.UserID);
+            Logic.DoActions(actionIdentifyingInfo, actions);
+#endif
+            Client.Send(new Network.MessageWrappers.DoActionsCallWrapper(actionIdentifyingInfo, actions));
         }
 
         public override void Sync(int syncID)
         {
             LastSyncID = syncID;
+            SyncStarted?.Invoke(this, new EventArgs());
             Client.Send(new Network.MessageWrappers.SyncCallWrapper(syncID));
         }
 
-        public override void StartGame(BattleGameState.Fields fields)
+        public override void Sync(int syncID, BattleGameState.Fields fields, Fields logicFields)
         {
-            Client.Send(new Network.MessageWrappers.StartGameCallWrapper(fields));
+            LastSyncID = syncID;
+            SyncStarted?.Invoke(this, new EventArgs());
+            Client.Send(new Network.MessageWrappers.SyncToCallWrapper(syncID, fields, logicFields));
+        }
+
+        public override void StartGame(BattleGameState.Fields fields, BattleGameState.StartMode startMode)
+        {
+            Client.Send(new Network.MessageWrappers.StartGameCallWrapper(fields, startMode));
         }
 
         public override void AddUser(User user, IReadOnlyList<IUserLogic> logic)
@@ -173,9 +192,9 @@ namespace UnnamedStrategyGame.Game
             Client.Send(new Network.MessageWrappers.RemoveUserCallWrapper(userID));
         }
 
-        public override void AssignUserToCommander(int? userID, int commanderID)
+        public void AssignUserToCommander(int? userID, int commanderID)
         {
-            Client.Send(new Network.MessageWrappers.AssignUserToCommanderCallWrapper(userID, commanderID));
+            Client.Send(new Network.MessageWrappers.AssignUserToCommanderCallWrapper(userID, commanderID, User.UserID, User.IsHost));
         }
 
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
@@ -189,27 +208,13 @@ namespace UnnamedStrategyGame.Game
         #region Helper Methods
 
 #if NETWORK_PREDICTION
-        private void UpdateCurrentlyUserTurn()
+        private bool ShouldUpdateStateInformation(IActionTriggeredEvent e)
         {
-            if (User != null && State.CurrentCommander != null)
-            {
-                CurrentlyUserTurn = Logic.IsUserCommanding(User.UserID, State.CurrentCommander.CommanderID);
-                UserTurnID = State.TurnID;
-            }
-            else
-            {
-                CurrentlyUserTurn = false;
-                UserTurnID = -1;
-            }
-        }
-
-        private bool ShouldUpdateStateInformation(ITurnAwareEvent e)
-        {
-            return CurrentlyUserTurn == false || UserTurnID != e.TurnID;
+            return e.ActionIdentifyingInfo == null || User.UserID != e.ActionIdentifyingInfo.UserID || PredictedActionIDs.Contains(e.ActionIdentifyingInfo.ActionID) == false;
         }
 #endif
 
-        #endregion
+#endregion
 
         #region Event Handlers
 
@@ -260,7 +265,7 @@ namespace UnnamedStrategyGame.Game
         public void OnCommanderChanged(object sender, CommanderChangedEventArgs e)
         {
 #if NETWORK_PREDICTION
-            if(ShouldUpdateStateInformation(e))
+            if (ShouldUpdateStateInformation(e))
 #endif
                 InternalState.UpdateCommander(e.ChangeInfo);
         }
@@ -289,9 +294,14 @@ namespace UnnamedStrategyGame.Game
                 InternalState.SetProperties(e.ChangeInfo.UpdatedProperties);
         }
 
+        public void OnVictoryConditionAchieved(object sender, VictoryConditionAchievedEventArgs args)
+        {
+
+        }
+
         public void OnGameStart(object sender, GameStartEventArgs e)
         {
-            Logic.StartGame(e.ChangeInfo);
+            Logic.StartGame(e.ChangeInfo, e.StartMode);
         }
 
         public void OnUserAdded(object sender, UserAddedEventArgs e)
@@ -312,33 +322,40 @@ namespace UnnamedStrategyGame.Game
 
         public void OnUserAssignedToCommander(object sender, UserAssignedToCommanderEventArgs e)
         {
-            Logic.AssignUserToCommander(e.UserID, e.CommanderID);
-#if NETWORK_PREDICTION
-            UpdateCurrentlyUserTurn();
-#endif
+            Logic.AssignUserToCommander(e.UserID, e.CommanderID, e.PerformedByUserID, e.WasHost);
         }
 
         public void OnTurnChanged(object sender, TurnChangedEventArgs e)
         {
-            if(e.ChangeInfo.ChangeCause == StateChanges.TurnChanged.Cause.TurnEnded
+            System.Diagnostics.Debug.WriteLine($"{e.ChangeInfo.PreviousTurnID} > {e.ChangeInfo.NewTurnID} | {e.ChangeInfo.PreviousCommanderID} > {e.ChangeInfo.NextCommanderID}");
+#if NETWORK_PREDICTION
+            RemoteTurnID = e.ChangeInfo.NewTurnID;
+#endif
+
+            if (e.ChangeInfo.ChangeCause == StateChanges.TurnChanged.Cause.TurnEnded
 #if NETWORK_PREDICTION
                 && ShouldUpdateStateInformation(e)
 #endif
                 )
             {
-                Logic.EndTurn(e.ChangeInfo.PreviousCommanderID);
+                Logic.EndTurn(e.ActionIdentifyingInfo, e.ChangeInfo.PreviousCommanderID);
             }
-#if NETWORK_PREDICTION
-            UpdateCurrentlyUserTurn();
-#endif
+
+            System.Diagnostics.Debug.WriteLine($"{e.ChangeInfo.PreviousTurnID} > {e.ChangeInfo.NewTurnID} | {e.ChangeInfo.PreviousCommanderID} > {e.ChangeInfo.NextCommanderID}");
         }
 
         public void OnSync(object sender, SyncEventArgs e)
         {
-            Logic.Sync(e.SyncID, e.Fields);
-#if NETWORK_PREDICTION
-            UpdateCurrentlyUserTurn();
-#endif
+            if (e.SyncID == LastSyncID)
+            {
+                Logic.Sync(e.SyncID, e.Fields, e.LogicFields);
+                SyncFinished?.Invoke(this, new EventArgs());
+            }
+        }
+
+        public void OnException(object sender, ExceptionEventArgs e)
+        {
+            Sync(++LastSyncID);
         }
 
 #endregion

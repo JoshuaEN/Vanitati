@@ -13,7 +13,7 @@ namespace UnnamedStrategyGame.Network
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public class Server : IClientNotifier
     {
-        private readonly object serverLock = new object();
+        private readonly QueuedLock serverLock = new QueuedLock();
         private TcpListener _listener;
 
         private Dictionary<ServerClient, Task> ConnectedClients = new Dictionary<ServerClient, Task>();
@@ -33,7 +33,7 @@ namespace UnnamedStrategyGame.Network
             _listener.Start();
         }
 
-        private bool _stop = false;
+        private volatile bool _stop = false;
 
         private bool _listening = false;
         private Task _listernTask;
@@ -55,17 +55,17 @@ namespace UnnamedStrategyGame.Network
             {
                 while (_stop == false)
                 {
-                    var tcpClient = await _listener.AcceptSocketAsync().ConfigureAwait(false);
+                    var tcpClient = await _listener.AcceptTcpClientAsync().ConfigureAwait(false);
 
                     if (_stop == true)
                     {
                         break;
                     }
 
-                    var client = new ServerClient(new NetworkStream(tcpClient), Logic, new Game.User(nextUserID++, null), serverLock);
+                    var client = new ServerClient(tcpClient, Logic, new Game.User(nextUserID++, null, nextUserID == 1), serverLock);
                     client.Disconnected += Client_Disconnected;
                     client.Exception += Client_Exception;
-#if DEBUG
+#if NET_DEBUG
                     client.MessageReceived += Client_MessageReceived;
 #endif
                     ConnectedClients.Add(client, client.Listen());
@@ -86,9 +86,7 @@ namespace UnnamedStrategyGame.Network
             if (_stop == true)
                 return;
 
-            _stop = true;
-
-            _listener.Stop();
+            Shutdown();
         }
 
         private void Client_MessageReceived(object sender, MessageReceivedEventArgs e)
@@ -129,7 +127,23 @@ namespace UnnamedStrategyGame.Network
 
         ~Server()
         {
+            Shutdown();
+        }
+
+        private void Shutdown()
+        {
+            _stop = true;
+            _listener.Server.Close();
             _listener.Stop();
+
+            foreach (var client in ConnectedClients)
+            {
+                try
+                {
+                    client.Key.Disconnect();
+                }
+                catch (Exception) { }
+            }
         }
 
         [ContractInvariantMethod]

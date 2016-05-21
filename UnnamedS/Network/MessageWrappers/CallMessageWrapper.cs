@@ -12,12 +12,7 @@ namespace UnnamedStrategyGame.Network.MessageWrappers
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public abstract class CallMessageWrapper : MessageWrapper
     {
-        public bool RequiresHost { get; }
-
-        public CallMessageWrapper(bool requiresHost = false)
-        {
-            RequiresHost = requiresHost;
-        }
+        public abstract bool RequiresHost { get; }
 
         public abstract void Call(LocalGameLogic logic);
     }

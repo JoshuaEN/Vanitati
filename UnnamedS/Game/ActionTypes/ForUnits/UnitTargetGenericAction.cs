@@ -12,10 +12,10 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public abstract class UnitTargetGenericAction<T> : UnitAction
     {
-        public sealed override TargetCategory ActionTargetCategory
+        public sealed override Type[] TargetValueTypes { get; } = new Type[]
         {
-            get { return TargetCategory.Generic; }
-        }
+            typeof(T)
+        };
 
         public UnitTargetGenericAction(string key) : base(key) { }
 
@@ -33,12 +33,12 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
         }
         public abstract IReadOnlyList<StateChange> PerformOn(IReadOnlyBattleGameState state, UnitTargetGenericContext<T> context, Tile sourceTile, T targetValue);
 
-        public sealed override IReadOnlyList<object> AvailableOptions(IReadOnlyBattleGameState state, ActionContext context)
+        public sealed override System.Collections.IEnumerable ValidTargets(IReadOnlyBattleGameState state, ActionContext context)
         {
             var convertedContext = new UnitTargetGenericContext<T>(state, context, TargetContextBase.Load.Source);
-            return AvailableOptions(state, convertedContext, convertedContext.SourceTile).Cast<object>().ToList();
+            return ValidTargets(state, convertedContext, convertedContext.SourceTile);
         }
-        public abstract IReadOnlyList<T> AvailableOptions(IReadOnlyBattleGameState state, UnitTargetGenericContext<T> context, Tile sourceTile);
+        public abstract IReadOnlyList<T> ValidTargets(IReadOnlyBattleGameState state, UnitTargetGenericContext<T> context, Tile sourceTile);
 
         public sealed override IReadOnlyList<Modifier> Modifiers(IReadOnlyBattleGameState state, ActionContext context)
         {
@@ -46,6 +46,11 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
             return Modifiers(state, convertedContext, convertedContext.SourceTile, convertedContext.TargetValue);
         }
         public abstract IReadOnlyList<Modifier> Modifiers(IReadOnlyBattleGameState state, UnitTargetGenericContext<T> context, Tile sourceTile, T targetValue);
+
+        protected sealed override bool RangeBasedValidTargetCanPerform(IReadOnlyBattleGameState state, UnitTargetTileContext context, Tile sourceTile, Tile targetTile)
+        {
+            throw new NotSupportedException();
+        }
     }
 
     [ContractClassFor(typeof(UnitTargetGenericAction<>))]
@@ -77,7 +82,7 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
             throw new NotSupportedException();
         }
 
-        public override IReadOnlyList<T> AvailableOptions(IReadOnlyBattleGameState state, UnitTargetGenericContext<T> context, Tile sourceTile)
+        public override IReadOnlyList<T> ValidTargets(IReadOnlyBattleGameState state, UnitTargetGenericContext<T> context, Tile sourceTile)
         {
             Contract.Requires<ArgumentNullException>(null != state);
             Contract.Requires<ArgumentNullException>(null != context);

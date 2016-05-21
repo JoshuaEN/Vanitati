@@ -9,7 +9,8 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
 {
     public sealed class NullUnitAction : UnitAction
     {
-        public override TargetCategory ActionTargetCategory { get; } = TargetCategory.Other;
+
+        public override Type[] TargetValueTypes { get; } = new Type[0];
 
         public override ActionTriggers Triggers { get; } = ActionTriggers.None;
 
@@ -32,9 +33,14 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
             return new List<StateChange>(0);
         }
 
-        public override IReadOnlyDictionary<Location, ActionChain> ActionableLocations(IReadOnlyBattleGameState state, ActionContext context)
+        public override System.Collections.IEnumerable ValidTargets(IReadOnlyBattleGameState state, ActionContext context)
         {
-            return new Dictionary<Location, ActionChain>(0);
+            throw new NotSupportedException();
+        }
+
+        protected override bool RangeBasedValidTargetCanPerform(IReadOnlyBattleGameState state, UnitTargetTileContext context, Tile sourceTile, Tile targetTile)
+        {
+            throw new NotSupportedException();
         }
     }
 }

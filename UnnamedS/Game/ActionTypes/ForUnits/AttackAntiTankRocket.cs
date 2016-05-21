@@ -9,7 +9,7 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
     public sealed class AttackAntiTankRocket : AttackBase
     {
         public override int BaseAccuracy { get; } = 40;
-        public override IReadOnlyList<MovementType> TargetableMovementTypes { get; } = TARGETABLE_LAND_VEHICLE_MOVEMENT_TYPES;
+        public override IReadOnlyList<MovementType> TargetableMovementTypes { get; } = MovementType.LAND_VEHICLE_MOVEMENT_TYPES;
         public override int MinimumRange { get; } = 1;
         public override int MaximumRange { get; } = 1;
         public override double ArmorPenetration { get; } = UnitType.ArmorProtectionFrom.AntiTankRockets;

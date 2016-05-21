@@ -9,17 +9,14 @@ using static UnnamedStrategyGame.Game.Action.TargetContextBase;
 namespace UnnamedStrategyGame.Game.Action
 {
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
-    public class CommanderTargetGenericContext<T> : TargetContextBase<CommanderContext, GenericContext, ActionTypes.CommanderAction.ActionTriggers>
+    public class CommanderTargetGenericContext<T> : TargetContextOneArg<CommanderContext, T, ActionTypes.CommanderAction.ActionTriggers>
     {
         public Commander SourceCommander { get; }
-        public T TargetValue { get; }
 
         public CommanderTargetGenericContext(IReadOnlyBattleGameState state, ActionContext context, Load load = Load.Source | Load.Target) : base(state, context, load)
         {
             if (load.HasFlag(Load.Source))
                 SourceCommander = state.GetCommander(Source.CommanderID);
-            if (load.HasFlag(Load.Target))
-                TargetValue = (T)Target.Value;
         }
 
         [ContractInvariantMethod]

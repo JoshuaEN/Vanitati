@@ -13,7 +13,7 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForTerrain
 
         private BuildLandUnit() : base(
             "build_land_unit",
-            buildableTypes: UnitType.TYPES.Values.Where(t => t.MovementType.TraversableClassifications.Contains(TerrainType.TerrainClassifications.Land)).ToList()
+            buildableTypes: UnitType.TYPES.Values.Where(t => MovementType.LAND_MOVEMENT_TYPES.Contains(t.MovementType)).ToList()
         ) { }
         public static BuildLandUnit Instance { get; } = new BuildLandUnit();
     }

@@ -11,11 +11,15 @@ namespace UnnamedStrategyGame.Game.Event
     {
         public int? UserID { get; }
         public int CommanderID { get; }
+        public int PerformedByUserID { get; }
+        public bool WasHost { get; }
 
-        public UserAssignedToCommanderEventArgs(int? userID, int commanderID)
+        public UserAssignedToCommanderEventArgs(int? userID, int commanderID, int performedByUserID, bool wasHost)
         {
             UserID = userID;
             CommanderID = commanderID;
+            PerformedByUserID = performedByUserID;
+            WasHost = wasHost;
         }
     }
 }

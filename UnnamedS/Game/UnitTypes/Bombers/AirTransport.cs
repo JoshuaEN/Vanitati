@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnnamedStrategyGame.Game.ActionTypes;
 
-namespace UnnamedStrategyGame.Game.UnitTypes.Bombers
+namespace UnnamedStrategyGame.Game.UnitTypes
 {
     public sealed class AirTransport : BomberChassis
     {

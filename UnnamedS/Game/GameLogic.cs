@@ -25,24 +25,22 @@ namespace UnnamedStrategyGame.Game
 
         public abstract void RemoveUser(int userID);
 
-        public abstract void AssignUserToCommander(int? userID, int CommanderID);
+        //public abstract void AssignUserToCommander(int? userID, int CommanderID, bool isHost);
 
         public abstract bool IsUserCommanding(int userID, int commanderID);
 
-        public virtual void DoActions(List<ActionInfo> actions)
-        {
-            Contract.Requires<ArgumentNullException>(null != actions);
-            foreach(var action in actions)
-            {
-                DoAction(action);
-            }
-        }
-
-        public abstract void DoAction(ActionInfo action);
+        public abstract void DoActions(List<ActionInfo> actions);
 
         public abstract void Sync(int syncID);
 
-        public abstract void StartGame(BattleGameState.Fields fields);
+        public abstract void Sync(int syncID, BattleGameState.Fields fields, Fields logicFields);
+
+        public abstract void StartGame(BattleGameState.Fields fields, BattleGameState.StartMode startMode);
+
+        public virtual Fields GetFields()
+        {
+            return new Fields(Users.Values.ToArray(), CommanderAssignments.ToDictionary(kp => kp.Key, kp => kp.Value));
+        }
 
         protected class UserSet
         {
@@ -64,6 +62,19 @@ namespace UnnamedStrategyGame.Game
                 Contract.Invariant(null != State);
             }
         }
+
+        public class Fields
+        {
+            public User[] Users { get; }
+            public Dictionary<int, int?> UserCommanderAssignments { get; }
+
+            public Fields(User[] users, Dictionary<int, int?> userCommanderAssignments)
+            {
+                Users = users;
+                UserCommanderAssignments = userCommanderAssignments;
+            }
+        }
+
     }
 
     [ContractClassFor(typeof(GameLogic))]
@@ -76,14 +87,15 @@ namespace UnnamedStrategyGame.Game
             Contract.Requires<ArgumentNullException>(null != logic);
         }
 
-        public override void DoAction(ActionInfo action)
-        {
-            Contract.Requires<ArgumentNullException>(null != action);
-        }
-
-        public override void StartGame(BattleGameState.Fields fields)
+        public override void StartGame(BattleGameState.Fields fields, BattleGameState.StartMode startMode)
         {
             Contract.Requires<ArgumentNullException>(null != fields);
+        }
+
+        public override void Sync(int syncID, BattleGameState.Fields fields, Fields logicFields)
+        {
+            Contract.Requires<ArgumentNullException>(null != fields);
+            Contract.Requires<ArgumentNullException>(null != logicFields);
         }
     }
 }

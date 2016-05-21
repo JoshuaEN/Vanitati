@@ -8,7 +8,7 @@ using UnnamedStrategyGame.Game.Action;
 
 namespace UnnamedStrategyGameTests.TestHelpers.FakeConcrete
 {
-    public class FakeContext : Context
+    public class FakeSourceContext : SourceContext
     {
         public override ActionType.Category ActionCategory
         {
@@ -17,13 +17,10 @@ namespace UnnamedStrategyGameTests.TestHelpers.FakeConcrete
                 return ActionType.Category.Commander;
             }
         }
+    }
 
-        public override ActionType.TargetCategory ActionTargetCategory
-        {
-            get
-            {
-                return ActionType.TargetCategory.Commander;
-            }
-        }
+    public class FakeTargetContext : GenericContext
+    {
+
     }
 }

@@ -30,12 +30,12 @@ namespace UnnamedStrategyGame.Game.ActionTypes
         {
             ManuallyByUser = 1,
             DirectlyByGameLogic = 2,
-            AnyTurnStart = 4,
-            AnyTurnEnd = 8,
-            OwnerTurnStart = 16,
-            OwnerTurnEnd = 32,
-            OccupyingUnitTurnStart = 64,
-            OccupyingUnitTurnEnd = 128,
+            OnAnyTurnStart = 4,
+            OnAnyTurnEnd = 8,
+            OnOwnerTurnStart = 16,
+            OnOwnerTurnEnd = 32,
+            OnOccupyingUnitTurnStart = 64,
+            OnOccupyingUnitTurnEnd = 128,
             None = 0         
         }
 

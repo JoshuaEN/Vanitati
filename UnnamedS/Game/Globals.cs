@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 using UnnamedStrategyGame.Properties;
 
 namespace UnnamedStrategyGame
@@ -17,6 +19,21 @@ namespace UnnamedStrategyGame
 
             return Resources.ResourceManager.GetString(key) ?? key;
         }
+
+        private static readonly Brush[] CommanderColorBrushes = new Brush[]
+        {
+            Brushes.MediumAquamarine,
+            Brushes.Coral,
+            Brushes.Plum,
+            Brushes.PaleGoldenrod
+        };
+
+        public static Brush GetCommanderColor(int commanderID)
+        {
+            return CommanderColorBrushes[commanderID % CommanderColorBrushes.Length];
+        }
+
+        public static readonly string BaseDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Vanitati");
 
         public static int DEFAULT_PORT { get; } = 4000;
 

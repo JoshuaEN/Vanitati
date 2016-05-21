@@ -1,0 +1,119 @@
+﻿<Page x:Class="UnnamedStrategyGame.UI.BattleViewV2"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:UnnamedStrategyGame.UI"
+      mc:Ignorable="d" 
+      d:DesignHeight="300" d:DesignWidth="300"
+      Title="BattleViewV2" Loaded="Page_Loaded">
+
+    <Grid Background="AntiqueWhite" x:Name="rootContainer">
+
+        <Canvas x:Name="ContainerCanvas">
+            <Canvas x:Name="BattleCanvas" RenderOptions.EdgeMode="Unspecified" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="Linear">
+                <!--<Canvas.CacheMode>
+                        <BitmapCache />
+                    </Canvas.CacheMode>-->
+            </Canvas>
+            <Canvas x:Name="AllyOverlayCanvas" RenderOptions.EdgeMode="Unspecified" UseLayoutRounding="True" IsHitTestVisible="False">
+                <Canvas.CacheMode>
+                    <BitmapCache/>
+                </Canvas.CacheMode>
+            </Canvas>
+            <Canvas x:Name="EnemyOverlayCanvas" RenderOptions.EdgeMode="Unspecified" UseLayoutRounding="True" IsHitTestVisible="False">
+                <Canvas.CacheMode>
+                    <BitmapCache/>
+                </Canvas.CacheMode>
+            </Canvas>
+            <Canvas x:Name="NeutralOverlayCanvas" RenderOptions.EdgeMode="Unspecified" UseLayoutRounding="True" IsHitTestVisible="False">
+                <Canvas.CacheMode>
+                    <BitmapCache/>
+                </Canvas.CacheMode>
+            </Canvas>
+            <Canvas x:Name="SelectionUnavailableOverlayCanvas" RenderOptions.EdgeMode="Unspecified" UseLayoutRounding="True" IsHitTestVisible="False">
+                <Canvas.CacheMode>
+                    <BitmapCache/>
+                </Canvas.CacheMode>
+            </Canvas>
+            <Canvas x:Name="UnitExpendedOverlayCanvas" RenderOptions.EdgeMode="Unspecified" UseLayoutRounding="True" IsHitTestVisible="False" Visibility="Collapsed">
+                <Canvas.CacheMode>
+                    <BitmapCache/>
+                </Canvas.CacheMode>
+            </Canvas>
+        </Canvas>
+        <!--<Rectangle x:Name="BattleCanvasOverlayRectange" Fill="#3F0000FF" IsHitTestVisible="False" MinWidth="50000" MinHeight="50000"></Rectangle>-->
+        <Border BorderBrush="#FF858585" BorderThickness="0,2,2,0" HorizontalAlignment="Left" VerticalAlignment="Bottom" Background="White">
+            <Grid x:Name="selectedItemActionViewContainer">
+
+            </Grid>
+        </Border>
+
+        <Border BorderBrush="#FF858585" BorderThickness="0,0,2,2" HorizontalAlignment="Left" VerticalAlignment="Top" Background="White">
+            <Grid x:Name="currentCommanderActionViewContainer">
+
+            </Grid>
+        </Border>
+
+        <Border BorderBrush="#FF858585" BorderThickness="2,2,0,0" HorizontalAlignment="Right" VerticalAlignment="Bottom" Background="White" Padding="0,0,0,5">
+            <StackPanel>
+                <Border BorderBrush="#FF858585" BorderThickness="0,0,0,1" Padding="0,0,0,2">
+                    <TextBlock TextAlignment="Center">Hovered Unit</TextBlock>
+                </Border>
+                <local:UnitView x:Name="unitHoveredStatePropView" IsHitTestVisible="False" Background="White"></local:UnitView>
+                <Border BorderBrush="#FF858585" BorderThickness="0,0,0,1" Padding="0,0,0,10">
+                    <TextBlock TextAlignment="Center">Hovered Terrain</TextBlock>
+                </Border>
+                <local:TerrainView x:Name="terrainHoveredStatePropView" IsHitTestVisible="False" Background="White"></local:TerrainView>
+            </StackPanel>
+        </Border>
+
+        <Grid x:Name="inputPromptGrid" Visibility="Collapsed" Background="#CC000000" >
+            <local:InputPrompt x:Name="inputPrompt" VerticalAlignment="Center" HorizontalAlignment="Center" Background="White" OptionSelected="inputPrompt_OptionSelected" ></local:InputPrompt>
+
+            <Button VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="inputPrompt_CancelButton_Click">Cancel</Button>
+        </Grid>
+
+        <Grid x:Name="freeformInputPromptContainer" Visibility="Collapsed" Background="#CC000000" >
+            <Grid x:Name="freeformInputPromptGrid" Background="White">
+                
+            </Grid>
+
+            <Button VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="FreeformInputPromptCancelButton_Click">Cancel</Button>
+        </Grid>
+
+        <Border BorderBrush="#FF858585" BorderThickness="2,0,0,2" HorizontalAlignment="Right" VerticalAlignment="Top" Background="White">
+            <StackPanel Orientation="Horizontal">
+                <Button Click="MenuButton_Click">Menu</Button>
+                <local:CommandersView x:Name="commandersListing">
+
+                </local:CommandersView>
+            </StackPanel>
+        </Border>
+
+        <Border x:Name="userToCommanderAssignmentGrid" Visibility="Collapsed" Background="#7F000000">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <local:UserToCommanderAssignment x:Name="userToCommanderAssignment" HorizontalAlignment="Center" VerticalAlignment="Center" ReleaseCommand="userToCommanderAssignment_CommandTrigger" TakeCommand="userToCommanderAssignment_CommandTrigger"/>
+                <Button Click="UserToCommanderAssignmentCloseButton_Click">Close</Button>
+            </StackPanel>
+        </Border>
+        
+        <local:BattleMenu x:Name="battleMenu" Visibility="Collapsed" SaveGame="battleMenu_SaveGame" ExitToMenu="battleMenu_ExitToMenu" ExitToDesktop="battleMenu_ExitToDesktop" ReturnToBattle="battleMenu_ReturnToBattle" CommanderAssignment="battleMenu_CommanderAssignment"/>
+
+        <Border x:Name="stateLoadingGrid" Visibility="Collapsed" Background="#7F000000">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Background="White">
+                <Label x:Name="stateLoadingStatusLabel" FontSize="32"></Label>
+                <Label x:Name="stateLoadingDetailedStatusLabel" FontSize="20"></Label>
+            </StackPanel>
+        </Border>
+
+        <Border x:Name="disconnectedContainer" Visibility="Collapsed" Background="#7F000000">
+            <StackPanel x:Name="disconnectedPanel" VerticalAlignment="Center" HorizontalAlignment="Center" Background="Thistle">
+                <Label FontSize="46">Disconnected</Label>
+                <Button Click="SaveGameButton_Click">Save Game</Button>
+                <Button Click="ExitToMainMenuButton_Click">Exit to Main Menu</Button>
+                <Button Click="ExitToDesktopButton_Click">Exit to Desktop</Button>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Page>

@@ -16,6 +16,12 @@ namespace UnnamedStrategyGame.Game
     {
         #region Properties
 
+        [JsonIgnore]
+        public IReadOnlyList<ActionTypes.GameAction> Actions { get; } = new List<ActionTypes.GameAction>()
+        {
+            ActionTypes.ForGame.DetectVictoryPointWinConditions.Instance
+        };
+
         [JsonProperty]
         public int CurrentCommanderIndex { get; set; } = -1;
 
@@ -26,7 +32,25 @@ namespace UnnamedStrategyGame.Game
         public int NextUnitID { get; set; } = 0;
 
         [JsonProperty]
-        public int CreditsPerCity { get; set; } = 1000;
+        public int CreditsPerCity { get; private set; } = 1000;
+
+        [JsonProperty]
+        public int VictoryPointsPerPoint { get; private set; } = 1;
+
+        [JsonProperty]
+        public bool VictoryPointLimitEnabled { get; private set; } = false;
+
+        [JsonProperty]
+        public int VictoryPointLimit { get; private set; } = 50;
+
+        [JsonProperty]
+        public bool VictoryPointGapEnabled { get; private set; } = true;
+
+        [JsonProperty]
+        public int VictoryPointGap { get; private set; } = 20;
+
+        [JsonProperty]
+        public bool VictoryPointVictoryAchieved { get; private set; } = false;
 
         [JsonIgnore]
         public Commander CurrentCommander
@@ -40,7 +64,7 @@ namespace UnnamedStrategyGame.Game
             }
         }
 
-        [JsonProperty]
+        [JsonIgnore]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
         protected Dictionary<int, Unit> _units { get; set; } = new Dictionary<int, Unit>();
 
@@ -54,7 +78,7 @@ namespace UnnamedStrategyGame.Game
             get { return _units; }
         }
 
-        [JsonProperty]
+        [JsonIgnore]
         protected Terrain[] _terrain { get; set; } = new Terrain[0];
 
         [JsonIgnore]
@@ -73,7 +97,7 @@ namespace UnnamedStrategyGame.Game
         [JsonProperty]
         protected Commander[] _commanderOrder { get; set; } = new Commander[0];
 
-        [JsonProperty]
+        [JsonIgnore]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
         protected Dictionary<int, Commander> _commanders { get; set; } = new Dictionary<int, Commander>();
 
@@ -95,6 +119,8 @@ namespace UnnamedStrategyGame.Game
         {
             Contract.Requires<ArgumentNullException>(fields != null);
 
+            SetProperties(fields.Values);
+
             Height = fields.Height;
             Width = fields.Width;
 
@@ -113,15 +139,19 @@ namespace UnnamedStrategyGame.Game
 
             CurrentCommanderIndex = fields.CurrentCommanderIndex;
 
-            SetProperties(fields.Values);
         }
 
-        public void StartGame(Fields fields)
+        public void StartGame(Fields fields, StartMode startMode)
         {
             Contract.Requires<ArgumentNullException>(fields != null);
 
             Sync(fields);
-            AdvanceToNextCommander();
+
+            if (startMode == StartMode.NewGame)
+            {
+                CurrentCommanderIndex = -1;
+                AdvanceToNextCommander();
+            }
         }
 
         public override Unit GetUnit(int x, int y)
@@ -247,6 +277,11 @@ namespace UnnamedStrategyGame.Game
             return p;
         }
 
+        public bool IsCommanderFriendly(int ourCommanderID, int otherCommanderID)
+        {
+            return ourCommanderID == otherCommanderID;
+        }
+
         public virtual void EndTurn(int commanderID)
         {
             if(CurrentCommander == null)
@@ -309,9 +344,11 @@ namespace UnnamedStrategyGame.Game
             switch (changeInfo.ChangeCause)
             {
                 case UnitStateChange.Cause.Created:
+                case UnitStateChange.Cause.Added:
                     AddUnit(new Unit(changeInfo.UpdatedProperties));
                     break;
                 case UnitStateChange.Cause.Destroyed:
+                case UnitStateChange.Cause.Removed:
                     DeleteUnit(changeInfo.UnitID);
                     return;
                 case UnitStateChange.Cause.Changed:
@@ -518,5 +555,7 @@ namespace UnnamedStrategyGame.Game
                 Contract.Invariant(null != Values);
             }
         }
+
+        public enum StartMode { NewGame, LoadedSaveGame }
     }
 }

@@ -12,10 +12,10 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForTerrain
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public abstract class TerrainTargetTileAction : TerrainAction
     {
-        public sealed override TargetCategory ActionTargetCategory
+        public sealed override Type[] TargetValueTypes { get; } = new Type[]
         {
-            get { return TargetCategory.Tile; }
-        }
+            typeof(Location)
+        };
 
         protected TerrainTargetTileAction(string key) : base(key) { }
 
@@ -33,12 +33,12 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForTerrain
         }
         public abstract IReadOnlyList<StateChange> PerformOn(IReadOnlyBattleGameState state, TerrainTargetTileContext context, Tile sourceTile, Tile targetTile);
 
-        public sealed override IReadOnlyDictionary<Location, ActionChain> ActionableLocations(IReadOnlyBattleGameState state, ActionContext context)
+        public sealed override System.Collections.IEnumerable ValidTargets(IReadOnlyBattleGameState state, ActionContext context)
         {
             var convertedContext = new TerrainTargetTileContext(state, context, TargetContextBase.Load.Source);
-            return ActionableLocations(state, convertedContext, convertedContext.SourceTile);
+            return ValidTargets(state, convertedContext, convertedContext.SourceTile);
         }
-        public abstract IReadOnlyDictionary<Location, ActionChain> ActionableLocations(IReadOnlyBattleGameState state, TerrainTargetTileContext context, Tile sourceTile);
+        public abstract IReadOnlyDictionary<Location, ActionChain> ValidTargets(IReadOnlyBattleGameState state, TerrainTargetTileContext context, Tile sourceTile);
 
         public sealed override IReadOnlyList<Modifier> Modifiers(IReadOnlyBattleGameState state, ActionContext context)
         {
@@ -76,7 +76,7 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForTerrain
             throw new NotSupportedException();
         }
 
-        public override IReadOnlyDictionary<Location, ActionChain> ActionableLocations(IReadOnlyBattleGameState state, TerrainTargetTileContext context, Tile sourceTile)
+        public override IReadOnlyDictionary<Location, ActionChain> ValidTargets(IReadOnlyBattleGameState state, TerrainTargetTileContext context, Tile sourceTile)
         {
             Contract.Requires<ArgumentNullException>(null != state);
             Contract.Requires<ArgumentNullException>(null != context);

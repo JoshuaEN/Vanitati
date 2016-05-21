@@ -70,6 +70,15 @@ namespace UnnamedStrategyGame.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to End Turn.
+        /// </summary>
+        internal static string action_commander_end_turn_short {
+            get {
+                return ResourceManager.GetString("action_commander_end_turn_short", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Defending unit&apos;s armor of {1} exceeds armor pentration of {0}..
         /// </summary>
         internal static string action_modifier_attack_no_damage_from_armor {
@@ -341,7 +350,25 @@ namespace UnnamedStrategyGame.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Build Air Unit.
+        /// </summary>
+        internal static string action_terrain_build_air_unit {
+            get {
+                return ResourceManager.GetString("action_terrain_build_air_unit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Build.
+        /// </summary>
+        internal static string action_terrain_build_air_unit_short {
+            get {
+                return ResourceManager.GetString("action_terrain_build_air_unit_short", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Build Land Unit.
         /// </summary>
         internal static string action_terrain_build_land_unit {
             get {
@@ -350,7 +377,16 @@ namespace UnnamedStrategyGame.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Anti-Air Cannon (vs. Air).
+        ///   Looks up a localized string similar to Build.
+        /// </summary>
+        internal static string action_terrain_build_land_unit_short {
+            get {
+                return ResourceManager.GetString("action_terrain_build_land_unit_short", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attack w/ Anti-Air Cannon (vs. Air).
         /// </summary>
         internal static string action_unit_attack_anti_aircraft_cannon_vs_air {
             get {
@@ -359,11 +395,47 @@ namespace UnnamedStrategyGame.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Anti-Air Cannon (vs. Ground).
+        ///   Looks up a localized string similar to Attack.
+        /// </summary>
+        internal static string action_unit_attack_anti_aircraft_cannon_vs_air_short {
+            get {
+                return ResourceManager.GetString("action_unit_attack_anti_aircraft_cannon_vs_air_short", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attack w/ Anti-Air Cannon (vs. Ground).
         /// </summary>
         internal static string action_unit_attack_anti_aircraft_cannon_vs_ground {
             get {
                 return ResourceManager.GetString("action_unit_attack_anti_aircraft_cannon_vs_ground", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attack.
+        /// </summary>
+        internal static string action_unit_attack_anti_aircraft_cannon_vs_ground_short {
+            get {
+                return ResourceManager.GetString("action_unit_attack_anti_aircraft_cannon_vs_ground_short", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attack w/ Anti-Tank Gun.
+        /// </summary>
+        internal static string action_unit_attack_anti_tank_cannon {
+            get {
+                return ResourceManager.GetString("action_unit_attack_anti_tank_cannon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attack.
+        /// </summary>
+        internal static string action_unit_attack_anti_tank_cannon_short {
+            get {
+                return ResourceManager.GetString("action_unit_attack_anti_tank_cannon_short", resourceCulture);
             }
         }
         
@@ -377,6 +449,15 @@ namespace UnnamedStrategyGame.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Attack.
+        /// </summary>
+        internal static string action_unit_attack_anti_tank_rocket_short {
+            get {
+                return ResourceManager.GetString("action_unit_attack_anti_tank_rocket_short", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Attack w/ Artillery Barrage.
         /// </summary>
         internal static string action_unit_attack_artillery_barrage {
@@ -386,7 +467,16 @@ namespace UnnamedStrategyGame.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Dive Bomb.
+        ///   Looks up a localized string similar to Attack.
+        /// </summary>
+        internal static string action_unit_attack_artillery_barrage_short {
+            get {
+                return ResourceManager.GetString("action_unit_attack_artillery_barrage_short", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attack w/ Dive Bomb.
         /// </summary>
         internal static string action_unit_attack_dive_bomb {
             get {
@@ -395,11 +485,29 @@ namespace UnnamedStrategyGame.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Wing Mounted HMGs.
+        ///   Looks up a localized string similar to Attack.
+        /// </summary>
+        internal static string action_unit_attack_dive_bomb_short {
+            get {
+                return ResourceManager.GetString("action_unit_attack_dive_bomb_short", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attack w/ Wing Mounted HMGs.
         /// </summary>
         internal static string action_unit_attack_fighter_heavy_machine_gun {
             get {
                 return ResourceManager.GetString("action_unit_attack_fighter_heavy_machine_gun", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attack.
+        /// </summary>
+        internal static string action_unit_attack_fighter_heavy_machine_gun_short {
+            get {
+                return ResourceManager.GetString("action_unit_attack_fighter_heavy_machine_gun_short", resourceCulture);
             }
         }
         
@@ -413,6 +521,15 @@ namespace UnnamedStrategyGame.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Attack.
+        /// </summary>
+        internal static string action_unit_attack_heavy_machine_gun_short {
+            get {
+                return ResourceManager.GetString("action_unit_attack_heavy_machine_gun_short", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Attack w/ LMG.
         /// </summary>
         internal static string action_unit_attack_light_machine_gun {
@@ -422,7 +539,16 @@ namespace UnnamedStrategyGame.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Quad HMG (vs. Air).
+        ///   Looks up a localized string similar to Attack.
+        /// </summary>
+        internal static string action_unit_attack_light_machine_gun_short {
+            get {
+                return ResourceManager.GetString("action_unit_attack_light_machine_gun_short", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attack w/ Quad HMG (vs. Air).
         /// </summary>
         internal static string action_unit_attack_quad_hmg_vs_air {
             get {
@@ -431,11 +557,29 @@ namespace UnnamedStrategyGame.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Quad HMG (vs. Ground).
+        ///   Looks up a localized string similar to Attack.
+        /// </summary>
+        internal static string action_unit_attack_quad_hmg_vs_air_short {
+            get {
+                return ResourceManager.GetString("action_unit_attack_quad_hmg_vs_air_short", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attack w/ Quad HMG (vs. Ground).
         /// </summary>
         internal static string action_unit_attack_quad_hmg_vs_ground {
             get {
                 return ResourceManager.GetString("action_unit_attack_quad_hmg_vs_ground", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attack.
+        /// </summary>
+        internal static string action_unit_attack_quad_hmg_vs_ground_short {
+            get {
+                return ResourceManager.GetString("action_unit_attack_quad_hmg_vs_ground_short", resourceCulture);
             }
         }
         
@@ -449,11 +593,29 @@ namespace UnnamedStrategyGame.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Rocket Artillery Barrage.
+        ///   Looks up a localized string similar to Attack.
+        /// </summary>
+        internal static string action_unit_attack_rifle_short {
+            get {
+                return ResourceManager.GetString("action_unit_attack_rifle_short", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attack w/ Rocket Artillery Barrage.
         /// </summary>
         internal static string action_unit_attack_rocket_artillery_barrage {
             get {
                 return ResourceManager.GetString("action_unit_attack_rocket_artillery_barrage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attack.
+        /// </summary>
+        internal static string action_unit_attack_rocket_artillery_barrage_short {
+            get {
+                return ResourceManager.GetString("action_unit_attack_rocket_artillery_barrage_short", resourceCulture);
             }
         }
         
@@ -467,11 +629,29 @@ namespace UnnamedStrategyGame.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Attack.
+        /// </summary>
+        internal static string action_unit_attack_saturation_bombing_short {
+            get {
+                return ResourceManager.GetString("action_unit_attack_saturation_bombing_short", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Attack w/ Tank Main Gun.
         /// </summary>
         internal static string action_unit_attack_tank_main_gun {
             get {
                 return ResourceManager.GetString("action_unit_attack_tank_main_gun", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attack.
+        /// </summary>
+        internal static string action_unit_attack_tank_main_gun_short {
+            get {
+                return ResourceManager.GetString("action_unit_attack_tank_main_gun_short", resourceCulture);
             }
         }
         
@@ -485,11 +665,29 @@ namespace UnnamedStrategyGame.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Capture.
+        /// </summary>
+        internal static string action_unit_capture_short {
+            get {
+                return ResourceManager.GetString("action_unit_capture_short", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Auto-Clear Repeat Action.
         /// </summary>
         internal static string action_unit_clear_repeated_action_automatically {
             get {
                 return ResourceManager.GetString("action_unit_clear_repeated_action_automatically", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clear Action.
+        /// </summary>
+        internal static string action_unit_clear_repeated_action_automatically_short {
+            get {
+                return ResourceManager.GetString("action_unit_clear_repeated_action_automatically_short", resourceCulture);
             }
         }
         
@@ -503,11 +701,65 @@ namespace UnnamedStrategyGame.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clear Action.
+        /// </summary>
+        internal static string action_unit_clear_repeated_action_manually_short {
+            get {
+                return ResourceManager.GetString("action_unit_clear_repeated_action_manually_short", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Dig In.
         /// </summary>
         internal static string action_unit_dig_in {
             get {
                 return ResourceManager.GetString("action_unit_dig_in", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dig In.
+        /// </summary>
+        internal static string action_unit_dig_in_short {
+            get {
+                return ResourceManager.GetString("action_unit_dig_in_short", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Embark.
+        /// </summary>
+        internal static string action_unit_embark {
+            get {
+                return ResourceManager.GetString("action_unit_embark", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Embark.
+        /// </summary>
+        internal static string action_unit_embark_short {
+            get {
+                return ResourceManager.GetString("action_unit_embark_short", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Move.
+        /// </summary>
+        internal static string action_unit_move {
+            get {
+                return ResourceManager.GetString("action_unit_move", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Move To.
+        /// </summary>
+        internal static string action_unit_move_short {
+            get {
+                return ResourceManager.GetString("action_unit_move_short", resourceCulture);
             }
         }
         
@@ -521,11 +773,74 @@ namespace UnnamedStrategyGame.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unload Embarked Unit.
+        /// </summary>
+        internal static string action_unit_unload_embarked_unit {
+            get {
+                return ResourceManager.GetString("action_unit_unload_embarked_unit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unload.
+        /// </summary>
+        internal static string action_unit_unload_embarked_unit_short {
+            get {
+                return ResourceManager.GetString("action_unit_unload_embarked_unit_short", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Boots.
         /// </summary>
         internal static string movement_boots {
             get {
                 return ResourceManager.GetString("movement_boots", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The most versitial of movement methods, able to traverse the most treacherous terrain..
+        /// </summary>
+        internal static string movement_boots_desc {
+            get {
+                return ResourceManager.GetString("movement_boots_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Half-Track.
+        /// </summary>
+        internal static string movement_half_track {
+            get {
+                return ResourceManager.GetString("movement_half_track", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Similar off-road performance to a fully Tracked vehicle, but at lower cost..
+        /// </summary>
+        internal static string movement_halftrack_desc {
+            get {
+                return ResourceManager.GetString("movement_halftrack_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Propeller.
+        /// </summary>
+        internal static string movement_propeller {
+            get {
+                return ResourceManager.GetString("movement_propeller", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The pinnacle of aerial propulsion..
+        /// </summary>
+        internal static string movement_propeller_desc {
+            get {
+                return ResourceManager.GetString("movement_propeller_desc", resourceCulture);
             }
         }
         
@@ -539,11 +854,29 @@ namespace UnnamedStrategyGame.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An effective all-terrain mode of traversal, at the cost of top speed..
+        /// </summary>
+        internal static string movement_treads_desc {
+            get {
+                return ResourceManager.GetString("movement_treads_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Wheels.
         /// </summary>
         internal static string movement_wheels {
             get {
                 return ResourceManager.GetString("movement_wheels", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Best used on roads, adversly impacted by more difficult terrain..
+        /// </summary>
+        internal static string movement_wheels_desc {
+            get {
+                return ResourceManager.GetString("movement_wheels_desc", resourceCulture);
             }
         }
         
@@ -683,6 +1016,15 @@ namespace UnnamedStrategyGame.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bombs.
+        /// </summary>
+        internal static string supply_bombs {
+            get {
+                return ResourceManager.GetString("supply_bombs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bullets.
         /// </summary>
         internal static string supply_bullets {
@@ -697,6 +1039,15 @@ namespace UnnamedStrategyGame.Properties {
         internal static string supply_diesel {
             get {
                 return ResourceManager.GetString("supply_diesel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kerosene.
+        /// </summary>
+        internal static string supply_kerosene {
+            get {
+                return ResourceManager.GetString("supply_kerosene", resourceCulture);
             }
         }
         
@@ -728,11 +1079,38 @@ namespace UnnamedStrategyGame.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Airfield.
+        /// </summary>
+        internal static string terrain_airfield {
+            get {
+                return ResourceManager.GetString("terrain_airfield", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to With facilities for aircraft production, repair, and resupply, airfields are the best suited for supporting allied air forces..
+        /// </summary>
+        internal static string terrain_airfield_desc {
+            get {
+                return ResourceManager.GetString("terrain_airfield_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to City.
         /// </summary>
         internal static string terrain_city {
             get {
                 return ResourceManager.GetString("terrain_city", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Urban jungles offer execlent cover for those on foot, while creating deadly funnels for those constrained to the narrow streets..
+        /// </summary>
+        internal static string terrain_city_desc {
+            get {
+                return ResourceManager.GetString("terrain_city_desc", resourceCulture);
             }
         }
         
@@ -746,11 +1124,47 @@ namespace UnnamedStrategyGame.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Able to produce, repair, and resupply ground units, factories are an indispensable asset for a successful ground war..
+        /// </summary>
+        internal static string terrain_factory_desc {
+            get {
+                return ResourceManager.GetString("terrain_factory_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Forest.
+        /// </summary>
+        internal static string terrain_forest {
+            get {
+                return ResourceManager.GetString("terrain_forest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ancient trees offer imposing barriers to vehicles, while the amble brush offers excent cover to those waiting inside..
+        /// </summary>
+        internal static string terrain_forest_desc {
+            get {
+                return ResourceManager.GetString("terrain_forest_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hill.
         /// </summary>
         internal static string terrain_hill {
             get {
                 return ResourceManager.GetString("terrain_hill", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hilly terrain offers sigificant advantages to unit, both for concealment and accuracy from the surperior vantage points available..
+        /// </summary>
+        internal static string terrain_hill_desc {
+            get {
+                return ResourceManager.GetString("terrain_hill_desc", resourceCulture);
             }
         }
         
@@ -764,6 +1178,15 @@ namespace UnnamedStrategyGame.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Towering above the terrain, mountains present an effectively impassible obstacle for land based vehicles, while giving infantry unmatched protection..
+        /// </summary>
+        internal static string terrain_mountain_desc {
+            get {
+                return ResourceManager.GetString("terrain_mountain_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Plain.
         /// </summary>
         internal static string terrain_plain {
@@ -773,11 +1196,110 @@ namespace UnnamedStrategyGame.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Anti-Air HalfTrack.
+        ///   Looks up a localized string similar to A sea of knee high grass in all directions, offering little cover, but little obstacles to passage as well..
+        /// </summary>
+        internal static string terrain_plain_desc {
+            get {
+                return ResourceManager.GetString("terrain_plain_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Road.
+        /// </summary>
+        internal static string terrain_road {
+            get {
+                return ResourceManager.GetString("terrain_road", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Made for ease of vehicle travel, roads are where wheeled vehicles can truly shine, but the lack of cover can prove deadly..
+        /// </summary>
+        internal static string terrain_road_desc {
+            get {
+                return ResourceManager.GetString("terrain_road_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Runway.
+        /// </summary>
+        internal static string terrain_runway {
+            get {
+                return ResourceManager.GetString("terrain_runway", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Able to resupply--but not repair--airplanes, runways are useful for staging air forces. However, the large, perfectly flat expanses make any unit on them stand out clearly..
+        /// </summary>
+        internal static string terrain_runway_desc {
+            get {
+                return ResourceManager.GetString("terrain_runway_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Air Transport.
+        /// </summary>
+        internal static string unit_air_transport {
+            get {
+                return ResourceManager.GetString("unit_air_transport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Able to carry infantry vast distances, air transports can be used to subvert the front-line or quickly transport reinforcements to where they are needed..
+        /// </summary>
+        internal static string unit_air_transport_desc {
+            get {
+                return ResourceManager.GetString("unit_air_transport_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Air Transport.
+        /// </summary>
+        internal static string unit_air_transport_short {
+            get {
+                return ResourceManager.GetString("unit_air_transport_short", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Armed with quad auto-cannons, and armored like a tank, this vehicle presents a sigificant threat to aircraft and light armor alike. The latter is often not only extremely vulnerable to the auto-cannons, but also unable to even deal damage due to the thick armor protection..
+        /// </summary>
+        internal static string unit_anit_aircraft_artillery_desc {
+            get {
+                return ResourceManager.GetString("unit_anit_aircraft_artillery_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Anti-Air Half-Track.
         /// </summary>
         internal static string unit_anti_air_half_track {
             get {
                 return ResourceManager.GetString("unit_anti_air_half_track", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A truly terrifying weapon platform, with four heavy machine guns, it tears through aircraft and light armor alike. Though, its own mode of transport leaves it likewise vulnerable..
+        /// </summary>
+        internal static string unit_anti_air_half_track_desc {
+            get {
+                return ResourceManager.GetString("unit_anti_air_half_track_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AA Half-Track.
+        /// </summary>
+        internal static string unit_anti_air_half_track_short {
+            get {
+                return ResourceManager.GetString("unit_anti_air_half_track_short", resourceCulture);
             }
         }
         
@@ -791,11 +1313,65 @@ namespace UnnamedStrategyGame.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to AT Infantry.
+        ///   Looks up a localized string similar to AA Tank.
+        /// </summary>
+        internal static string unit_anti_aircraft_artillery_short {
+            get {
+                return ResourceManager.GetString("unit_anti_aircraft_artillery_short", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Anti-Tank Half-Track.
+        /// </summary>
+        internal static string unit_anti_tank_half_track {
+            get {
+                return ResourceManager.GetString("unit_anti_tank_half_track", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Armed with a high-velocity anti-tank gun, this Half-Track can effectively engage armored targets, even at long range. Though it&apos;s own armor protection is lacking..
+        /// </summary>
+        internal static string unit_anti_tank_half_track_desc {
+            get {
+                return ResourceManager.GetString("unit_anti_tank_half_track_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Half-Track.
+        /// </summary>
+        internal static string unit_anti_tank_half_track_short {
+            get {
+                return ResourceManager.GetString("unit_anti_tank_half_track_short", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Anti-Tank Infantry.
         /// </summary>
         internal static string unit_anti_tank_infantry {
             get {
                 return ResourceManager.GetString("unit_anti_tank_infantry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Armed with powerful anti-tank rockets, along with standard issue rifles, these infantry can devistate armor divisions if they are allowed to get in range..
+        /// </summary>
+        internal static string unit_anti_tank_infantry_desc {
+            get {
+                return ResourceManager.GetString("unit_anti_tank_infantry_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AT Infantry.
+        /// </summary>
+        internal static string unit_anti_tank_infantry_short {
+            get {
+                return ResourceManager.GetString("unit_anti_tank_infantry_short", resourceCulture);
             }
         }
         
@@ -809,11 +1385,47 @@ namespace UnnamedStrategyGame.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The powerful guns offer the ability to engage targets from a safe distance, but the design is unable to effectively engage targets at close range..
+        /// </summary>
+        internal static string unit_artillery_desc {
+            get {
+                return ResourceManager.GetString("unit_artillery_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Artillery.
+        /// </summary>
+        internal static string unit_artillery_short {
+            get {
+                return ResourceManager.GetString("unit_artillery_short", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bomber.
         /// </summary>
         internal static string unit_bomber {
             get {
                 return ResourceManager.GetString("unit_bomber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Carring a truly impressive payload of bombs, a few bombers can level cities. However, carpet bombing doesn&apos;t offer precision, so don&apos;t expect much effect against infantry..
+        /// </summary>
+        internal static string unit_bomber_desc {
+            get {
+                return ResourceManager.GetString("unit_bomber_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bomber.
+        /// </summary>
+        internal static string unit_bomber_short {
+            get {
+                return ResourceManager.GetString("unit_bomber_short", resourceCulture);
             }
         }
         
@@ -827,11 +1439,47 @@ namespace UnnamedStrategyGame.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unlike it&apos;s much larger relative the bomber, the dive bomber is a precision strike tool able to effectively engage ground targets..
+        /// </summary>
+        internal static string unit_dive_bomber_desc {
+            get {
+                return ResourceManager.GetString("unit_dive_bomber_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dive Bomber.
+        /// </summary>
+        internal static string unit_dive_bomber_short {
+            get {
+                return ResourceManager.GetString("unit_dive_bomber_short", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Fighter.
         /// </summary>
         internal static string unit_fighter {
             get {
                 return ResourceManager.GetString("unit_fighter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Designed and built to rule the skys, the fighter is a extremely effective at clearing the skys, and can even strafe softer ground targets with it&apos;s powerful armament..
+        /// </summary>
+        internal static string unit_fighter_desc {
+            get {
+                return ResourceManager.GetString("unit_fighter_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fighter.
+        /// </summary>
+        internal static string unit_fighter_short {
+            get {
+                return ResourceManager.GetString("unit_fighter_short", resourceCulture);
             }
         }
         
@@ -845,11 +1493,47 @@ namespace UnnamedStrategyGame.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Armed with standard issue rifles, these soldiers are cheap yet effective against other infantry as well as lightly armored vehicles. They are also able to capture terrain..
+        /// </summary>
+        internal static string unit_infantry_desc {
+            get {
+                return ResourceManager.GetString("unit_infantry_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Infantry.
+        /// </summary>
+        internal static string unit_infantry_short {
+            get {
+                return ResourceManager.GetString("unit_infantry_short", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Jeep.
         /// </summary>
         internal static string unit_recon_car {
             get {
                 return ResourceManager.GetString("unit_recon_car", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quick, lightly armored and somewhat heavily armed, the Jeep is a versatile tool for hit and run raids or responding to incursions of lightly armored targets..
+        /// </summary>
+        internal static string unit_recon_car_desc {
+            get {
+                return ResourceManager.GetString("unit_recon_car_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Jeep.
+        /// </summary>
+        internal static string unit_recon_car_short {
+            get {
+                return ResourceManager.GetString("unit_recon_car_short", resourceCulture);
             }
         }
         
@@ -863,11 +1547,47 @@ namespace UnnamedStrategyGame.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A rack of rockets afixed to the back of a truck, offering good mobility on roads, along with excellent range and damage, rocket artillery can be a extremely useful unit for breaking enemy defenses or repelling attacks. However, it&apos;s also extremely vulnerable being unable to fire at targets anywhere near it and having no armor to speak of--being a truck with exposed rockets sitting on the back..
+        /// </summary>
+        internal static string unit_rocket_artillery_desc {
+            get {
+                return ResourceManager.GetString("unit_rocket_artillery_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rocket Arty.
+        /// </summary>
+        internal static string unit_rocket_artillery_short {
+            get {
+                return ResourceManager.GetString("unit_rocket_artillery_short", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Tank.
         /// </summary>
         internal static string unit_tank {
             get {
                 return ResourceManager.GetString("unit_tank", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The calvary of a modern army, tanks offer a well rounded mix of armor, firepower, and speed..
+        /// </summary>
+        internal static string unit_tank_desc {
+            get {
+                return ResourceManager.GetString("unit_tank_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tank.
+        /// </summary>
+        internal static string unit_tank_short {
+            get {
+                return ResourceManager.GetString("unit_tank_short", resourceCulture);
             }
         }
         
@@ -881,11 +1601,47 @@ namespace UnnamedStrategyGame.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Offering protection from small arms and a single heavy machine gun for protection, the transport half-track is effective at not just bringing infantry to the battle safely, but supporting them once the combat starts..
+        /// </summary>
+        internal static string unit_transport_half_track_desc {
+            get {
+                return ResourceManager.GetString("unit_transport_half_track_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Half-Track.
+        /// </summary>
+        internal static string unit_transport_half_track_short {
+            get {
+                return ResourceManager.GetString("unit_transport_half_track_short", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Transport Truck.
         /// </summary>
         internal static string unit_transport_truck {
             get {
                 return ResourceManager.GetString("unit_transport_truck", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A basic truck, maybe with some canvas over the back if you&apos;re lucky. Good mobility on roads can make it an effectivce tool for ferrying infantry and supplies to the front lines. Just try not to get too close to front-lines..
+        /// </summary>
+        internal static string unit_transport_truck_desc {
+            get {
+                return ResourceManager.GetString("unit_transport_truck_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Truck.
+        /// </summary>
+        internal static string unit_transport_truck_short {
+            get {
+                return ResourceManager.GetString("unit_transport_truck_short", resourceCulture);
             }
         }
     }

@@ -11,6 +11,7 @@ namespace UnnamedStrategyGame.Game
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public abstract class MovementType : BaseType
     {
+
         public abstract IReadOnlyList<TerrainType.TerrainClassifications> TraversableClassifications { get; }
         public abstract IReadOnlyList<TerrainType.TerrainDifficulty> TraversableDifficulties { get; }
 
@@ -44,7 +45,43 @@ namespace UnnamedStrategyGame.Game
             TYPES = BuildTypeListing<MovementType>("UnnamedStrategyGame.Game.MovementTypes");
         }
 
+        public static void LoadMovementTypeListings()
+        {
+            if (LAND_INFANTRY_TYPES != null)
+                throw new NotSupportedException("Already done");
 
+
+            LAND_MOVEMENT_TYPES = new List<MovementType>()
+            {
+                MovementTypes.Boots.Instance,
+                MovementTypes.Treads.Instance,
+                MovementTypes.Wheels.Instance,
+                MovementTypes.HalfTrack.Instance
+            };
+
+            LAND_INFANTRY_TYPES = new List<MovementType>()
+            {
+                MovementTypes.Boots.Instance
+            };
+
+            LAND_VEHICLE_MOVEMENT_TYPES = new List<MovementType>()
+            {
+                MovementTypes.Treads.Instance,
+                MovementTypes.Wheels.Instance,
+                MovementTypes.HalfTrack.Instance
+            };
+
+            AIR_VEHICLE_MOVEMENT_TYPES = new List<MovementType>()
+            {
+                MovementTypes.Propeller.Instance
+            };
+
+        }
+
+        public static IReadOnlyList<MovementType> LAND_MOVEMENT_TYPES { get; private set; } 
+        public static IReadOnlyList<MovementType> LAND_INFANTRY_TYPES { get; private set; } 
+        public static IReadOnlyList<MovementType> LAND_VEHICLE_MOVEMENT_TYPES { get; private set; }
+        public static IReadOnlyList<MovementType> AIR_VEHICLE_MOVEMENT_TYPES { get; private set; }
     }
 
     [ContractClassFor(typeof(MovementType))]

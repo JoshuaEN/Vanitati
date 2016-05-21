@@ -17,30 +17,49 @@ namespace UnnamedStrategyGame.Serializers.JsonConverters
 
         public override bool CanConvert(Type objectType)
         {
-            return typeof(GenericContext).IsAssignableFrom(objectType);
+            return typeof(TargetContext).IsAssignableFrom(objectType);
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
         {
             var json = JObject.Load(reader);
 
-            var typeStr = (string)json["ValueType"];
-            Type canidateType = Assembly.GetEntryAssembly().GetType(typeStr, false);
+            var valueTypes = (JArray)json["ValueTypes"];
+            var values = (JArray)json["Values"];
 
-            if(canidateType == null)
+            if(valueTypes.Count != values.Count)
             {
-                throw new ArgumentException($"Unknown type of {typeStr}");
+                throw new ArgumentException($"Context Value Mismatch; expected values array length ({values.Count}) to equal value types array length ({valueTypes.Count})");
             }
 
-            foreach(var type in ActionType.GENERIC_ACTION_TYPE_VALUES.Values)
+            object[] parsedValues = new object[valueTypes.Count];
+
+            for (var i = 0; i < valueTypes.Count; i++)
             {
-                if(type.IsAssignableFrom(canidateType))
+                var typeStr = valueTypes[i].ToObject<string>();
+                var value = values[i];
+
+                Type canidateType = Assembly.GetEntryAssembly().GetType(typeStr, false);
+
+                if (canidateType == null)
                 {
-                    return new GenericContext(json["Value"].ToObject(canidateType, serializer));
+                    throw new ArgumentException($"Unknown type of {typeStr}");
                 }
+
+                foreach (var type in ActionType.GENERIC_ACTION_TYPE_VALUES.Values)
+                {
+                    if (type.IsAssignableFrom(canidateType))
+                    {
+                        parsedValues[i] = value.ToObject(canidateType, serializer);
+                        break;
+                    }
+                }
+
+                if(parsedValues[i] == null)
+                    throw new ArgumentException("Invalid Generic Context Type Value of " + typeStr);
             }
 
-            throw new ArgumentException("Invalid Generic Context Type Value of " + typeStr);
+            return new GenericContext(parsedValues);
         }
 
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]

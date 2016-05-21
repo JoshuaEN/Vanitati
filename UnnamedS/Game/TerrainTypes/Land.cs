@@ -10,7 +10,7 @@ namespace UnnamedStrategyGame.Game.TerrainTypes
     {
         public override TerrainClassifications Classification { get { return TerrainClassifications.Land; } }
 
-        public override bool CanBePillage { get { return true; } }
+        public override bool CanBePillage { get; } = false;
 
         protected Land(string key) : base(key) { }
     }

@@ -24,7 +24,7 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
             if (targetTile.Terrain.TerrainType.CanCapture == false)
                 return false;
 
-            if (targetTile.Terrain.IsOwned == true && targetTile.Terrain.CommanderID == sourceTile.Unit.CommanderID)
+            if (targetTile.Terrain.IsOwned == true && targetTile.Terrain.CommanderID == sourceTile.Unit.CommanderID && targetTile.Terrain.CaptureProgress.Count == 0)
                 return false;
 
             if (sourceTile.Unit.Actions < ACTIONS_NEEDED)
@@ -51,14 +51,25 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
 
             ourCaptureProgress += ourCaptureStrength;
 
-            if(ourCaptureProgress >= targetTile.Terrain.TerrainType.MaxCapturePoints)
+
+            if (targetTile.Terrain.IsOwned && captureProgress.ContainsKey(targetTile.Terrain.CommanderID) == false)
+            {
+                if(targetTile.Terrain.TerrainType.MaxCapturePoints > ourCaptureStrength)
+                {
+                    captureProgress[targetTile.Terrain.CommanderID] = targetTile.Terrain.TerrainType.MaxCapturePoints;
+                }
+            }
+
+            if (ourCaptureProgress >= targetTile.Terrain.TerrainType.MaxCapturePoints)
             {
                 changeList.Add("IsOwned", true);
                 changeList.Add("CommanderID", ourCommanderID);
-                ourCaptureProgress = targetTile.Terrain.TerrainType.MaxCapturePoints;
+                captureProgress.Remove(ourCommanderID);
             }
-
-            captureProgress[ourCommanderID] = ourCaptureProgress;
+            else
+            {
+                captureProgress[ourCommanderID] = ourCaptureProgress;
+            }
 
             foreach(var cmdID in captureProgress.Keys.ToList())
             {
@@ -73,6 +84,8 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
                     captureProgress[cmdID] = capProgress - ourCaptureStrength;
             }
 
+            
+
             changeList.Add("CaptureProgress", captureProgress);
 
             return new List<StateChange>()
@@ -85,8 +98,15 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
             };
         }
 
-        public override IReadOnlyDictionary<Location, ActionChain> ActionableLocations(IReadOnlyBattleGameState state, UnitTargetTileContext context, Tile sourceTile)
+        protected override bool RangeBasedValidTargetCanPerform(IReadOnlyBattleGameState state, UnitTargetTileContext context, Tile sourceTile, Tile targetTile)
         {
+            return CanPerformOn(state, context, sourceTile, targetTile);
+        }
+
+        public override IReadOnlyDictionary<Location, ActionChain> ValidTargets(IReadOnlyBattleGameState state, UnitTargetTileContext context, Tile sourceTile)
+        {
+            return RangeBasedValidTargets(state, context, sourceTile, 0, 0);
+
             var listing = new Dictionary<Location, ActionChain>();
 
             var movement = sourceTile.Unit.GetAvailableMovement(state, context, sourceTile);
@@ -103,9 +123,9 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
                 var chain = new ActionChain();
 
                 if (action != null)
-                    chain.AddAction(new ActionChain.Link(action, new UnitContext(sourceTile.Location), new TileContext(location)));
+                    chain.AddAction(new ActionChain.Link(action, new UnitContext(sourceTile.Location), new GenericContext(location)));
 
-                chain.AddAction(new ActionChain.Link(this, new UnitContext(location), new TerrainContext(location)));
+                chain.AddAction(new ActionChain.Link(this, new UnitContext(location), new GenericContext(location)));
 
                 listing.Add(location, chain);
             }

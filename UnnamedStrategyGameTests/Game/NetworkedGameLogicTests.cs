@@ -58,7 +58,7 @@ namespace UnnamedStrategyGame.Game.Tests
 
             client.SentMessages.Clear();
 
-            var action = new ActionInfo(ActionTypes.ForUnits.Move.Instance, new ActionContext(1, ActionContext.TriggerAutoDetermineMode.ManuallyByUser, new UnitContext(new Location(1, 1)), new TerrainContext(new Location(0,1))));
+            var action = new ActionInfo(ActionTypes.ForUnits.Move.Instance, new ActionContext(1, ActionContext.TriggerAutoDetermineMode.ManuallyByUser, new UnitContext(new Location(1, 1)), new GenericContext(new Location(0,1))));
             logic.DoActions(new List<ActionInfo>() { action });
 
             Assert.Equal(1, client.SentMessages.Count);
@@ -176,6 +176,7 @@ namespace UnnamedStrategyGame.Game.Tests
             logic.OnCommanderChanged(this,
                 new Event.CommanderChangedEventArgs(
                     logic.State.TurnID + 1,
+                     null,
                     new StateChanges.CommanderStateChange(0, new Dictionary<string, object>() { { "Credits", before + after } })));
 
             Assert.Equal(after, logic.State.GetCommander(0).Credits);
@@ -190,7 +191,8 @@ namespace UnnamedStrategyGame.Game.Tests
 
             logic.OnCommanderChanged(this, 
                 new Event.CommanderChangedEventArgs(
-                    logic.State.TurnID, 
+                    logic.State.TurnID,
+                     null,
                     new StateChanges.CommanderStateChange(0, new Dictionary<string, object>() { { "Credits", before + 99999 } })));
 
             Assert.Equal(before, logic.State.GetCommander(0).Credits);
@@ -208,6 +210,7 @@ namespace UnnamedStrategyGame.Game.Tests
             logic.OnUnitChanged(this,
                 new Event.UnitChangedEventArgs(
                     logic.State.TurnID + 1,
+                    null,
                     new StateChanges.UnitStateChange(0, new Dictionary<string, object>() { { "Health", after } }, logic.State.GetUnit(0).Location)));
 
             Assert.Equal(after, logic.State.GetUnit(0).Health);
@@ -224,6 +227,7 @@ namespace UnnamedStrategyGame.Game.Tests
             logic.OnUnitChanged(this,
                 new Event.UnitChangedEventArgs(
                     logic.State.TurnID,
+                    null,
                     new StateChanges.UnitStateChange(0, new Dictionary<string, object>() { { "Health", after } }, logic.State.GetUnit(0).Location)));
 
             Assert.Equal(before, logic.State.GetUnit(0).Health);
@@ -240,6 +244,7 @@ namespace UnnamedStrategyGame.Game.Tests
             logic.OnTerrainChanged(this,
                 new Event.TerrainChangedEventArgs(
                     logic.State.TurnID + 1,
+                     null,
                     new StateChanges.TerrainStateChange(new Location(0, 0), new Dictionary<string, object>() { { "IsOwned", after } })));
 
             Assert.Equal(after, logic.State.GetTerrain(0, 0).IsOwned);
@@ -256,6 +261,7 @@ namespace UnnamedStrategyGame.Game.Tests
             logic.OnTerrainChanged(this,
                 new Event.TerrainChangedEventArgs(
                     logic.State.TurnID,
+                     null,
                     new StateChanges.TerrainStateChange(new Location(0, 0), new Dictionary<string, object>() { { "IsOwned", after } })));
 
             Assert.Equal(before, logic.State.GetTerrain(0, 0).IsOwned);
@@ -272,6 +278,7 @@ namespace UnnamedStrategyGame.Game.Tests
             logic.OnGameStateChanged(this,
                 new Event.GameStateChangedArgs(
                     logic.State.TurnID + 1,
+                     null,
                     new StateChanges.GameStateChange(new Dictionary<string, object>() { { "CreditsPerCity", after } })));
 
             Assert.Equal(after, logic.State.CreditsPerCity);
@@ -288,6 +295,7 @@ namespace UnnamedStrategyGame.Game.Tests
             logic.OnGameStateChanged(this,
                 new Event.GameStateChangedArgs(
                     logic.State.TurnID,
+                     null,
                     new StateChanges.GameStateChange(new Dictionary<string, object>() { { "CreditsPerCity", after } })));
 
             Assert.Equal(before, logic.State.CreditsPerCity);
@@ -348,7 +356,7 @@ namespace UnnamedStrategyGame.Game.Tests
             var logic = GetLogicForEvents();
             var user = new User(1, "hi");
             logic.OnUserAdded(this, new Event.UserAddedEventArgs(user));
-            logic.OnUserAssignedToCommander(this, new Event.UserAssignedToCommanderEventArgs(user.UserID, 0));
+            logic.OnUserAssignedToCommander(this, new Event.UserAssignedToCommanderEventArgs(user.UserID, 0, user.UserID, user.IsHost));
 
             Assert.True(logic.IsUserCommanding(user.UserID, 0));
             Assert.Equal(user.UserID, logic.CommanderAssignments[0]);
@@ -361,7 +369,7 @@ namespace UnnamedStrategyGame.Game.Tests
             logic.Logic.DoAction(new ActionInfo(ActionTypes.ForCommanders.EndTurn.Instance, new ActionContext(logic.State.CurrentCommander.CommanderID, ActionContext.TriggerAutoDetermineMode.ManuallyByUser, new CommanderContext(logic.State.CurrentCommander.CommanderID), new OtherContext())));
             var turnID = logic.State.TurnID;
             logic.OnTurnChanged(this, 
-                new Event.TurnChangedEventArgs(turnID, new StateChanges.TurnChanged(turnID, turnID + 1, 0, 1, StateChanges.TurnChanged.Cause.TurnEnded)));
+                new Event.TurnChangedEventArgs(turnID, null, new StateChanges.TurnChanged(turnID, turnID + 1, 0, 1, StateChanges.TurnChanged.Cause.TurnEnded)));
 
             Assert.Equal(turnID + 1, logic.State.TurnID);
         }
@@ -372,7 +380,7 @@ namespace UnnamedStrategyGame.Game.Tests
             var logic = GetLogicForEvents();
             var turnID = logic.State.TurnID;
             logic.OnTurnChanged(this,
-                new Event.TurnChangedEventArgs(turnID, new StateChanges.TurnChanged(turnID, turnID + 1, 0, 1, StateChanges.TurnChanged.Cause.TurnEnded)));
+                new Event.TurnChangedEventArgs(turnID, null, new StateChanges.TurnChanged(turnID, turnID + 1, 0, 1, StateChanges.TurnChanged.Cause.TurnEnded)));
 
             Assert.Equal(turnID, logic.State.TurnID);
         }
@@ -383,7 +391,7 @@ namespace UnnamedStrategyGame.Game.Tests
             var logic = GetLogicForEvents();
             var turnID = logic.State.TurnID;
             logic.OnTurnChanged(this,
-                new Event.TurnChangedEventArgs(turnID, new StateChanges.TurnChanged(-1, 0, -1, 0, StateChanges.TurnChanged.Cause.GameStart)));
+                new Event.TurnChangedEventArgs(turnID, null, new StateChanges.TurnChanged(-1, 0, -1, 0, StateChanges.TurnChanged.Cause.GameStart)));
 
             Assert.Equal(turnID, logic.State.TurnID);
         }
@@ -395,7 +403,7 @@ namespace UnnamedStrategyGame.Game.Tests
             var fields = BattleGameStateTests.GetFields();
             fields = new BattleGameState.Fields(fields.Height + 1, fields.Width + 1, fields.Terrain, fields.Units, fields.Commanders, fields.Values, -1);
 
-            logic.OnSync(this, new Event.SyncEventArgs(0, fields));
+            logic.OnSync(this, new Event.SyncEventArgs(0, fields, logic.GetFields()));
 
             BattleGameStateTests.CrossCheckFieldsWithState(fields, logic.Logic.InternalState);
         }
@@ -461,7 +469,7 @@ namespace UnnamedStrategyGame.Game.Tests
             logic.ClientInfoPacketRecieved(user);
             logic.OnUserAdded(this, new Event.UserAddedEventArgs(user));
             logic.Logic.StartGame(BattleGameStateTests.GetFields());
-            logic.OnUserAssignedToCommander(this, new Event.UserAssignedToCommanderEventArgs(0, 1));
+            logic.OnUserAssignedToCommander(this, new Event.UserAssignedToCommanderEventArgs(0, 1, 0, true));
 
             return logic;
         }
@@ -529,6 +537,11 @@ namespace UnnamedStrategyGame.Game.Tests
             }
 
             public void Write(string message)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void Disconnect()
             {
                 throw new NotImplementedException();
             }

@@ -9,7 +9,7 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
 {
     public sealed class ClearRepeatedActionAutomatically : UnitTargetGenericAction<ActionInfo>
     {
-        public override ActionTriggers Triggers { get; } = ActionTriggers.ActionPerformedByUser;
+        public override ActionTriggers Triggers { get; } = ActionTriggers.OnActionPerformedByUser;
         private ClearRepeatedActionAutomatically() : base("clear_repeated_action_automatically") { }
         public static ClearRepeatedActionAutomatically Instance { get; } = new ClearRepeatedActionAutomatically();
 
@@ -41,7 +41,7 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
             return new List<Modifier>(0);
         }
 
-        public override IReadOnlyList<ActionInfo> AvailableOptions(IReadOnlyBattleGameState state, UnitTargetGenericContext<ActionInfo> context, Tile sourceTile)
+        public override IReadOnlyList<ActionInfo> ValidTargets(IReadOnlyBattleGameState state, UnitTargetGenericContext<ActionInfo> context, Tile sourceTile)
         {
             return new List<ActionInfo>(0);
         }

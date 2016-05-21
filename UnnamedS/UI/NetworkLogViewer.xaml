@@ -20,5 +20,7 @@
         </TabControl>
         <WindowsFormsHost x:Name="propContainerHost" Grid.Column="2"/>
 
+        
+        
     </Grid>
 </Window>

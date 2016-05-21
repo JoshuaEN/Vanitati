@@ -9,6 +9,7 @@ namespace UnnamedStrategyGame.Game.UnitTypes
 {
     public sealed class DiveBomber : FighterChassis
     {
+        public override int MaxMovement { get; }
         public override int BuildCost { get; } = 26000;
 
         public override IReadOnlyList<UnitAction> Actions { get; } = new List<UnitAction>()
@@ -23,7 +24,10 @@ namespace UnnamedStrategyGame.Game.UnitTypes
             { SupplyTypes.Kerosene.Instance, 70 }
         };
 
-        private DiveBomber() : base("dive_bomber") { }
+        private DiveBomber() : base("dive_bomber")
+        {
+            MaxMovement = base.MaxMovement - 1;
+        }
         public static DiveBomber Instance { get; } = new DiveBomber();
     }
 }

@@ -27,7 +27,7 @@ namespace UnnamedStrategyGame.Serializers.JsonConverters.Tests
         {
             var s = new JsonSerializer();
 
-            SerializerCrossChecks.Check(new OnTurnChangedNotifyWrapper(new Game.Event.TurnChangedEventArgs(0, new Game.StateChanges.TurnChanged(0, 1, 0, 1, Game.StateChanges.TurnChanged.Cause.TurnEnded))), typeof(MessageWrapper), s);
+            SerializerCrossChecks.Check(new OnTurnChangedNotifyWrapper(new Game.Event.TurnChangedEventArgs(0, null, new Game.StateChanges.TurnChanged(0, 1, 0, 1, Game.StateChanges.TurnChanged.Cause.TurnEnded))), typeof(MessageWrapper), s);
         }
 
         [Fact()]
@@ -36,8 +36,8 @@ namespace UnnamedStrategyGame.Serializers.JsonConverters.Tests
             var s = new JsonSerializer();
 
             SerializerCrossChecks.CheckNot(
-                new OnTurnChangedNotifyWrapper(new Game.Event.TurnChangedEventArgs(0, new Game.StateChanges.TurnChanged(0, 1, 0, 1, Game.StateChanges.TurnChanged.Cause.TurnEnded))),
-                new OnTurnChangedNotifyWrapper(new Game.Event.TurnChangedEventArgs(1, new Game.StateChanges.TurnChanged(0, 1, 0, 1, Game.StateChanges.TurnChanged.Cause.TurnEnded))),
+                new OnTurnChangedNotifyWrapper(new Game.Event.TurnChangedEventArgs(0, null, new Game.StateChanges.TurnChanged(0, 1, 0, 1, Game.StateChanges.TurnChanged.Cause.TurnEnded))),
+                new OnTurnChangedNotifyWrapper(new Game.Event.TurnChangedEventArgs(1, null, new Game.StateChanges.TurnChanged(0, 1, 0, 1, Game.StateChanges.TurnChanged.Cause.TurnEnded))),
                 typeof(MessageWrapper), s);
         }
 
@@ -46,7 +46,7 @@ namespace UnnamedStrategyGame.Serializers.JsonConverters.Tests
         {
             var s = new JsonSerializer();
 
-            var wrapper = new OnTurnChangedNotifyWrapper(new Game.Event.TurnChangedEventArgs(0, new Game.StateChanges.TurnChanged(0, 1, 0, 1, Game.StateChanges.TurnChanged.Cause.TurnEnded)));
+            var wrapper = new OnTurnChangedNotifyWrapper(new Game.Event.TurnChangedEventArgs(0, null, new Game.StateChanges.TurnChanged(0, 1, 0, 1, Game.StateChanges.TurnChanged.Cause.TurnEnded)));
             var sres = s.Serialize(wrapper);
             var tsres = sres.Replace(wrapper.Type, typeof(object).FullName);
 

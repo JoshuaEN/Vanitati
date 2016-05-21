@@ -9,7 +9,7 @@ using UnnamedStrategyGame.Game;
 namespace UnnamedStrategyGame.Network.MessageWrappers
 {
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
-    public abstract class CommanderTypeCallWrapper : CallMessageWrapper
+    public abstract class CommanderTypeCallWrapper : CallMessageWrapper, AuthInterfaces.ICommanderAuth
     {
         public int CommanderID { get; }
 
@@ -18,7 +18,7 @@ namespace UnnamedStrategyGame.Network.MessageWrappers
             CommanderID = commanderID;
         }
 
-        public virtual bool AuthCheck(LocalGameLogic logic, User user)
+        public virtual bool CommanderAuthCheck(LocalGameLogic logic, User user)
         {
             Contract.Requires<ArgumentNullException>(null != logic);
             Contract.Requires<ArgumentNullException>(null != user);

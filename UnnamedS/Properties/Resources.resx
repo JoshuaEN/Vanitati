@@ -178,7 +178,7 @@
     <value>Total Damage: {0}</value>
   </data>
   <data name="action_terrain_build_land_unit" xml:space="preserve">
-    <value>Build</value>
+    <value>Build Land Unit</value>
   </data>
   <data name="action_unit_attack_anti_tank_rocket" xml:space="preserve">
     <value>Attack w/ AT Rocket</value>
@@ -298,7 +298,7 @@
     <value>Plain</value>
   </data>
   <data name="unit_anti_tank_infantry" xml:space="preserve">
-    <value>AT Infantry</value>
+    <value>Anti-Tank Infantry</value>
   </data>
   <data name="unit_artillery" xml:space="preserve">
     <value>Artillery</value>
@@ -346,25 +346,25 @@
     <value>Both units cannot benefit from Terrain Modifiers</value>
   </data>
   <data name="action_unit_attack_anti_aircraft_cannon_vs_air" xml:space="preserve">
-    <value>Anti-Air Cannon (vs. Air)</value>
+    <value>Attack w/ Anti-Air Cannon (vs. Air)</value>
   </data>
   <data name="action_unit_attack_anti_aircraft_cannon_vs_ground" xml:space="preserve">
-    <value>Anti-Air Cannon (vs. Ground)</value>
+    <value>Attack w/ Anti-Air Cannon (vs. Ground)</value>
   </data>
   <data name="action_unit_attack_dive_bomb" xml:space="preserve">
-    <value>Dive Bomb</value>
+    <value>Attack w/ Dive Bomb</value>
   </data>
   <data name="action_unit_attack_fighter_heavy_machine_gun" xml:space="preserve">
-    <value>Wing Mounted HMGs</value>
+    <value>Attack w/ Wing Mounted HMGs</value>
   </data>
   <data name="action_unit_attack_quad_hmg_vs_air" xml:space="preserve">
-    <value>Quad HMG (vs. Air)</value>
+    <value>Attack w/ Quad HMG (vs. Air)</value>
   </data>
   <data name="action_unit_attack_quad_hmg_vs_ground" xml:space="preserve">
-    <value>Quad HMG (vs. Ground)</value>
+    <value>Attack w/ Quad HMG (vs. Ground)</value>
   </data>
   <data name="action_unit_attack_rocket_artillery_barrage" xml:space="preserve">
-    <value>Rocket Artillery Barrage</value>
+    <value>Attack w/ Rocket Artillery Barrage</value>
   </data>
   <data name="action_unit_attack_saturation_bombing" xml:space="preserve">
     <value>Attack w/ Saturation Bombing</value>
@@ -373,7 +373,7 @@
     <value>Anti-Air Tank</value>
   </data>
   <data name="unit_anti_air_half_track" xml:space="preserve">
-    <value>Anti-Air HalfTrack</value>
+    <value>Anti-Air Half-Track</value>
   </data>
   <data name="unit_bomber" xml:space="preserve">
     <value>Bomber</value>
@@ -392,5 +392,257 @@
   </data>
   <data name="unit_transport_truck" xml:space="preserve">
     <value>Transport Truck</value>
+  </data>
+  <data name="action_commander_end_turn_short" xml:space="preserve">
+    <value>End Turn</value>
+  </data>
+  <data name="action_terrain_build_land_unit_short" xml:space="preserve">
+    <value>Build</value>
+  </data>
+  <data name="action_unit_attack_anti_aircraft_cannon_vs_air_short" xml:space="preserve">
+    <value>Attack</value>
+  </data>
+  <data name="action_unit_attack_anti_aircraft_cannon_vs_ground_short" xml:space="preserve">
+    <value>Attack</value>
+  </data>
+  <data name="action_unit_attack_anti_tank_rocket_short" xml:space="preserve">
+    <value>Attack</value>
+  </data>
+  <data name="action_unit_attack_artillery_barrage_short" xml:space="preserve">
+    <value>Attack</value>
+  </data>
+  <data name="action_unit_attack_dive_bomb_short" xml:space="preserve">
+    <value>Attack</value>
+  </data>
+  <data name="action_unit_attack_fighter_heavy_machine_gun_short" xml:space="preserve">
+    <value>Attack</value>
+  </data>
+  <data name="action_unit_attack_heavy_machine_gun_short" xml:space="preserve">
+    <value>Attack</value>
+  </data>
+  <data name="action_unit_attack_light_machine_gun_short" xml:space="preserve">
+    <value>Attack</value>
+  </data>
+  <data name="action_unit_attack_quad_hmg_vs_air_short" xml:space="preserve">
+    <value>Attack</value>
+  </data>
+  <data name="action_unit_attack_quad_hmg_vs_ground_short" xml:space="preserve">
+    <value>Attack</value>
+  </data>
+  <data name="action_unit_attack_rifle_short" xml:space="preserve">
+    <value>Attack</value>
+  </data>
+  <data name="action_unit_attack_rocket_artillery_barrage_short" xml:space="preserve">
+    <value>Attack</value>
+  </data>
+  <data name="action_unit_attack_saturation_bombing_short" xml:space="preserve">
+    <value>Attack</value>
+  </data>
+  <data name="action_unit_attack_tank_main_gun_short" xml:space="preserve">
+    <value>Attack</value>
+  </data>
+  <data name="action_unit_capture_short" xml:space="preserve">
+    <value>Capture</value>
+  </data>
+  <data name="action_unit_clear_repeated_action_automatically_short" xml:space="preserve">
+    <value>Clear Action</value>
+  </data>
+  <data name="action_unit_clear_repeated_action_manually_short" xml:space="preserve">
+    <value>Clear Action</value>
+  </data>
+  <data name="action_unit_dig_in_short" xml:space="preserve">
+    <value>Dig In</value>
+  </data>
+  <data name="action_unit_embark" xml:space="preserve">
+    <value>Embark</value>
+  </data>
+  <data name="action_unit_embark_short" xml:space="preserve">
+    <value>Embark</value>
+  </data>
+  <data name="action_unit_move" xml:space="preserve">
+    <value>Move</value>
+  </data>
+  <data name="action_unit_move_short" xml:space="preserve">
+    <value>Move To</value>
+  </data>
+  <data name="action_unit_unload_embarked_unit" xml:space="preserve">
+    <value>Unload Embarked Unit</value>
+  </data>
+  <data name="action_unit_unload_embarked_unit_short" xml:space="preserve">
+    <value>Unload</value>
+  </data>
+  <data name="terrain_airfield" xml:space="preserve">
+    <value>Airfield</value>
+  </data>
+  <data name="terrain_runway" xml:space="preserve">
+    <value>Runway</value>
+  </data>
+  <data name="unit_anti_aircraft_artillery_short" xml:space="preserve">
+    <value>AA Tank</value>
+  </data>
+  <data name="unit_anti_air_half_track_short" xml:space="preserve">
+    <value>AA Half-Track</value>
+  </data>
+  <data name="unit_anti_tank_infantry_short" xml:space="preserve">
+    <value>AT Infantry</value>
+  </data>
+  <data name="unit_artillery_short" xml:space="preserve">
+    <value>Artillery</value>
+  </data>
+  <data name="unit_bomber_short" xml:space="preserve">
+    <value>Bomber</value>
+  </data>
+  <data name="unit_dive_bomber_short" xml:space="preserve">
+    <value>Dive Bomber</value>
+  </data>
+  <data name="unit_fighter_short" xml:space="preserve">
+    <value>Fighter</value>
+  </data>
+  <data name="unit_infantry_short" xml:space="preserve">
+    <value>Infantry</value>
+  </data>
+  <data name="unit_recon_car_short" xml:space="preserve">
+    <value>Jeep</value>
+  </data>
+  <data name="unit_rocket_artillery_short" xml:space="preserve">
+    <value>Rocket Arty</value>
+  </data>
+  <data name="unit_tank_short" xml:space="preserve">
+    <value>Tank</value>
+  </data>
+  <data name="unit_transport_half_track_short" xml:space="preserve">
+    <value>Half-Track</value>
+  </data>
+  <data name="unit_transport_truck_short" xml:space="preserve">
+    <value>Truck</value>
+  </data>
+  <data name="supply_bombs" xml:space="preserve">
+    <value>Bombs</value>
+  </data>
+  <data name="supply_kerosene" xml:space="preserve">
+    <value>Kerosene</value>
+  </data>
+  <data name="terrain_forest" xml:space="preserve">
+    <value>Forest</value>
+  </data>
+  <data name="terrain_road" xml:space="preserve">
+    <value>Road</value>
+  </data>
+  <data name="action_terrain_build_air_unit" xml:space="preserve">
+    <value>Build Air Unit</value>
+  </data>
+  <data name="action_terrain_build_air_unit_short" xml:space="preserve">
+    <value>Build</value>
+  </data>
+  <data name="movement_boots_desc" xml:space="preserve">
+    <value>The most versitial of movement methods, able to traverse the most treacherous terrain.</value>
+  </data>
+  <data name="movement_halftrack_desc" xml:space="preserve">
+    <value>Similar off-road performance to a fully Tracked vehicle, but at lower cost.</value>
+  </data>
+  <data name="movement_half_track" xml:space="preserve">
+    <value>Half-Track</value>
+  </data>
+  <data name="movement_propeller" xml:space="preserve">
+    <value>Propeller</value>
+  </data>
+  <data name="movement_propeller_desc" xml:space="preserve">
+    <value>The pinnacle of aerial propulsion.</value>
+  </data>
+  <data name="movement_treads_desc" xml:space="preserve">
+    <value>An effective all-terrain mode of traversal, at the cost of top speed.</value>
+  </data>
+  <data name="movement_wheels_desc" xml:space="preserve">
+    <value>Best used on roads, adversly impacted by more difficult terrain.</value>
+  </data>
+  <data name="terrain_airfield_desc" xml:space="preserve">
+    <value>With facilities for aircraft production, repair, and resupply, airfields are the best suited for supporting allied air forces.</value>
+  </data>
+  <data name="terrain_city_desc" xml:space="preserve">
+    <value>Urban jungles offer execlent cover for those on foot, while creating deadly funnels for those constrained to the narrow streets.</value>
+  </data>
+  <data name="terrain_factory_desc" xml:space="preserve">
+    <value>Able to produce, repair, and resupply ground units, factories are an indispensable asset for a successful ground war.</value>
+  </data>
+  <data name="terrain_forest_desc" xml:space="preserve">
+    <value>Ancient trees offer imposing barriers to vehicles, while the amble brush offers excent cover to those waiting inside.</value>
+  </data>
+  <data name="terrain_hill_desc" xml:space="preserve">
+    <value>Hilly terrain offers sigificant advantages to unit, both for concealment and accuracy from the surperior vantage points available.</value>
+  </data>
+  <data name="terrain_mountain_desc" xml:space="preserve">
+    <value>Towering above the terrain, mountains present an effectively impassible obstacle for land based vehicles, while giving infantry unmatched protection.</value>
+  </data>
+  <data name="terrain_plain_desc" xml:space="preserve">
+    <value>A sea of knee high grass in all directions, offering little cover, but little obstacles to passage as well.</value>
+  </data>
+  <data name="terrain_road_desc" xml:space="preserve">
+    <value>Made for ease of vehicle travel, roads are where wheeled vehicles can truly shine, but the lack of cover can prove deadly.</value>
+  </data>
+  <data name="terrain_runway_desc" xml:space="preserve">
+    <value>Able to resupply--but not repair--airplanes, runways are useful for staging air forces. However, the large, perfectly flat expanses make any unit on them stand out clearly.</value>
+  </data>
+  <data name="unit_air_transport" xml:space="preserve">
+    <value>Air Transport</value>
+  </data>
+  <data name="unit_air_transport_desc" xml:space="preserve">
+    <value>Able to carry infantry vast distances, air transports can be used to subvert the front-line or quickly transport reinforcements to where they are needed.</value>
+  </data>
+  <data name="unit_air_transport_short" xml:space="preserve">
+    <value>Air Transport</value>
+  </data>
+  <data name="unit_anit_aircraft_artillery_desc" xml:space="preserve">
+    <value>Armed with quad auto-cannons, and armored like a tank, this vehicle presents a sigificant threat to aircraft and light armor alike. The latter is often not only extremely vulnerable to the auto-cannons, but also unable to even deal damage due to the thick armor protection.</value>
+  </data>
+  <data name="unit_anti_air_half_track_desc" xml:space="preserve">
+    <value>A truly terrifying weapon platform, with four heavy machine guns, it tears through aircraft and light armor alike. Though, its own mode of transport leaves it likewise vulnerable.</value>
+  </data>
+  <data name="unit_anti_tank_infantry_desc" xml:space="preserve">
+    <value>Armed with powerful anti-tank rockets, along with standard issue rifles, these infantry can devistate armor divisions if they are allowed to get in range.</value>
+  </data>
+  <data name="unit_artillery_desc" xml:space="preserve">
+    <value>The powerful guns offer the ability to engage targets from a safe distance, but the design is unable to effectively engage targets at close range.</value>
+  </data>
+  <data name="unit_bomber_desc" xml:space="preserve">
+    <value>Carring a truly impressive payload of bombs, a few bombers can level cities. However, carpet bombing doesn't offer precision, so don't expect much effect against infantry.</value>
+  </data>
+  <data name="unit_dive_bomber_desc" xml:space="preserve">
+    <value>Unlike it's much larger relative the bomber, the dive bomber is a precision strike tool able to effectively engage ground targets.</value>
+  </data>
+  <data name="unit_fighter_desc" xml:space="preserve">
+    <value>Designed and built to rule the skys, the fighter is a extremely effective at clearing the skys, and can even strafe softer ground targets with it's powerful armament.</value>
+  </data>
+  <data name="unit_infantry_desc" xml:space="preserve">
+    <value>Armed with standard issue rifles, these soldiers are cheap yet effective against other infantry as well as lightly armored vehicles. They are also able to capture terrain.</value>
+  </data>
+  <data name="unit_recon_car_desc" xml:space="preserve">
+    <value>Quick, lightly armored and somewhat heavily armed, the Jeep is a versatile tool for hit and run raids or responding to incursions of lightly armored targets.</value>
+  </data>
+  <data name="unit_rocket_artillery_desc" xml:space="preserve">
+    <value>A rack of rockets afixed to the back of a truck, offering good mobility on roads, along with excellent range and damage, rocket artillery can be a extremely useful unit for breaking enemy defenses or repelling attacks. However, it's also extremely vulnerable being unable to fire at targets anywhere near it and having no armor to speak of--being a truck with exposed rockets sitting on the back.</value>
+  </data>
+  <data name="unit_tank_desc" xml:space="preserve">
+    <value>The calvary of a modern army, tanks offer a well rounded mix of armor, firepower, and speed.</value>
+  </data>
+  <data name="unit_transport_half_track_desc" xml:space="preserve">
+    <value>Offering protection from small arms and a single heavy machine gun for protection, the transport half-track is effective at not just bringing infantry to the battle safely, but supporting them once the combat starts.</value>
+  </data>
+  <data name="unit_transport_truck_desc" xml:space="preserve">
+    <value>A basic truck, maybe with some canvas over the back if you're lucky. Good mobility on roads can make it an effectivce tool for ferrying infantry and supplies to the front lines. Just try not to get too close to front-lines.</value>
+  </data>
+  <data name="action_unit_attack_anti_tank_cannon" xml:space="preserve">
+    <value>Attack w/ Anti-Tank Gun</value>
+  </data>
+  <data name="action_unit_attack_anti_tank_cannon_short" xml:space="preserve">
+    <value>Attack</value>
+  </data>
+  <data name="unit_anti_tank_half_track" xml:space="preserve">
+    <value>Anti-Tank Half-Track</value>
+  </data>
+  <data name="unit_anti_tank_half_track_desc" xml:space="preserve">
+    <value>Armed with a high-velocity anti-tank gun, this Half-Track can effectively engage armored targets, even at long range. Though it's own armor protection is lacking.</value>
+  </data>
+  <data name="unit_anti_tank_half_track_short" xml:space="preserve">
+    <value>Half-Track</value>
   </data>
 </root>

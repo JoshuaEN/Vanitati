@@ -5,8 +5,30 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:UnnamedStrategyGame"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525" WindowStartupLocation="CenterScreen" WindowState="Maximized" Closed="Window_Closed"  >
+        Title="MainWindow" Height="350" Width="525" Visibility="Collapsed" WindowStartupLocation="CenterScreen" WindowState="Maximized" Closed="Window_Closed" Loaded="Window_Loaded" SizeChanged="Window_SizeChanged" Closing="Window_Closing" >
+
     <Grid>
-        
+        <Frame x:Name="mainContent" NavigationUIVisibility="Hidden">
+            
+        </Frame>
+
+        <Grid x:Name="msgContainer" Visibility="Collapsed" Background="Thistle">
+            <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Label FontSize="28" x:Name="msgHeader" Grid.Row="0"></Label>
+                <Grid x:Name="msgContent" Grid.Row="1">
+
+                </Grid>
+
+                <StackPanel Orientation="Horizontal" Grid.Row="2" x:Name="msgButtons">
+                    <Button x:Name="msgCloseButton" Click="msgCloseButton_Click">Close</Button>
+                </StackPanel>
+            </Grid>
+        </Grid>
     </Grid>
 </Window>

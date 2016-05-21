@@ -16,11 +16,13 @@ namespace UnnamedStrategyGame.Game.StateChanges
         public Unit[] Units { get; }
         public Commander[] Commanders { get; }
         public IDictionary<string, object> GameStateAttributes { get; }
+        public BattleGameState.StartMode StartMode { get; }
 
         public GameStarted(
             int height, int width, 
             Terrain[] terrain, Unit[] units, Commander[] commanders, 
-            IDictionary<string, object> gameStateAttributes
+            IDictionary<string, object> gameStateAttributes,
+            BattleGameState.StartMode startMode
         ) : base()
         {
             Contract.Requires<ArgumentNullException>(null != terrain);
@@ -34,6 +36,7 @@ namespace UnnamedStrategyGame.Game.StateChanges
             Units = units;
             Commanders = commanders;
             GameStateAttributes = gameStateAttributes;
+            StartMode = startMode;
         }
 
         [ContractInvariantMethod]

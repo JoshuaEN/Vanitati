@@ -16,6 +16,7 @@ namespace UnnamedStrategyGame.Game.MovementTypes
         public override IReadOnlyList<TerrainType.TerrainDifficulty> TraversableDifficulties { get; } = new List<TerrainType.TerrainDifficulty>()
         {
             TerrainType.TerrainDifficulty.Paved,
+            TerrainType.TerrainDifficulty.Industrialized,
             TerrainType.TerrainDifficulty.Tamed,
             TerrainType.TerrainDifficulty.Natural,
             TerrainType.TerrainDifficulty.Rough

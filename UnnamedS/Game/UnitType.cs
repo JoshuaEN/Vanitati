@@ -15,18 +15,25 @@ namespace UnnamedStrategyGame.Game
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public abstract class UnitType : BaseType
     {
+        #region Read-only Lists
+
         protected static readonly IReadOnlyList<UnitAction> DEFAULT_ACTIONS = new List<UnitAction>()
         {
+            Embark.Instance,
             ClearRepeatedActionManually.Instance,
             ReplenishUnitTurnResources.Instance,
             TriggerRepeatedActionAutomatically.Instance,
             ClearRepeatedActionAutomatically.Instance
         };
 
+        #endregion
+
         public abstract MovementType MovementType { get; }
         public abstract IReadOnlyDictionary<SupplyType, int> SupplyLimits { get; }
         public abstract IReadOnlyDictionary<SupplyType, int> MovementSupplyUsage { get; }
         public abstract IReadOnlyDictionary<SupplyType, int> TurnSupplyUsage { get; }
+        public virtual IReadOnlyList<MovementType> EmbarkableMovementTypes { get; } = new List<MovementType>(0);
+        public virtual int MaxEmbarkedUnits { get; } = 0;
         public abstract IReadOnlyList<UnitAction> Actions { get; }
         public abstract int MaxMovement { get; }
         public virtual int MaxActions { get; } = 1;
@@ -71,6 +78,9 @@ namespace UnnamedStrategyGame.Game
             Contract.Invariant(SupplyLimits != null);
             Contract.Invariant(MovementSupplyUsage != null);
             Contract.Invariant(TurnSupplyUsage != null);
+            Contract.Invariant(EmbarkableMovementTypes != null);
+            Contract.Invariant(EmbarkableMovementTypes.Count == 0 || MaxEmbarkedUnits > 0);
+            Contract.Invariant(MaxEmbarkedUnits == 0 || EmbarkableMovementTypes.Count > 0);
             Contract.Invariant(Actions != null);
             Contract.Invariant(MaxMovement > -1);
             Contract.Invariant(MaxHealth > -1);

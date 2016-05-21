@@ -9,7 +9,7 @@ using static UnnamedStrategyGame.Game.Action.TargetContextBase;
 namespace UnnamedStrategyGame.Game.Action
 {
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
-    public class TileTargetOtherContext<TSource, TTrigger> : TargetContextBase<TSource, OtherContext, TTrigger> where TSource:TileContext
+    public class TileTargetOtherContext<TSource, TTrigger> : TargetContextZeroArgs<TSource, TTrigger> where TSource:TileContext
     {
         public Tile SourceTile { get; }
 

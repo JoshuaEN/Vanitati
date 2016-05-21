@@ -22,6 +22,7 @@ namespace UnnamedStrategyGame.Serializers
             SERIALIZER.Converters.Add(new JsonConverters.MessageWrapperConverter());
             SERIALIZER.Converters.Add(new JsonConverters.ContextConverter());
             SERIALIZER.Converters.Add(new JsonConverters.GenericContextConverter());
+            SERIALIZER.Converters.Add(new JsonConverters.SavingWrapperConverter());
 
             //SERIALIZER.ReferenceLoopHandling = ReferenceLoopHandling.Serialize;
             //SERIALIZER.PreserveReferencesHandling = PreserveReferencesHandling.All;
@@ -31,6 +32,7 @@ namespace UnnamedStrategyGame.Serializers
 #else
             SERIALIZER.Formatting = Formatting.None;
 #endif
+            SERIALIZER.NullValueHandling = NullValueHandling.Ignore;
         }
 
         public override T Deserialize<T>(string str)

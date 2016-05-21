@@ -10,7 +10,7 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
     public sealed class AttackRifle : AttackBase
     {
         public override int BaseAccuracy { get; } = 75;
-        public override IReadOnlyList<MovementType> TargetableMovementTypes { get; } = TARGETABLE_LAND_MOVEMENT_TYPES;
+        public override IReadOnlyList<MovementType> TargetableMovementTypes { get; } = MovementType.LAND_MOVEMENT_TYPES;
         public override int MaximumRange { get; } = 1;
         public override double ArmorPenetration { get; } = UnitType.ArmorProtectionFrom.SmallArms;
         public override double DamagePerSubunit { get; } = 2;

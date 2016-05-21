@@ -1,0 +1,21 @@
+﻿<Page x:Class="UnnamedStrategyGame.UI.Help.ArticleGameplayBasics"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:UnnamedStrategyGame.UI.Help"
+      mc:Ignorable="d" 
+      d:DesignHeight="300" d:DesignWidth="300"
+      Title="ArticleGameplayBasics" Background="White">
+
+    <ScrollViewer Background="Transparent">
+        <StackPanel>
+            <Label FontSize="20" Tag="header1" FontWeight="Bold">Game-play Basics</Label>
+            <local:RtfSection Path="GettingStarted_Game-playBasics.rtf"/>
+            <Label FontSize="16" Tag="header2" FontWeight="Bold">Combat</Label>
+            <local:RtfSection Path="GettingStarted_Game-playCombat.rtf"/>
+            <Label FontSize="16" Tag="header2" FontWeight="Bold">Achieving Victory</Label>
+            <local:RtfSection Path="GettingStarted_Game-playWinning.rtf"/>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

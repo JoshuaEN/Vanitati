@@ -38,7 +38,7 @@ namespace UnnamedStrategyGame.Game.Tests
         public void RemoveUserTest()
         {
             var logic = new LocalGameLogic();
-            logic.Sync(0, BattleGameStateTests.GetFields());
+            logic.Sync(0, BattleGameStateTests.GetFields(), logic.GetFields());
             var userToRemove = new User(0, "user");
             var userToWatch = new User(1, "user");
 
@@ -46,10 +46,10 @@ namespace UnnamedStrategyGame.Game.Tests
                 new FakeIUserLogic.Callback(FakeIUserLogic.Handler.OnUserRemoved, e => Assert.Equal(userToRemove.UserID, (e as UserRemovedEventArgs).UserID)));
 
             logic.AddUser(userToRemove, new List<IUserLogic>());
-            logic.AssignUserToCommander(userToRemove.UserID, 0);
+            logic.AssignUserToCommander(userToRemove.UserID, 0, userToRemove.UserID, true);
             logic.AddUser(userToWatch, handler);
             handler.ForEach(h => h.Pause = true);
-            logic.AssignUserToCommander(userToWatch.UserID, 1);
+            logic.AssignUserToCommander(userToWatch.UserID, 1, userToWatch.UserID, true);
             handler.ForEach(h => h.Pause = false);
 
             logic.RemoveUser(userToRemove.UserID);
@@ -64,7 +64,7 @@ namespace UnnamedStrategyGame.Game.Tests
         public void AssignUserToCommanderTest_SetSimple()
         {
             var logic = new LocalGameLogic();
-            logic.Sync(0, BattleGameStateTests.GetFields());
+            logic.Sync(0, BattleGameStateTests.GetFields(), logic.GetFields());
             var user = new User(0, "user");
             var cmdId = logic.State.Commanders.First().Key;
 
@@ -79,7 +79,7 @@ namespace UnnamedStrategyGame.Game.Tests
 
             logic.AddUser(user, handler);
 
-            logic.AssignUserToCommander(user.UserID, cmdId);
+            logic.AssignUserToCommander(user.UserID, cmdId, user.UserID, false);
 
             handler.ForEach(h => h.End());
             Assert.Equal(user.UserID, logic.CommanderAssignments[cmdId]);
@@ -89,7 +89,7 @@ namespace UnnamedStrategyGame.Game.Tests
         public void AssignUserToCommanderTest_SetOverwrite()
         {
             var logic = new LocalGameLogic();
-            logic.Sync(0, BattleGameStateTests.GetFields());
+            logic.Sync(0, BattleGameStateTests.GetFields(), logic.GetFields());
             var userA = new User(0, "user");
             var userB = new User(1, "user", true);
             var cmdId = logic.State.Commanders.First().Key;
@@ -129,8 +129,8 @@ namespace UnnamedStrategyGame.Game.Tests
             logic.AddUser(userB, handlerB);
 
             
-            logic.AssignUserToCommander(userA.UserID, cmdId);
-            logic.AssignUserToCommander(userB.UserID, cmdId, true);
+            logic.AssignUserToCommander(userA.UserID, cmdId, userA.UserID, true);
+            logic.AssignUserToCommander(userB.UserID, cmdId, userB.UserID, true);
 
             handlerA.ForEach(h => h.End());
             handlerB.ForEach(h => h.End());
@@ -142,7 +142,7 @@ namespace UnnamedStrategyGame.Game.Tests
         public void AssignUserToCommanderTest_SetOverwriteNotHost()
         {
             var logic = new LocalGameLogic();
-            logic.Sync(0, BattleGameStateTests.GetFields());
+            logic.Sync(0, BattleGameStateTests.GetFields(), logic.GetFields());
             var userA = new User(0, "user");
             var userB = new User(1, "user");
 
@@ -150,11 +150,11 @@ namespace UnnamedStrategyGame.Game.Tests
             logic.AddUser(userB, new List<IUserLogic>());
 
             var cmdId = logic.State.Commanders.First().Key;
-            logic.AssignUserToCommander(userA.UserID, cmdId);
+            logic.AssignUserToCommander(userA.UserID, cmdId, userA.UserID, userA.IsHost);
 
             Assert.Throws<Exceptions.NotHostException>(() =>
             {
-                logic.AssignUserToCommander(userB.UserID, cmdId);
+                logic.AssignUserToCommander(userB.UserID, cmdId, userB.UserID, userB.IsHost);
             });
 
             Assert.Equal(userA.UserID, logic.CommanderAssignments[cmdId]);
@@ -164,13 +164,13 @@ namespace UnnamedStrategyGame.Game.Tests
         public void AssignUserToCommanderTest_SetInvalidCommanderID()
         {
             var logic = new LocalGameLogic();
-            logic.Sync(0, BattleGameStateTests.GetFields());
+            logic.Sync(0, BattleGameStateTests.GetFields(), logic.GetFields());
             var user = new User(0, "user");
             logic.AddUser(user, new List<IUserLogic>());
 
             Assert.Throws<Exceptions.UnknownCommanderException>(() =>
             {
-                logic.AssignUserToCommander(user.UserID, 99);
+                logic.AssignUserToCommander(user.UserID, 99, user.UserID, user.IsHost);
             });
 
         }
@@ -179,13 +179,13 @@ namespace UnnamedStrategyGame.Game.Tests
         public void AssignUserToCommanderTest_SetInvalidUserID()
         {
             var logic = new LocalGameLogic();
-            logic.Sync(0, BattleGameStateTests.GetFields());
+            logic.Sync(0, BattleGameStateTests.GetFields(), logic.GetFields());
             var user = new User(0, "user");
             logic.AddUser(user, new List<IUserLogic>());
 
             Assert.Throws<ArgumentException>(() =>
             {
-                logic.AssignUserToCommander(99, 0);
+                logic.AssignUserToCommander(99, 0, 99, false);
             });
 
         }
@@ -264,7 +264,7 @@ namespace UnnamedStrategyGame.Game.Tests
             logic.AddUser(user, handler);
 
             handler.ForEach(l => l.Pause = true);
-            logic.AssignUserToCommander(user.UserID, cmdID);
+            logic.AssignUserToCommander(user.UserID, cmdID, user.UserID, user.IsHost);
             handler.ForEach(l => l.Pause = false);
 
             var otherContext = new OtherContext();
@@ -355,7 +355,7 @@ namespace UnnamedStrategyGame.Game.Tests
             {
                 logic.DoAction(
                     new ActionInfo(
-                        new FakeActionType(new List<StateChange>(), ActionType.Category.Commander, ActionType.TargetCategory.Other, false),
+                        new FakeActionType(new List<StateChange>(), ActionType.Category.Commander, null, false),
                         new ActionContext(logic.State.CurrentCommander.CommanderID, ActionContext.TriggerAutoDetermineMode.ManuallyByUser, new CommanderContext(0), new OtherContext())
                    )
                 );
@@ -397,7 +397,7 @@ namespace UnnamedStrategyGame.Game.Tests
             {
                 logic.DoAction(
                     new ActionInfo(
-                        new FakeActionType(new List<StateChange>(), ActionType.Category.Commander, ActionType.TargetCategory.Tile),
+                        new FakeActionType(new List<StateChange>(), ActionType.Category.Commander, new Type[] { typeof(Location) }),
                         new ActionContext(logic.State.CurrentCommander.CommanderID, ActionContext.TriggerAutoDetermineMode.ManuallyByUser, new CommanderContext(0), new OtherContext())
                    )
                 );
@@ -589,7 +589,7 @@ namespace UnnamedStrategyGame.Game.Tests
             );
 
             logic.AddUser(user, handler);
-            logic.Sync(0, fields);
+            logic.Sync(0, fields, logic.GetFields());
             handler.ForEach(h => h.End());
 
             BattleGameStateTests.CrossCheckFieldsWithState(fields, logic.InternalState);
@@ -603,7 +603,7 @@ namespace UnnamedStrategyGame.Game.Tests
         {
             var logic = new LocalGameLogic();
             var fields = BattleGameStateTests.GetFields();
-            logic.Sync(0, fields);
+            logic.Sync(0, fields, logic.GetFields());
             var user = new User(0, "name");
 
             var handler = GetIUserLogic(new FakeIUserLogic.Callback(FakeIUserLogic.Handler.OnUserAdded, null),
@@ -687,7 +687,7 @@ namespace UnnamedStrategyGame.Game.Tests
             handler.ForEach(h => h.Pause = true);
             logic.StartGame(fields);
             handler.ForEach(h => h.Pause = false);
-            logic.EndTurn(logic.State.CurrentCommander.CommanderID);
+            logic.EndTurn(null, logic.State.CurrentCommander.CommanderID);
             handler.ForEach(h => h.End());
         }
 
@@ -695,12 +695,12 @@ namespace UnnamedStrategyGame.Game.Tests
         public void IsUserCommandingTest()
         {
             var logic = new LocalGameLogic();
-            logic.Sync(0, BattleGameStateTests.GetFields());
+            logic.Sync(0, BattleGameStateTests.GetFields(), logic.GetFields());
             var user = new User(0, "user");
             logic.AddUser(user, new List<IUserLogic>());
 
             var cmdId = logic.State.Commanders.First().Key;
-            logic.AssignUserToCommander(user.UserID, cmdId);
+            logic.AssignUserToCommander(user.UserID, cmdId, user.UserID, user.IsHost);
 
             Assert.True(logic.IsUserCommanding(user.UserID, cmdId));
             Assert.False(logic.IsUserCommanding(user.UserID + 1, cmdId));
@@ -724,21 +724,18 @@ namespace UnnamedStrategyGame.Game.Tests
                 get;
             }
 
-            public override TargetCategory ActionTargetCategory
-            {
-                get;
-            }
+            public override Type[] TargetValueTypes { get; }
 
             public override bool CanUserTrigger
             {
                 get;
             }
 
-            public FakeActionType(List<StateChange> testStateChanges, Category actionCategory, TargetCategory actionTargetCategory = TargetCategory.Other, bool canUserTrigger = true) : base("")
+            public FakeActionType(List<StateChange> testStateChanges, Category actionCategory, Type[] targetValidTypes = null, bool canUserTrigger = true) : base("")
             {
                 TestStateChanges = testStateChanges;
                 ActionCategory = actionCategory;
-                ActionTargetCategory = actionTargetCategory;
+                TargetValueTypes = targetValidTypes ?? new Type[0];
                 CanUserTrigger = canUserTrigger;
             }
 
@@ -750,6 +747,11 @@ namespace UnnamedStrategyGame.Game.Tests
             public override IReadOnlyList<StateChange> PerformOn(IReadOnlyBattleGameState state, ActionContext context)
             {
                 return TestStateChanges.ToList();
+            }
+
+            public override System.Collections.IEnumerable ValidTargets(IReadOnlyBattleGameState state, ActionContext context)
+            {
+                return new List<object>(0);
             }
 
             public override IReadOnlyList<Modifier> Modifiers(IReadOnlyBattleGameState state, ActionContext context)

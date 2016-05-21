@@ -25,8 +25,10 @@ namespace UnnamedStrategyGame.Game.ActionTypes
         public enum ActionTriggers
         {
             DirectlyByGameLogic = 1,
-            AnyTurnStart = 2,
-            AnyTurnEnd = 4,
+            OnAnyTurnStart = 2,
+            OnAnyTurnEnd = 4,
+            OnRoundStart = 8,
+            OnRoundEnd = 16,
             None = 0
         }
     }

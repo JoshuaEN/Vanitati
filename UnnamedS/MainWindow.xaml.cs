@@ -23,72 +23,186 @@ namespace UnnamedStrategyGame
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, UI.Settings.IUsesSettings
     {
-        public Network.Server sv;
-        public NetworkedGameLogic c1;
-        public NetworkedGameLogic c2;
+        private Network.Server _server;
+        public Network.Server Server
+        {
+            get { return _server; }
+            set
+            {
+                _server = value;
+                viewer.AddSource("Server", _server);
+            }
+        }
+
+        private void Server_Exception(object sender, Network.ExceptionEventArgs e)
+        {
+
+        }
+
+        private void Server_Disconnected(object sender, Network.DisconnectedEventArgs e)
+        {
+
+        }
+
+        public UI.NetworkLogViewer viewer;
+
         public MainWindow()
         {
             InitializeComponent();
 
             Preloader.Preload();
 
-            Content = new UI.DamageTable(); // new UI.BattleView();
-            return;
+            UI.Settings.Settings.Current.DisplayModeChanged += Current_DisplayDataChanged;
+            UI.Settings.Settings.Current.DisplayStateChanged += Current_DisplayDataChanged;
+            UI.Settings.Settings.Current.DisplaySizeChanged += Current_DisplayDataChanged;
 
-            //var view = new UI.NetworkLogViewer();
+            viewer = new UI.NetworkLogViewer();
+            viewer.Show();
+            //if(false)
+            //    Content = new UI.DamageTable();
+            //else
+            //    Content = new UI.BattleViewV2();
+            //return;
 
-            //var endpoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), Globals.DEFAULT_PORT);
+        }
 
-            //sv = new Network.Server( new TcpListener(endpoint));
+        private void Current_DisplayDataChanged(object sender, EventArgs e)
+        {
+            SettingsUpdated();
+        }
 
-            //view.AddSource("Server", sv);
-
-            //sv.Listen();
-
-            //var endpoint2 = new IPEndPoint(IPAddress.Parse("127.0.0.1"), endpoint.Port);
-            //var endpoint3 = new IPEndPoint(IPAddress.Parse("127.0.0.1"), endpoint.Port);
-
-            //var cc1 = new Network.Client(endpoint2);
-            //var cc2 = new Network.Client(endpoint3);
-
-            //view.AddSource("Client A", cc1);
-            //view.AddSource("Client B", cc2);
-
-            //c1 = new Game.NetworkedGameLogic(cc1, new List<IPlayerLogic>());
-            //c2 = new Game.NetworkedGameLogic(cc2, new List<IPlayerLogic>());
-
-            //view.Show();
-
-
-            //var s = Serializers.Serializer.Instance;
-
-            //var m = new Network.MessageWrappers.DoActionsCallWrapper(0, new List<ActionInfo>() { new ActionInfo(Game.ActionTypes.AttackRifle.Instance, new Location(1, 1), new Location(2, 2)) });
-            //var res = s.Serialize(m);
-
-
-
-
-            ////var t = new Terrain("terrain_plain");
-
-            ////var res = s.Serialize(t);
-
-            //MessageBox.Show(res);
-
-            //var usres = s.Deserialize<Network.MessageWrappers.MessageWrapper>(res);
-
-            //MessageBox.Show(s.Serialize(usres));
-
-            //MessageBox.Show(UnitType.TYPES.Count.ToString());
-
-            //Console.WriteLine();
+        public void SetContent(FrameworkElement elm)
+        {
+            mainContent.Content = elm;   
         }
 
         private void Window_Closed(object sender, EventArgs e)
         {
             Application.Current.Shutdown(0);
             Environment.Exit(0);
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            SettingsUpdated();
+            UI.Resource.MainWindow = this;
+            //SetContent(new UI.BattleViewV2());
+            SetContent(new UI.MainMenu());
+            Visibility = Visibility.Visible;
+        }
+
+        public void SettingsUpdated()
+        {
+            if(UI.Settings.Settings.Current.DisplayMode == UI.Settings.Settings.WindowDisplayMode.BorderlessFullscreen)
+            {
+                WindowStyle = WindowStyle.None;
+                WindowState = WindowState.Normal;
+                WindowState = WindowState.Maximized;
+                ResizeMode = ResizeMode.NoResize;
+                Height = SystemParameters.FullPrimaryScreenHeight;
+                Width = SystemParameters.FullPrimaryScreenWidth;
+            }
+            else if(UI.Settings.Settings.Current.DisplayMode == UI.Settings.Settings.WindowDisplayMode.Fullscreen)
+            {
+                WindowStyle = WindowStyle.SingleBorderWindow;
+                WindowState = WindowState.Normal;
+                WindowState = WindowState.Maximized;
+                ResizeMode = ResizeMode.CanMinimize;
+            }
+            else
+            {
+                WindowStyle = WindowStyle.SingleBorderWindow;
+                WindowState = UI.Settings.Settings.Current.DisplayState;
+                ResizeMode = ResizeMode.CanResize;
+                Height = UI.Settings.Settings.Current.DisplaySize.Height;
+                Width = UI.Settings.Settings.Current.DisplaySize.Width;
+            }
+        }
+
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if(WindowState == WindowState.Normal)
+                UI.Settings.Settings.Current.DisplaySize = new Size(Width, Height);
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            UI.Settings.Settings.SaveSettings();
+        }
+
+        private void MessageReset()
+        {
+            msgContent.RowDefinitions.Clear();
+            msgContent.ColumnDefinitions.Clear();
+            msgContent.Children.Clear();
+            msgContainer.Visibility = Visibility.Visible;
+        }
+
+        public void ShowMessage(Exception ex)
+        {
+            MessageReset();
+
+            var rootEx = ex;
+
+            while (rootEx.InnerException != null)
+                rootEx = rootEx.InnerException;
+
+            msgHeader.Content = rootEx.Message;
+
+            msgContent.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(0, GridUnitType.Auto) });
+            msgContent.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(0, GridUnitType.Auto) });
+
+            var row = 0;
+            UI.Resource.GenerateRow(msgContent, ref row, "Type", rootEx.GetType().Name);
+
+
+            msgContent.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(0, GridUnitType.Auto) });
+            msgContent.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(0, GridUnitType.Auto) });
+            msgContent.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(0, GridUnitType.Auto) });
+
+
+            var stackLbl = new Label() { Content = "Stack Trace" };
+            Grid.SetRow(stackLbl, row++);
+            Grid.SetColumnSpan(stackLbl, 2);
+            msgContent.Children.Add(stackLbl);
+            var stackTxt = new TextBox() { Text = ex.StackTrace, HorizontalScrollBarVisibility = ScrollBarVisibility.Auto, VerticalScrollBarVisibility = ScrollBarVisibility.Visible, TextWrapping = TextWrapping.NoWrap, IsReadOnly = true };
+            Grid.SetRow(stackTxt, row++);
+            Grid.SetColumnSpan(stackTxt, 2);
+            msgContent.Children.Add(stackTxt);
+            stackTxt = new TextBox() { Text = rootEx.StackTrace, HorizontalScrollBarVisibility = ScrollBarVisibility.Auto, VerticalScrollBarVisibility = ScrollBarVisibility.Visible, TextWrapping = TextWrapping.NoWrap, IsReadOnly = true };
+            Grid.SetRow(stackTxt, row++);
+            Grid.SetColumnSpan(stackTxt, 2);
+            msgContent.Children.Add(stackTxt);
+        }
+
+        public void ShowFatalMessage(Exception ex)
+        {
+            ShowMessage(ex);
+            var stacky = new StackPanel();
+            stacky.Children.Add(new Label() { Content = "Fatal Error", FontSize = 40 });
+            stacky.Children.Add(new Label() { Content = msgHeader.Content });
+            msgHeader.Content = stacky;
+        }
+
+        public void ShowMessage(object header, string content)
+        {
+            MessageReset();
+            msgHeader.Content = header;
+            msgContent.Children.Add(new Label() { Content = content});
+        }
+
+        public void ShowMessage(object header, UIElement content)
+        {
+            MessageReset();
+            msgHeader.Content = header;
+            msgContent.Children.Add(content);
+        }
+
+        private void msgCloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            msgContainer.Visibility = Visibility.Collapsed;
         }
     }
 }

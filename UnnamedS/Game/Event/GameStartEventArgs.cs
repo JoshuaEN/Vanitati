@@ -11,12 +11,14 @@ namespace UnnamedStrategyGame.Game.Event
     public class GameStartEventArgs : EventArgs
     {
         public BattleGameState.Fields ChangeInfo { get; }
+        public BattleGameState.StartMode StartMode { get; }
 
-        public GameStartEventArgs(BattleGameState.Fields changeInfo)
+        public GameStartEventArgs(BattleGameState.Fields changeInfo, BattleGameState.StartMode startMode)
         {
             Contract.Requires<ArgumentNullException>(null != changeInfo);
 
             ChangeInfo = changeInfo;
+            StartMode = startMode;
         }
 
         [ContractInvariantMethod]

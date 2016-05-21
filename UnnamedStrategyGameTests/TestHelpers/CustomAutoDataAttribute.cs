@@ -18,7 +18,8 @@ namespace UnnamedStrategyGameTests.TestHelpers
         {
             var f = new Fixture();
             f.Register<ActionType>(() => UnnamedStrategyGame.Game.ActionTypes.ForUnits.Move.Instance);
-            f.Register<Context>(() => new FakeConcrete.FakeContext());
+            f.Register<SourceContext>(() => new FakeConcrete.FakeSourceContext());
+            f.Register<TargetContext>(() => new FakeConcrete.FakeTargetContext());
             return f;
         }
     }

@@ -16,6 +16,11 @@ namespace UnnamedStrategyGame.UI.Settings
             Key = key;
         }
 
+        public override bool IsActive()
+        {
+            return Keyboard.IsKeyDown(Key);
+        }
+
         public override bool Equals(object obj)
         {
             if (object.ReferenceEquals(obj, null))

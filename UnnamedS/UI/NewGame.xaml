@@ -1,0 +1,101 @@
+﻿<Page x:Class="UnnamedStrategyGame.UI.NewGame"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:UnnamedStrategyGame.UI"
+      mc:Ignorable="d" 
+      d:DesignHeight="500" d:DesignWidth="500"
+      Title="NewGame" Background="#7F000000">
+
+    <Border Padding="10" HorizontalAlignment="Center" VerticalAlignment="Center" Background="White">
+        <StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Label Content="Player Settings" FontWeight="Black" FontSize="16" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0"/>
+
+                <Label Content="Display Name" Grid.Row="1" />
+                <TextBox x:Name="optName" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center"/>
+
+                <Label Content="Hosting Settings" FontWeight="Black" FontSize="16" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="10"/>
+
+                <Label Content="Mode" Grid.Row="11" FontWeight="Bold"/>
+                <StackPanel Grid.Column="1" Grid.Row="11">
+                    <RadioButton x:Name="optLocalGame" IsChecked="True">
+                        Local Game
+                    </RadioButton>
+                    <RadioButton x:Name="optNetworkedGame">
+                        Networked Game
+                    </RadioButton>
+                </StackPanel>
+
+                <Label Content="Port" Grid.Row="12" />
+                <TextBox x:Name="optPort" Grid.Column="1" Grid.Row="12" VerticalAlignment="Center"/>
+
+            
+                <Label Content="Battle Settings" FontWeight="Black" FontSize="16" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="20"/>
+
+                <Label Content="Initial State" Grid.Row="21" FontWeight="Bold"/>
+                <Button Grid.Column="1" Grid.Row="21" Click="SelectMapButton_Click" VerticalAlignment="Center" >Select</Button>
+                
+                <Label Grid.Row="22">Max Commanders</Label>
+                <TextBox Grid.Column="1" Grid.Row="22" IsEnabled="False" x:Name="nooptMaxCommanders"></TextBox>
+
+                <Label Grid.ColumnSpan="2" Grid.Row="23" FontWeight="Bold">Victory Conditions</Label>
+                
+                <CheckBox x:Name="optEnableVictoryPointsMaximum" Grid.ColumnSpan="2" Grid.Row="24">Victory Points Maximum</CheckBox>
+                
+                <Label Grid.Row="25">Maximum VP</Label>
+                <TextBox Grid.Column="1" Grid.Row="25" x:Name="optVictoryPointsMaximum" IsEnabled="{Binding ElementName=optEnableVictoryPointsMaximum, Path=IsChecked}"></TextBox>
+
+                <CheckBox x:Name="optEnableVictoryPointsGap" Grid.ColumnSpan="2" Grid.Row="26">Victory Points Gap</CheckBox>
+
+                <Label Grid.Row="27">Maximum VP Gap</Label>
+                <TextBox Grid.Column="1" Grid.Row="27" x:Name="optVictoryPointsGap" IsEnabled="{Binding ElementName=optEnableVictoryPointsGap, Path=IsChecked}"></TextBox>
+
+                <Label x:Name="msgNoStateSelected" Grid.ColumnSpan="2" Grid.Row="22" Grid.RowSpan="6" Background="White" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">(No State Selected)</Label>
+
+            </Grid>
+            <DockPanel LastChildFill="False">
+                <Button DockPanel.Dock="Right" Click="CancelButton_Click">Cancel</Button>
+                <Button x:Name="btnStartGame" DockPanel.Dock="Right" Click="StartGameButton_Click">Start Game</Button>
+            </DockPanel>
+        </StackPanel>
+    </Border>
+</Page>

@@ -19,5 +19,44 @@ namespace UnnamedStrategyGame.Game
             Name = name;
             IsHost = isHost;
         }
+
+        public override bool Equals(object obj)
+        {
+            if (object.ReferenceEquals(obj, null))
+                return false;
+
+            if (!(obj is User))
+                return false;
+
+            var otherLoc = (obj as User);
+
+            return this == otherLoc;
+        }
+
+        public bool Equals(User loc)
+        {
+            return this == loc;
+        }
+
+        public static bool operator ==(User a, User b)
+        {
+            if (object.ReferenceEquals(a, b))
+                return true;
+
+            if (object.ReferenceEquals(a, null) || object.ReferenceEquals(b, null))
+                return false;
+
+            return a.UserID == b.UserID;
+        }
+
+        public static bool operator !=(User a, User b)
+        {
+            return !(a == b);
+        }
+
+        public override int GetHashCode()
+        {
+            return UserID.GetHashCode();
+        }
     }
 }

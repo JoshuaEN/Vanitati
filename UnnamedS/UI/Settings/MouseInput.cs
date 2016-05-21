@@ -16,6 +16,25 @@ namespace UnnamedStrategyGame.UI.Settings
             Button = button;
         }
 
+        public override bool IsActive()
+        {
+            switch(Button)
+            {
+                case MouseButton.Left:
+                    return Mouse.LeftButton == MouseButtonState.Pressed;
+                case MouseButton.Middle:
+                    return Mouse.MiddleButton == MouseButtonState.Pressed;
+                case MouseButton.Right:
+                    return Mouse.RightButton == MouseButtonState.Pressed;
+                case MouseButton.XButton1:
+                    return Mouse.XButton1 == MouseButtonState.Pressed;
+                case MouseButton.XButton2:
+                    return Mouse.XButton2 == MouseButtonState.Pressed;
+                default:
+                    throw new ArgumentException($"Unknown Mouse Button of {Button}");
+            }
+        }
+
         public override bool Equals(object obj)
         {
             if (object.ReferenceEquals(obj, null))

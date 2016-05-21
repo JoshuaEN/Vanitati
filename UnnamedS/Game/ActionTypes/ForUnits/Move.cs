@@ -41,6 +41,9 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
             if (targetTile.Unit != null)
                 return false;
 
+            if (sourceTile.Unit.UnitType.MovementType.CanTraverse(targetTile.Terrain.TerrainType) == false)
+                return false;
+
             return true;
         }
 
@@ -77,10 +80,10 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
             return changes;
         }
 
-        public override IReadOnlyDictionary<Location, ActionChain> ActionableLocations(IReadOnlyBattleGameState state, UnitTargetTileContext context, Tile sourceTile)
+        public override IReadOnlyDictionary<Location, ActionChain> ValidTargets(IReadOnlyBattleGameState state, UnitTargetTileContext context, Tile sourceTile)
         {
             return GetRemainingMovement(state, context, sourceTile).Keys.
-                        ToDictionary(loc => loc, loc => new ActionChain(new ActionChain.Link(this, new UnitContext(sourceTile.Location), new TerrainContext(loc))));
+                        ToDictionary(loc => loc, loc => new ActionChain(new ActionChain.Link(this, new UnitContext(sourceTile.Location), new GenericContext(loc))));
         }
 
         public override IReadOnlyList<Modifier> Modifiers(IReadOnlyBattleGameState state, UnitTargetTileContext context, Tile sourceTile, Tile targetTile)
@@ -152,7 +155,7 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
             }
 
             // Initialize with the current tile as a starting point.
-            dic.Add(sourceTile.Terrain.Location, new MovementRemaining(maxMovementAvailable, sourceTile.Terrain.Location));
+            dic.Add(sourceTile.Terrain.Location, new MovementRemaining(this, maxMovementAvailable, sourceTile.Terrain.Location));
             evalStack.Push(sourceTile.Terrain.Location);
 
             do
@@ -177,15 +180,15 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
 
                         var remainingMovement = availableMovement.RemainingMovement - movementCost;
 
-                        // If there is less than 0 movement remaining, the unit can't move to this tile.
-                        if(remainingMovement < 0)
-                            continue;
+                        // If there is less than 0 movement remaining, we allow the unit to move. // the unit can't move to this tile.
+                        if (remainingMovement < 0)
+                            remainingMovement = 0;
 
                         MovementRemaining remaining;
 
                         if (dic.TryGetValue(location, out remaining) == false)
                         {
-                            remaining = new MovementRemaining(remainingMovement, sourceLocation);
+                            remaining = new MovementRemaining(this, remainingMovement, sourceLocation);
                             dic.Add(location, remaining);
 
                             if(remainingMovement > 0)
@@ -193,7 +196,7 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
                         }
                         else
                         {
-                            if (remaining.UpdateFromLocation(remainingMovement, sourceLocation) && remainingMovement > 0)
+                            if (remaining.UpdateFromLocation(this, remainingMovement, sourceLocation) && remainingMovement > 0)
                             {
                                 evalStack.Push(location);
                             }
@@ -209,27 +212,36 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
             return dic;
         }
 
+        protected override bool RangeBasedValidTargetCanPerform(IReadOnlyBattleGameState state, UnitTargetTileContext context, Tile sourceTile, Tile targetTile)
+        {
+            throw new NotImplementedException();
+        }
+
         public sealed class MovementRemaining
         {
             public int RemainingMovement { get; private set; }
             public Location FromLocation { get; private set; }
+            public ActionType MovementActionType { get; private set; }
 
-            public MovementRemaining(int remainingMovement, Location fromLocation)
+            public MovementRemaining(ActionType movementActionType, int remainingMovement, Location fromLocation)
             {
                 Contract.Requires<ArgumentNullException>(null != fromLocation);
                 Contract.Requires<ArgumentException>(remainingMovement >= 0);
 
+                MovementActionType = movementActionType;
                 RemainingMovement = remainingMovement;
                 FromLocation = fromLocation;
             }
 
-            public bool UpdateFromLocation(int remainingMovement, Location fromLocation)
+            public bool UpdateFromLocation(ActionType movementActionType, int remainingMovement, Location fromLocation)
             {
+                Contract.Requires<ArgumentNullException>(null != movementActionType);
                 Contract.Requires<ArgumentNullException>(null != fromLocation);
                 Contract.Requires<ArgumentException>(remainingMovement >= 0);
 
                 if (remainingMovement > RemainingMovement)
                 {
+                    MovementActionType = movementActionType;
                     RemainingMovement = remainingMovement;
                     FromLocation = FromLocation;
 

@@ -28,7 +28,7 @@ namespace UnnamedStrategyGame.Game.Properties
 
             public Helper()
             {
-                var info = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+                var info = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => Attribute.IsDefined(p, typeof(Newtonsoft.Json.JsonIgnoreAttribute)) == false);
 
                 foreach (var i in info)
                 {

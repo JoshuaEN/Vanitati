@@ -12,10 +12,10 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForCommanders
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public abstract class CommanderTargetGenericAction<T> : CommanderAction
     {
-        public sealed override TargetCategory ActionTargetCategory
+        public sealed override Type[] TargetValueTypes { get; } = new Type[]
         {
-            get { return TargetCategory.Generic; }
-        }
+            typeof(T)
+        };
 
         public CommanderTargetGenericAction(string key) : base(key) { }
 
@@ -33,12 +33,12 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForCommanders
         }
         public abstract IReadOnlyList<StateChange> PerformOn(IReadOnlyBattleGameState state, CommanderTargetGenericContext<T> context, Commander sourceCommander, T targetValue);
 
-        public sealed override IReadOnlyList<object> AvailableOptions(IReadOnlyBattleGameState state, ActionContext context)
+        public sealed override System.Collections.IEnumerable ValidTargets(IReadOnlyBattleGameState state, ActionContext context)
         {
             var convertedContext = new CommanderTargetGenericContext<T>(state, context, TargetContextBase.Load.Source);
-            return AvailableOptions(state, convertedContext, convertedContext.SourceCommander).Cast<object>().ToList();
+            return ValidTargets(state, convertedContext, convertedContext.SourceCommander);
         }
-        public abstract IReadOnlyList<T> AvailableOptions(IReadOnlyBattleGameState state, CommanderTargetGenericContext<T> context, Commander sourceCommander);
+        public abstract IReadOnlyList<T> ValidTargets(IReadOnlyBattleGameState state, CommanderTargetGenericContext<T> context, Commander sourceCommander);
 
         public sealed override IReadOnlyList<Modifier> Modifiers(IReadOnlyBattleGameState state, ActionContext context)
         {
@@ -75,7 +75,7 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForCommanders
             throw new NotSupportedException();
         }
 
-        public override IReadOnlyList<T> AvailableOptions(IReadOnlyBattleGameState state, CommanderTargetGenericContext<T> context, Commander sourceCommander)
+        public override IReadOnlyList<T> ValidTargets(IReadOnlyBattleGameState state, CommanderTargetGenericContext<T> context, Commander sourceCommander)
         {
             Contract.Requires<ArgumentNullException>(null != state);
             Contract.Requires<ArgumentNullException>(null != context);

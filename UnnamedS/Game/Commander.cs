@@ -31,15 +31,17 @@ namespace UnnamedStrategyGame.Game
             }
         }
         public int Credits { get; private set; } = -1;
+        public int VictoryPoints { get; private set; } = -1;
 
         [Newtonsoft.Json.JsonConstructor]
-        public Commander(CommanderType commanderType, int commanderID, int credits = 0)
+        public Commander(CommanderType commanderType, int commanderID, int credits = 0, int victoryPoints = 0)
         {
             Contract.Requires<ArgumentNullException>(null != commanderType);
 
             CommanderType = commanderType;
             CommanderID = commanderID;
             Credits = credits;
+            VictoryPoints = victoryPoints;
         }
 
         public Commander(IDictionary<string, object> values)
@@ -73,6 +75,7 @@ namespace UnnamedStrategyGame.Game
             Contract.Invariant(null != CommanderType);
             Contract.Invariant(CommanderID >= -1);
             Contract.Invariant(Credits >= -1);
+            Contract.Invariant(VictoryPoints >= -1);
         }
     }
 }

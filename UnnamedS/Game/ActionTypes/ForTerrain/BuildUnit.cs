@@ -59,9 +59,9 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForTerrain
             };
         }
 
-        public override IReadOnlyList<UnitType> AvailableOptions(IReadOnlyBattleGameState state, TerrainTargetGenericContext<UnitType> context, Tile sourceTile)
+        public override IReadOnlyList<UnitType> ValidTargets(IReadOnlyBattleGameState state, TerrainTargetGenericContext<UnitType> context, Tile sourceTile)
         {
-            return BuildableTypes;
+            return BuildableTypes.Where(t => CanPerformOn(state, context, sourceTile, t)).ToList();
         }
 
         public override IReadOnlyList<Modifier> Modifiers(IReadOnlyBattleGameState state, TerrainTargetGenericContext<UnitType> context, Tile sourceTile, UnitType targetValue)

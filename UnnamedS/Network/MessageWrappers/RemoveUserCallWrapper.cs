@@ -10,6 +10,7 @@ namespace UnnamedStrategyGame.Network.MessageWrappers
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public class RemoveUserCallWrapper : CallMessageWrapper
     {
+        public override bool RequiresHost { get; } = true;
         public int UserID { get; }
 
         public RemoveUserCallWrapper(int userID)

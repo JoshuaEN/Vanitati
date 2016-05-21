@@ -9,7 +9,7 @@ namespace UnnamedStrategyGame.Game.UnitTypes
 {
     public sealed class ReconCar : CarChassis
     {
-        public override int BuildCost { get; } = 5000;
+        public override int BuildCost { get; } = 6000;
 
         public override IReadOnlyList<UnitAction> Actions { get; } = new List<UnitAction>()
         {

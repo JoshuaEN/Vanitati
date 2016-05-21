@@ -9,7 +9,7 @@ namespace UnnamedStrategyGame.Game.UnitTypes
     public abstract class TankChassis : UnitType
     {
         public override MovementType MovementType { get; } = MovementTypes.Treads.Instance;
-        public override int MaxMovement { get; } = 6;
+        public override int MaxMovement { get; } = 5;
 
         public override double MaxArmor { get; } = ArmorProtectionFrom.SmallCaliberTankGuns - 1;
         public override int Concealment { get; } = 0;

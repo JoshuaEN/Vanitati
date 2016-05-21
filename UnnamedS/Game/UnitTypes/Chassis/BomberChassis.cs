@@ -9,7 +9,7 @@ namespace UnnamedStrategyGame.Game.UnitTypes
     public abstract class BomberChassis : UnitType
     {
         public override MovementType MovementType { get; } = MovementTypes.Propeller.Instance;
-        public override int MaxMovement { get; } = 14;
+        public override int MaxMovement { get; } = 8;
 
         public override double MaxArmor { get; } = ArmorProtectionFrom.SmallArms;
         public override int Concealment { get; } = -5;

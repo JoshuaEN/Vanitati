@@ -47,5 +47,9 @@ namespace UnnamedStrategyGame.Game
 
         void OnTurnChanged(object sender, Event.TurnChangedEventArgs args);
         void OnSync(object sender, Event.SyncEventArgs args);
+
+        void OnException(object sender, Event.ExceptionEventArgs args);
+
+        void OnVictoryConditionAchieved(object sender, Event.VictoryConditionAchievedEventArgs args);
     }
 }

@@ -9,7 +9,7 @@ using static UnnamedStrategyGame.Game.Action.TargetContextBase;
 namespace UnnamedStrategyGame.Game.Action
 {
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
-    public class CommanderTargetTileContext : TargetContextBase<CommanderContext, TileContext, ActionTypes.CommanderAction.ActionTriggers>
+    public class CommanderTargetTileContext : TargetContextOneArg<CommanderContext, Location, ActionTypes.CommanderAction.ActionTriggers>
     {
         public Commander SourceCommander { get; }
         public Tile TargetTile { get; }
@@ -19,7 +19,7 @@ namespace UnnamedStrategyGame.Game.Action
             if (load.HasFlag(Load.Source))
                 SourceCommander = state.GetCommander(Source.CommanderID);
             if (load.HasFlag(Load.Target))
-                TargetTile = state.GetTile(Target.Location);
+                TargetTile = state.GetTile(TargetValue);
         }
 
         [ContractInvariantMethod]

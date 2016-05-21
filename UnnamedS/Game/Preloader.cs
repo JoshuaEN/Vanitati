@@ -14,6 +14,7 @@ namespace UnnamedStrategyGame.Game
 
             v = SupplyType.TYPES;
             v = MovementType.TYPES;
+            MovementType.LoadMovementTypeListings();
             BaseType.BuildTypeListing<ActionType>("UnnamedStrategyGame.Game.ActionTypes.ForUnits");
             v = UnitType.TYPES;
             BaseType.BuildTypeListing<ActionType>("UnnamedStrategyGame.Game.ActionTypes.ForTerrain");
@@ -23,6 +24,10 @@ namespace UnnamedStrategyGame.Game
 
             ActionType.InitActionType();
 
+
+            Saving.Wrappers.BaseWrapper.LoadBaseWrapperTypes();
+
+            UI.Settings.Settings.LoadSettings();
         }
     }
 }

@@ -12,6 +12,7 @@ namespace UnnamedStrategyGame.Network
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public class Client : IClient, IClientNotifier
     {
+        private TcpClient TcpClient { get; }
         private NetworkStream NetworkStream { get; }
         public bool IsDisconnected { get; private set; }
 
@@ -52,20 +53,19 @@ namespace UnnamedStrategyGame.Network
             }
         }
 
-        public Client(NetworkStream networkStream)
-        {
-            Contract.Requires<ArgumentNullException>(null != networkStream);
-
-            NetworkStream = networkStream;
-        }
-
         public Client(System.Net.IPEndPoint remoteEP)
         {
             Contract.Requires<ArgumentNullException>(null != remoteEP);
 
-            var tcpClient = new TcpClient();
-            tcpClient.Connect(remoteEP);
-            NetworkStream = tcpClient.GetStream();
+            TcpClient = new TcpClient();
+            TcpClient.Connect(remoteEP);
+            NetworkStream = TcpClient.GetStream();
+        }
+
+        public Client(TcpClient client)
+        {
+            TcpClient = client;
+            NetworkStream = TcpClient.GetStream();
         }
 
         private bool _reading = false;
@@ -120,7 +120,7 @@ namespace UnnamedStrategyGame.Network
                 }
 
 #if NETWORK_LAG
-                await Task.Delay(300);
+                await Task.Delay(500);
 #endif
 
                 OnMessageReceived(new MessageReceivedEventArgs(Encoding.Unicode.GetString(messageBuffer)));
@@ -172,7 +172,7 @@ namespace UnnamedStrategyGame.Network
 
         public virtual void Disconnect()
         {
-            Disconnect(null);
+            Disconnect(new Exceptions.ConnectionGracefullyClosedException());
         }
 
         protected virtual void Disconnect(Exception disconnectCause)
@@ -198,7 +198,15 @@ namespace UnnamedStrategyGame.Network
         {
             try
             {
-                NetworkStream.Close();
+                try {
+                    NetworkStream.Close();
+                } catch(Exception) { }
+                try {
+                    TcpClient.Close();
+                } catch(Exception) { }
+                try {
+                    TcpClient.Client.Close();
+                } catch(Exception) { }
             }
             catch(Exception e)
             {

@@ -12,10 +12,10 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForTerrain
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public abstract class TerrainTargetCommanderAction : TerrainAction
     {
-        public sealed override TargetCategory ActionTargetCategory
+        public sealed override Type[] TargetValueTypes { get; } = new Type[]
         {
-            get { return TargetCategory.Commander; }
-        }
+            typeof(Action.Wrapper.CommanderID)
+        };
 
         protected TerrainTargetCommanderAction(string key) : base(key) { }
 

@@ -29,7 +29,7 @@ namespace UnnamedStrategyGame.Game.StateChanges
             PreviousLocation = previousLocation ?? location;
         }
 
-        public enum Cause { Created, Destroyed, Changed }
+        public enum Cause { Created, Destroyed, Changed, Added, Removed }
 
         [ContractInvariantMethod]
         private void Invariants()

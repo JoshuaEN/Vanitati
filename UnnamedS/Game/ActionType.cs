@@ -13,10 +13,11 @@ namespace UnnamedStrategyGame.Game
     public abstract class ActionType : BaseType
     {
         public abstract Category ActionCategory { get; }
-        public abstract TargetCategory ActionTargetCategory { get; }
 
         public abstract bool CanUserTrigger { get; }
         public virtual bool CanRetaliate { get; } = false;
+
+        public abstract Type[] TargetValueTypes { get; }
 
         protected ActionType(string key) : base("action_" + key) {  }
 
@@ -42,6 +43,34 @@ namespace UnnamedStrategyGame.Game
         [Pure]
         public abstract IReadOnlyList<StateChange> PerformOn(IReadOnlyBattleGameState state, ActionContext context);
 
+        [Pure]
+        public abstract System.Collections.IEnumerable ValidTargets(IReadOnlyBattleGameState state, ActionContext context);
+
+        [Pure]
+        public bool CheckTargetContext(TargetContext targetContext)
+        {
+            Contract.Requires<ArgumentNullException>(null != targetContext);
+
+            if (targetContext.Values.Count > TargetValueTypes.Length)
+                throw new ArgumentException($"Target context has {targetContext.Values.Count}, which exceeds the expected number of values of {TargetValueTypes.Length}");
+            if (targetContext.Values.Count != targetContext.ValueTypes.Count)
+                throw new ArgumentException($"Target context is in an illegal state; Values.Count ({targetContext.Values.Count}) does not equal ValueTypes.Count ({targetContext.ValueTypes.Count})");
+
+            for(var i = 0; i < TargetValueTypes.Length; i++)
+            {
+                if (targetContext.Values.Count <= i)
+                    return false;
+
+                var expectedType = TargetValueTypes[i];
+                var actualType = targetContext.Values[i].GetType();
+
+                if (expectedType.IsAssignableFrom(actualType) != true)
+                    throw new ArgumentException($"Expected index {i} to contain type of {expectedType}, not {actualType}");
+            }
+
+            return true;
+        }
+
         /// <summary>
         /// Determines all possible locations this Action can be performed given the Source Tile
         /// Takes into account possible chaining of several Actions together
@@ -49,33 +78,33 @@ namespace UnnamedStrategyGame.Game
         /// <param name="state">Game State</param>
         /// <param name="context">Context under which the Action is being performed</param>
         /// <returns></returns>
-        [Pure]
-        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
-        public virtual IReadOnlyDictionary<Location, ActionChain> ActionableLocations(IReadOnlyBattleGameState state, ActionContext context)
-        {
-            Contract.Requires<ArgumentNullException>(null != state);
-            Contract.Requires<ArgumentNullException>(null != context);
-            Contract.Ensures(Contract.Result<IReadOnlyDictionary<Location, ActionChain>>() != null);
+        //[Pure]
+        //[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+        //public virtual IReadOnlyDictionary<Location, ActionChain> ActionableLocations(IReadOnlyBattleGameState state, ActionContext context)
+        //{
+        //    Contract.Requires<ArgumentNullException>(null != state);
+        //    Contract.Requires<ArgumentNullException>(null != context);
+        //    Contract.Ensures(Contract.Result<IReadOnlyDictionary<Location, ActionChain>>() != null);
 
-            if (ActionTargetCategory == TargetCategory.Tile)
-                throw new NotImplementedException();
-            else
-                throw new NotSupportedException();
-        }
+        //    if (ActionTargetCategory == TargetCategory.Tile)
+        //        throw new NotImplementedException();
+        //    else
+        //        throw new NotSupportedException();
+        //}
 
-        [Pure]
-        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
-        public virtual IReadOnlyList<object> AvailableOptions(IReadOnlyBattleGameState state, ActionContext context)
-        {
-            Contract.Requires<ArgumentNullException>(null != state);
-            Contract.Requires<ArgumentNullException>(null != context);
-            Contract.Ensures(Contract.Result<IReadOnlyList<object>>() != null);
+        //[Pure]
+        //[System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+        //public virtual IReadOnlyList<object> AvailableOptions(IReadOnlyBattleGameState state, ActionContext context)
+        //{
+        //    Contract.Requires<ArgumentNullException>(null != state);
+        //    Contract.Requires<ArgumentNullException>(null != context);
+        //    Contract.Ensures(Contract.Result<IReadOnlyList<object>>() != null);
 
-            if (ActionTargetCategory == TargetCategory.Generic)
-                throw new NotImplementedException();
-            else
-                throw new NotSupportedException();
-        }
+        //    if (ActionTargetCategory == TargetCategory.Generic)
+        //        throw new NotImplementedException();
+        //    else
+        //        throw new NotSupportedException();
+        //}
 
         [Pure]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
@@ -106,20 +135,8 @@ namespace UnnamedStrategyGame.Game
 
             foreach(var actionType in TYPES.Values)
             {
-                var type = actionType.GetType();
-
-                while (type != null && type != typeof(ActionType))
-                {
-                    if (type.IsGenericType == true)
-                    {
-                        var typeArg = type.GetGenericArguments()[0];
-
-                        dic[typeArg.FullName] = typeArg;
-
-                        break;
-                    }
-                    type = type.BaseType;
-                }
+                foreach(var typeArg in actionType.TargetValueTypes)
+                    dic[typeArg.FullName] = typeArg;
             }
 
             GENERIC_ACTION_TYPE_VALUES = dic;

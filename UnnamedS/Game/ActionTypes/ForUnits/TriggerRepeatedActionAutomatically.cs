@@ -9,7 +9,7 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
 {
     public sealed class TriggerRepeatedActionAutomatically : UnitTargetOtherAction
     {
-        public override ActionTriggers Triggers { get; } = ActionTriggers.TurnEnd;
+        public override ActionTriggers Triggers { get; } = ActionTriggers.OnTurnEnd;
 
         private TriggerRepeatedActionAutomatically() : base("trigger_repeated_action_automatically") { }
         public static TriggerRepeatedActionAutomatically Instance { get; } = new TriggerRepeatedActionAutomatically();
@@ -26,7 +26,7 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
 
         public override IReadOnlyList<StateChange> PerformOn(IReadOnlyBattleGameState state, UnitTargetOtherContext context, Tile sourceTile)
         {
-            if (sourceTile.Unit.RepeatedAction == null)
+            if (sourceTile.Unit.RepeatedAction == null || sourceTile.Unit.RepeatedAction.Type == NullUnitAction.Instance)
                 return new List<StateChange>(0);
 
             var action = sourceTile.Unit.RepeatedAction;

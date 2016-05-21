@@ -9,7 +9,7 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForCommanders
 {
     public sealed class ProvideCommanderEarnings : CommanderTargetOtherAction
     {
-        public override ActionTriggers Triggers { get; } = ActionTriggers.TurnStart;
+        public override ActionTriggers Triggers { get; } = ActionTriggers.OnTurnStart;
 
         public ProvideCommanderEarnings() : base("provide_commander_earnings") { }
         public static ProvideCommanderEarnings Instance { get; } = new ProvideCommanderEarnings();
@@ -21,13 +21,37 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForCommanders
 
         public override IReadOnlyList<StateChange> PerformOn(IReadOnlyBattleGameState state, CommanderTargetOtherContext context, Commander sourceCommander)
         {
-            return new List<StateChange>()
+
+            var dic = new Dictionary<string, object>();
+
+            var ownedCitiesCount = 0;
+
+            foreach (var terrain in state.Terrain)
             {
-                new StateChanges.CommanderStateChange(sourceCommander.CommanderID, new Dictionary<string, object>()
+                if (terrain.IsOwned == false || terrain.CommanderID != sourceCommander.CommanderID)
+                    continue;
+
+                if (terrain.TerrainType == TerrainTypes.City.Instance)
+                    ownedCitiesCount += 1;
+            }
+
+            if (ownedCitiesCount > 0 && state.CreditsPerCity != 0)
+            {
+                dic.Add("Credits", sourceCommander.Credits + (ownedCitiesCount * state.CreditsPerCity));
+            }
+
+
+            if (dic.Count > 0)
+            {
+                return new List<StateChange>()
                 {
-                    { "Credits", sourceCommander.Credits + (GetOwnedCities(state, context, sourceCommander) * state.CreditsPerCity) }
-                })
-            };
+                    new StateChanges.CommanderStateChange(sourceCommander.CommanderID, dic)
+                };
+            }
+            else
+            {
+                return new List<StateChange>(0);
+            }
         }
 
         private int GetOwnedCities(IReadOnlyBattleGameState state, CommanderTargetOtherContext context, Commander sourceCommander)

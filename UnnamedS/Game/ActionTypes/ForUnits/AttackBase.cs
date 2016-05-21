@@ -14,27 +14,6 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
     /// </summary>
     public abstract class AttackBase : UnitTargetTileAction
     {
-
-        public static readonly IReadOnlyList<MovementType> TARGETABLE_LAND_MOVEMENT_TYPES = new List<MovementType>()
-        {
-            MovementTypes.Boots.Instance,
-            MovementTypes.Treads.Instance,
-            MovementTypes.Wheels.Instance,
-            MovementTypes.HalfTrack.Instance
-        };
-
-        public static readonly IReadOnlyList<MovementType> TARGETABLE_LAND_VEHICLE_MOVEMENT_TYPES = new List<MovementType>()
-        {
-            MovementTypes.Treads.Instance,
-            MovementTypes.Wheels.Instance,
-            MovementTypes.HalfTrack.Instance
-        };
-
-        public static readonly IReadOnlyList<MovementType> TARGETABLE_AIR_VEHICLE_MOVEMENT_TYPES = new List<MovementType>()
-        {
-            MovementTypes.Propeller.Instance
-        };
-
         public abstract IReadOnlyList<MovementType> TargetableMovementTypes { get; }
         public virtual int ActionsNeeded { get; } = 1;
         public abstract int BaseAccuracy { get; }
@@ -59,13 +38,15 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
             var unit = sourceTile.Unit;
             var targetUnit = targetTile.Unit;
 
-            if (unit == null || (targetUnit == null && (CanDamageTerrain == false || targetTile.Terrain.Health <= 0)))
+            var canTargetTerrain = CanTargetTerrain(targetTile);
+
+            if (unit == null || (targetUnit == null && canTargetTerrain == false))
                 return false;
 
             if (HasRequiredResources(state, context, sourceTile) == false)
                 return false;
 
-            if (CanTargetMovementType(targetTile.Unit.UnitType.MovementType) == false)
+            if (targetUnit != null && CanTargetMovementType(targetTile.Unit.UnitType.MovementType) == false && canTargetTerrain == false)
                 return false;
 
             if (state.LocationsAroundPoint(sourceTile.Location, MinimumRange, MaximumRange).Contains(targetTile.Location) == false)
@@ -162,7 +143,7 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
             #endregion
 
             // Prevent infinite loops
-            if (enemyUnitDown == false && context.Trigger != ActionTriggers.AttackRetaliation)
+            if (targetTile.Unit != null && enemyUnitDown == false && context.Trigger != ActionTriggers.AttackRetaliation && CanRetaliate == true && state.LocationsAdjacent(sourceTile.Location, targetTile.Location))
                 changes.AddRange(HandleRetaliation(state, changes, sourceTile, targetTile));
 
 
@@ -250,37 +231,20 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
 
         protected virtual int GetUnitConcealment(IReadOnlyBattleGameState state, UnitTargetTileContext context, Tile sourceTile, Tile targetTile)
         {
-            var concealment = 0;
-            if (targetTile.Unit.UnitType.EffectedByTerrainModifiers)
-            {
-                var baseConcealment = targetTile.Terrain.TerrainType.ConcealmentModifier + targetTile.Unit.UnitType.Concealment;
-                int digInBonus = ((int)Math.Round(baseConcealment * (targetTile.Terrain.DigIn * 2.0 / 5.0)));
-                concealment = baseConcealment + digInBonus;
-            }
-            else
-            {
-                concealment = targetTile.Unit.UnitType.Concealment;
-            }
+            var concealment = targetTile.Unit.GetEffectiveConcealment(state, targetTile.Terrain);
             int height_modifier = GetUnitConcealmentHeightDifferenceModifier(state, context, sourceTile, targetTile);
             return concealment + height_modifier;
         }
 
-        protected virtual int GetUnitConcealmentBase(IReadOnlyBattleGameState state, UnitTargetTileContext context, Tile sourceTile, Tile targetTile)
+        protected int GetUnitConcealmentBase(IReadOnlyBattleGameState state, UnitTargetTileContext context, Tile sourceTile, Tile targetTile)
         {
-            var concealment = targetTile.Unit.UnitType.Concealment;
-
-            if (targetTile.Unit.UnitType.EffectedByTerrainModifiers)
-                concealment += targetTile.Terrain.TerrainType.ConcealmentModifier;
-
-            return concealment;
+            return targetTile.Unit.GetConcealmentBase(state, targetTile.Terrain) + targetTile.Unit.GetConcealmentTerrainModifier(state, targetTile.Terrain);
         }
 
-        protected virtual int GetUnitConcealmentDigInBonus(IReadOnlyBattleGameState state, UnitTargetTileContext context, Tile sourceTile, Tile targetTile)
+
+        protected int GetUnitConcealmentDigInBonus(IReadOnlyBattleGameState state, UnitTargetTileContext context, Tile sourceTile, Tile targetTile)
         {
-            if (targetTile.Unit.UnitType.EffectedByTerrainModifiers)
-                return ((int)Math.Round(GetUnitConcealmentBase(state, context, sourceTile, targetTile) * (targetTile.Terrain.DigIn * 2.0 / 5.0)));
-            else
-                return 0;
+            return targetTile.Unit.GetConcealmentDigInBonus(state, targetTile.Terrain);
         }
 
         protected virtual int GetUnitConcealmentHeightDifferenceModifier(IReadOnlyBattleGameState state, UnitTargetTileContext context, Tile sourceTile, Tile targetTile)
@@ -323,9 +287,9 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
             foreach (var change in actionChanges)
                 forkedState.Update(change);
 
-            var context = new ActionContext(null, ActionTriggers.AttackRetaliation, new UnitContext(targetTile.Location), new UnitContext(sourceTile.Location));
+            var context = new ActionContext(null, ActionTriggers.AttackRetaliation, new UnitContext(targetTile.Location), new GenericContext(sourceTile.Location));
 
-            foreach(var action in targetTile.Unit.UnitType.Actions.Where(a => a.ActionCategory == Category.Unit && a.ActionTargetCategory == TargetCategory.Tile && a.CanRetaliate == true))
+            foreach(var action in targetTile.Unit.UnitType.Actions.Where(a => a.ActionCategory == Category.Unit && a is AttackBase && a.CanRetaliate == true))
             {
                 if(action.CanPerformOn(forkedState, context))
                 {
@@ -376,6 +340,12 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
             return true;
         }
 
+
+        private bool CanTargetTerrain(Tile targetTile)
+        {
+            return (CanDamageTerrain == true && targetTile.Terrain.TerrainType.CanBePillage && targetTile.Terrain.Health > 0);
+        }
+
         /// <summary>
         /// Checks if this type of attack can target the given movement type.
         /// </summary>
@@ -386,8 +356,27 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
             return TargetableMovementTypes.Contains(type);
         }
 
-        public override IReadOnlyDictionary<Location, ActionChain> ActionableLocations(IReadOnlyBattleGameState state, UnitTargetTileContext context, Tile sourceTile)
+        protected override bool RangeBasedValidTargetCanPerform(IReadOnlyBattleGameState state, UnitTargetTileContext context, Tile sourceTile, Tile targetTile)
         {
+            return
+                (CanTargetTerrain(targetTile) == true && targetTile?.Unit == null)
+                ||
+                (
+                targetTile != null &&
+                targetTile.Unit != null &&
+                targetTile.Location != sourceTile.Location &&
+                targetTile.Unit.CommanderID != sourceTile.Unit.CommanderID &&
+                CanTargetMovementType(targetTile.Unit.UnitType.MovementType)
+                );
+        }
+
+        public override IReadOnlyDictionary<Location, ActionChain> ValidTargets(IReadOnlyBattleGameState state, UnitTargetTileContext context, Tile sourceTile)
+        {
+            if(HasRequiredResources(state, context, sourceTile) == false)
+                return new Dictionary<Location, ActionChain>(0);
+
+            return RangeBasedValidTargets(state, context, sourceTile, MinimumRange, MaximumRange);
+
             var dic = new Dictionary<Location, ActionChain>();
 
             if (sourceTile.Unit == null || HasRequiredResources(state, context, sourceTile) == false)
@@ -421,21 +410,26 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
 
                     var targetTile = state.GetTile(location);
 
+                    var canTargetTerrain = CanTargetTerrain(targetTile);
+
                     // Check that there is a unit on the location we're targeting (and it isn't ourself)
-                    if (targetTile == null || targetTile.Unit == null || location == sourceTile.Location)
+                    if (targetTile == null || ((targetTile.Unit == null || location == sourceTile.Location) && canTargetTerrain == false))
                         continue;
 
                     // Check that we can attack the unit on this location.
-                    if (targetTile.Unit.CommanderID != sourceTile.Unit.CommanderID && CanTargetMovementType(targetTile.Unit.UnitType.MovementType))
+                    if (
+                        (canTargetTerrain == true && targetTile.Unit == null) || 
+                        (targetTile.Unit != null && targetTile.Unit.CommanderID != sourceTile.Unit.CommanderID && CanTargetMovementType(targetTile.Unit.UnitType.MovementType))
+                    )
                     {
                         // Create the action chain and register it to our final list.
                         chain = new ActionChain();
 
                         if (action != null)
                         {
-                            chain.AddAction(action, new UnitContext(sourceTile.Location), new UnitContext(sourceLocation));
+                            chain.AddAction(action, new UnitContext(sourceTile.Location), new GenericContext(sourceLocation));
                         }
-                        chain.AddAction(this, new UnitContext(sourceLocation), new UnitContext(location));
+                        chain.AddAction(this, new UnitContext(sourceLocation), new GenericContext(location));
 
                         dic[location] = chain;
                     }
@@ -447,107 +441,117 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
 
         public override IReadOnlyList<Modifier> Modifiers(IReadOnlyBattleGameState state, UnitTargetTileContext context, Tile sourceTile, Tile targetTile)
         {
-            var attacking_unit_accuracy = GetAccuracy(state, context, sourceTile, targetTile);
-            var defending_unit_concealment = GetUnitConcealment(state, context, sourceTile, targetTile);
-            var attacking_unit_attack = GetDamage(state, context, sourceTile, targetTile);
-            var defending_unit_armor = GetUnitArmor(state, context, sourceTile, targetTile);
             var defending_terrain_defense = GetTerrainDefense(state, context, sourceTile, targetTile);
             var defending_terrain_concealment = GetTerrainConcealment(state, context, sourceTile, targetTile);
-            var defending_height_modifier = GetUnitConcealmentHeightDifferenceModifier(state, context, sourceTile, targetTile);
-            var attacking_unit_terrain_attack = GetTerrainDamage(state, context, sourceTile, targetTile);
 
-            var subunits = GetSubunits(state, context, sourceTile, targetTile);
-            var attacking_unit_actual_accuracy = GetActualAccuracy(state, context, sourceTile, targetTile, attacking_unit_accuracy, defending_unit_concealment);
-            var damage_penetration = GetDamagePenetration(state, context, sourceTile, targetTile, defending_unit_armor);
 
-            if(defending_unit_armor >= ArmorPenetration)
+            if (targetTile.Unit != null)
             {
-                return new List<Modifier>()
+                var attacking_unit_accuracy = GetAccuracy(state, context, sourceTile, targetTile);
+                var defending_unit_concealment = GetUnitConcealment(state, context, sourceTile, targetTile);
+                var attacking_unit_attack = GetDamage(state, context, sourceTile, targetTile);
+                var defending_unit_armor = GetUnitArmor(state, context, sourceTile, targetTile);
+
+                var defending_height_modifier = GetUnitConcealmentHeightDifferenceModifier(state, context, sourceTile, targetTile);
+                var attacking_unit_terrain_attack = GetTerrainDamage(state, context, sourceTile, targetTile);
+
+                var subunits = GetSubunits(state, context, sourceTile, targetTile);
+                var attacking_unit_actual_accuracy = GetActualAccuracy(state, context, sourceTile, targetTile, attacking_unit_accuracy, defending_unit_concealment);
+                var damage_penetration = GetDamagePenetration(state, context, sourceTile, targetTile, defending_unit_armor);
+
+                if (defending_unit_armor >= ArmorPenetration)
+                {
+                    return new List<Modifier>()
                 {
                     new Modifier("unit_damage", 0,
                         new ModifierList("attack_no_damage_from_armor", ArmorPenetration, defending_unit_armor)
                     )
                 };
-            }
+                }
 
-            var accuracy_formual = new ModifierForumla("potential_damage", (attacking_unit_attack * (attacking_unit_actual_accuracy / 100.0)),
-                        new Modifier("attacking_unit_base_damage", attacking_unit_attack),
-                        ModifierForumla.OPERATOR_MULTIPLY,
-                        new ModifierForumla("attacking_unit_actual_accuracy", attacking_unit_actual_accuracy / 100.0,
-                            new Modifier("base_accuracy", BaseAccuracy / 100.0),
-                            ( sourceTile.Unit.UnitType.EffectedByTerrainModifiers ?
-                                new Modifier("terrain_accuracy_modifier", sourceTile.Terrain.TerrainType.AccuracyModifier / 100.0)
-                                :
-                                new Modifier("terrain_accuracy_modifier_not_effected_by_terrain_modifiers", null)
-                            ),
-                            ( sourceTile.Unit.UnitType.EffectedByTerrainModifiers || targetTile.Unit.UnitType.EffectedByTerrainModifiers ?
-                                new Modifier("terrain_high_difference_modifier", -(defending_height_modifier / 100.0))
-                                :
-                                new Modifier("terrain_high_difference_modifier_not_effected_by_terrain_modifiers", null)
-                            ),
-                            new Modifier("base_unit_concealment", -(targetTile.Unit.UnitType.Concealment / 100.0)),
-                            ( targetTile.Unit.UnitType.EffectedByTerrainModifiers ?
-                                new Modifier("terrain_concealment_modifier", -(targetTile.Terrain.TerrainType.ConcealmentModifier / 100.0))
-                                :
-                                new Modifier("terrain_concealment_modifier_not_effected_by_terrain_modifiers", null)
-                            ),
-                            
-                            ( targetTile.Unit.UnitType.EffectedByTerrainModifiers ?
-                                new Modifier("dig_in_concealment_bonus", -(GetUnitConcealmentDigInBonus(state, context, sourceTile, targetTile) / 100.0))
-                                :
-                                new Modifier("dig_in_concealment_bonus_not_effected_by_dig_in_modifiers", null)
+                var accuracy_formual = new ModifierForumla("potential_damage", (attacking_unit_attack * (attacking_unit_actual_accuracy / 100.0)),
+                            new Modifier("attacking_unit_base_damage", attacking_unit_attack),
+                            ModifierForumla.OPERATOR_MULTIPLY,
+                            new ModifierForumla("attacking_unit_actual_accuracy", attacking_unit_actual_accuracy / 100.0,
+                                new Modifier("base_accuracy", BaseAccuracy / 100.0),
+                                (sourceTile.Unit.UnitType.EffectedByTerrainModifiers ?
+                                    new Modifier("terrain_accuracy_modifier", sourceTile.Terrain.TerrainType.AccuracyModifier / 100.0)
+                                    :
+                                    new Modifier("terrain_accuracy_modifier_not_effected_by_terrain_modifiers", null)
+                                ),
+                                (sourceTile.Unit.UnitType.EffectedByTerrainModifiers || targetTile.Unit.UnitType.EffectedByTerrainModifiers ?
+                                    new Modifier("terrain_high_difference_modifier", -(defending_height_modifier / 100.0))
+                                    :
+                                    new Modifier("terrain_high_difference_modifier_not_effected_by_terrain_modifiers", null)
+                                ),
+                                new Modifier("base_unit_concealment", -(targetTile.Unit.UnitType.Concealment / 100.0)),
+                                (targetTile.Unit.UnitType.EffectedByTerrainModifiers ?
+                                    new Modifier("terrain_concealment_modifier", -(targetTile.Terrain.TerrainType.ConcealmentModifier / 100.0))
+                                    :
+                                    new Modifier("terrain_concealment_modifier_not_effected_by_terrain_modifiers", null)
+                                ),
+
+                                (targetTile.Unit.UnitType.EffectedByTerrainModifiers ?
+                                    new Modifier("dig_in_concealment_bonus", -(GetUnitConcealmentDigInBonus(state, context, sourceTile, targetTile) / 100.0))
+                                    :
+                                    new Modifier("dig_in_concealment_bonus_not_effected_by_dig_in_modifiers", null)
+                                )
                             )
-                        )
-                    );
+                        );
 
-            if (attacking_unit_actual_accuracy <= 0.0)
-            {
-                return new List<Modifier>()
+                if (attacking_unit_actual_accuracy <= 0.0)
+                {
+                    return new List<Modifier>()
                 {
                     new Modifier("unit_damage", 0,
                         accuracy_formual
                     )
                 };
-            }
+                }
 
 
-            return new List<Modifier>()
-            {
-                new ModifierForumla(
-                    "unit_damage",
-                    CalculateDamage(state, context, sourceTile, targetTile, attacking_unit_accuracy, defending_unit_concealment, attacking_unit_attack, defending_unit_armor),
+                return new List<Modifier>()
+                {
+                    new ModifierForumla(
+                        "unit_damage",
+                        CalculateDamage(state, context, sourceTile, targetTile, attacking_unit_accuracy, defending_unit_concealment, attacking_unit_attack, defending_unit_armor),
 
-                    accuracy_formual,
-                    ModifierForumla.OPERATOR_MINUS,
-                    ( IsArmorAnImpedance(state, context, sourceTile, targetTile, defending_unit_armor) ?
-                        new Modifier("damage_blocked_by_armor", (attacking_unit_attack * (attacking_unit_actual_accuracy / 100.0) * (1.0 - damage_penetration)),
-                            new Modifier("attackers_pen", ArmorPenetration),
-                            new Modifier("defenders_armor", defending_unit_armor),
-                            new Modifier("damage_penetration", damage_penetration)
+                        accuracy_formual,
+                        ModifierForumla.OPERATOR_MINUS,
+                        ( IsArmorAnImpedance(state, context, sourceTile, targetTile, defending_unit_armor) ?
+                            new Modifier("damage_blocked_by_armor", (attacking_unit_attack * (attacking_unit_actual_accuracy / 100.0) * (1.0 - damage_penetration)),
+                                new Modifier("attackers_pen", ArmorPenetration),
+                                new Modifier("defenders_armor", defending_unit_armor),
+                                new Modifier("damage_penetration", damage_penetration)
+                            )
+                            :
+                            new ModifierList("damage_blocked_by_armor_overmatched", ArmorPenetration, defending_unit_armor)
                         )
-                        :
-                        new ModifierList("damage_blocked_by_armor_overmatched", ArmorPenetration, defending_unit_armor)
+                        //new Modifier("defending_unit_armor", -effective_armor)
+                        //ModifierForumla.OPERATOR_MULTIPLY,
+                        //new ModifierForumla("defending_unit_armor_effectiveness", effective_armor,
+                        //    ModifierForumla.OPERATOR_LEFT_PARENTHESE,
+                        //    new Modifier("attacking_unit_armor_penetration", ArmorPenetration),
+                        //    ModifierForumla.OPERATOR_MINUS,
+                        //    new Modifier("base_unit_armor", defending_unit_armor),
+                        //    ModifierForumla.OPERATOR_RIGHT_PARENTHESE,
+                        //    ModifierForumla.OPERATOR_DIVIDE,
+                        //    new Modifier("attacking_unit_armor_penetration", ArmorPenetration)
+                        //)
                     )
-                    //new Modifier("defending_unit_armor", -effective_armor)
-                    //ModifierForumla.OPERATOR_MULTIPLY,
-                    //new ModifierForumla("defending_unit_armor_effectiveness", effective_armor,
-                    //    ModifierForumla.OPERATOR_LEFT_PARENTHESE,
-                    //    new Modifier("attacking_unit_armor_penetration", ArmorPenetration),
-                    //    ModifierForumla.OPERATOR_MINUS,
-                    //    new Modifier("base_unit_armor", defending_unit_armor),
-                    //    ModifierForumla.OPERATOR_RIGHT_PARENTHESE,
-                    //    ModifierForumla.OPERATOR_DIVIDE,
-                    //    new Modifier("attacking_unit_armor_penetration", ArmorPenetration)
+                    //),
+                    //new ModifierForumla(
+                    //    "terrain_damage",
+                    //    CalculateDamage(state, context, sourceTile, targetTile, attacking_unit_accuracy, defending_unit_concealment, attacking_unit_terrain_attack, defending_terrain_defense),
+                    //    new Modifier( "attacking_unit_damage_vs_terrain", ),
+                    //    { "defending_terrain_defense", GetTerrainDefense(state, context, sourceTile, targetTile) }
                     //)
-                )
-                //),
-                //new ModifierForumla(
-                //    "terrain_damage",
-                //    CalculateDamage(state, context, sourceTile, targetTile, attacking_unit_accuracy, defending_unit_concealment, attacking_unit_terrain_attack, defending_terrain_defense),
-                //    new Modifier( "attacking_unit_damage_vs_terrain", ),
-                //    { "defending_terrain_defense", GetTerrainDefense(state, context, sourceTile, targetTile) }
-                //)
-            };
+                };
+            }
+            else
+            {
+                return new List<Modifier>(0);
+            }
         }
 
         [ContractInvariantMethod]

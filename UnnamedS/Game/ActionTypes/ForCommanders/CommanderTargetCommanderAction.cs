@@ -12,10 +12,10 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForCommanders
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public abstract class CommanderTargetCommanderAction : CommanderAction
     {
-        public sealed override TargetCategory ActionTargetCategory
+        public sealed override Type[] TargetValueTypes { get; } = new Type[]
         {
-            get { return TargetCategory.Commander; }
-        }
+            typeof(Action.Wrapper.CommanderID)
+        };
 
         protected CommanderTargetCommanderAction(string key) : base(key) { }
 

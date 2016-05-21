@@ -48,7 +48,7 @@ namespace UnnamedStrategyGame.Game.Action.Tests
         }
 
         [Theory, CustomAutoData]
-        public void AddActionTestViaParams(ActionChain actionChain, ActionType type, Context source, Context target)
+        public void AddActionTestViaParams(ActionChain actionChain, ActionType type, SourceContext source, TargetContext target)
         {
             actionChain.AddAction(type, source, target);
             Assert.Equal(1, actionChain.Length);

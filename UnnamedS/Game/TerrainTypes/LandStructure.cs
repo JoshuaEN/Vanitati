@@ -13,7 +13,9 @@ namespace UnnamedStrategyGame.Game.TerrainTypes
 
         public override bool CanCapture { get; } = true;
         public override bool CanBePillage { get; } = true;
-
+        public override bool CanRepair { get; } = true;
+        public override bool CanSupply { get; } = true;
+        
         protected LandStructure(string key) : base(key) { }
     }
 }

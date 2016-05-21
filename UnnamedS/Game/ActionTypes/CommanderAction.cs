@@ -29,8 +29,8 @@ namespace UnnamedStrategyGame.Game.ActionTypes
         {
             ManuallyByUser = 1,
             DirectlyByGameLogic = 2,
-            TurnStart = 4,
-            TurnEnd = 8,
+            OnTurnStart = 4,
+            OnTurnEnd = 8,
             None = 0
         }
     }

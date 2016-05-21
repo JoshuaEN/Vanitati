@@ -9,7 +9,7 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
     public sealed class AttackArtilleryBarrage : AttackBase
     {
         public override int BaseAccuracy { get; } = 20;
-        public override IReadOnlyList<MovementType> TargetableMovementTypes { get; } = TARGETABLE_LAND_MOVEMENT_TYPES;
+        public override IReadOnlyList<MovementType> TargetableMovementTypes { get; } = MovementType.LAND_MOVEMENT_TYPES;
         public override int MinimumRange { get; } = 2;
         public override int MaximumRange { get; } = 3;
         public override double ArmorPenetration { get; } = UnitType.ArmorProtectionFrom.LandArtillery;

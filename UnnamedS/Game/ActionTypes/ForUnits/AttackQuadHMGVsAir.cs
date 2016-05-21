@@ -9,7 +9,7 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
     public sealed class AttackQuadHMGVsAir : AttackQuadHMGBase
     {
         public override int MaximumRange { get; } = 2;
-        public override IReadOnlyList<MovementType> TargetableMovementTypes { get; } = TARGETABLE_AIR_VEHICLE_MOVEMENT_TYPES;
+        public override IReadOnlyList<MovementType> TargetableMovementTypes { get; } = MovementType.AIR_VEHICLE_MOVEMENT_TYPES;
 
         public override bool CanRetaliate { get; } = true;
 

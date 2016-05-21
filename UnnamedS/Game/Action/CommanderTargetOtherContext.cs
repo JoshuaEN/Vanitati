@@ -9,7 +9,7 @@ using static UnnamedStrategyGame.Game.Action.TargetContextBase;
 namespace UnnamedStrategyGame.Game.Action
 {
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
-    public class CommanderTargetOtherContext : TargetContextBase<CommanderContext, OtherContext, ActionTypes.CommanderAction.ActionTriggers>
+    public class CommanderTargetOtherContext : TargetContextZeroArgs<CommanderContext, ActionTypes.CommanderAction.ActionTriggers>
     {
         public Commander SourceCommander { get; }
 

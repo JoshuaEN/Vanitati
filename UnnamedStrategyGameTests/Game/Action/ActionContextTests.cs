@@ -17,12 +17,12 @@ namespace UnnamedStrategyGame.Game.Action.Tests
         public void ConvertToSpecificContextTest_LoadBoth()
         {
             UnitContext source = new UnitContext(new Location());
-            TerrainContext target = new TerrainContext(new Location());
+            TargetContext target = new GenericContext(new Location());
 
             var ac = new ActionContext(default(int), ActionContext.TriggerAutoDetermineMode.ManuallyByUser, source, target);
 
             UnitContext outSource;
-            TerrainContext outTarget;
+            TargetContext outTarget;
 
             ac.ConvertToSpecificContext(TargetContextBase.Load.Source | TargetContextBase.Load.Target, out outSource, out outTarget);
 
@@ -34,7 +34,7 @@ namespace UnnamedStrategyGame.Game.Action.Tests
         public void ConvertToSpecificContextTest_LoadSource()
         {
             UnitContext source = new UnitContext(new Location());
-            FakeContext target = new FakeContext();
+            FakeTargetContext target = new FakeTargetContext();
 
             var ac = new ActionContext(default(int), ActionContext.TriggerAutoDetermineMode.ManuallyByUser, source, target);
 
@@ -50,13 +50,13 @@ namespace UnnamedStrategyGame.Game.Action.Tests
         [Fact]
         public void ConvertToSpecificContextTest_LoadTarget()
         {
-            FakeContext source = new FakeContext();
-            TerrainContext target = new TerrainContext(new Location());
+            FakeSourceContext source = new FakeSourceContext();
+            TargetContext target = new GenericContext(new Location());
 
             var ac = new ActionContext(default(int), ActionContext.TriggerAutoDetermineMode.ManuallyByUser, source, target);
 
             UnitContext outSource;
-            TerrainContext outTarget;
+            TargetContext outTarget;
 
             ac.ConvertToSpecificContext(TargetContextBase.Load.Target, out outSource, out outTarget);
 
@@ -68,12 +68,12 @@ namespace UnnamedStrategyGame.Game.Action.Tests
         public void ConvertToSpecificContextTest_IncompatableSourceType()
         {
             UnitContext source = new UnitContext(new Location());
-            TerrainContext target = new TerrainContext(new Location());
+            TargetContext target = new GenericContext(new Location());
 
             var ac = new ActionContext(default(int), ActionContext.TriggerAutoDetermineMode.ManuallyByUser, source, target);
 
-            FakeContext outSource;
-            TerrainContext outTarget;
+            FakeSourceContext outSource;
+            TargetContext outTarget;
 
             Assert.Throws<ArgumentException>(() =>
             {
@@ -85,12 +85,12 @@ namespace UnnamedStrategyGame.Game.Action.Tests
         public void ConvertToSpecificContextTest_IncompatableTargetType()
         {
             UnitContext source = new UnitContext(new Location());
-            TerrainContext target = new TerrainContext(new Location());
+            TargetContext target = new GenericContext(new Location());
 
             var ac = new ActionContext(default(int), ActionContext.TriggerAutoDetermineMode.ManuallyByUser, source, target);
 
             UnitContext outSource;
-            FakeContext outTarget;
+            FakeTargetContext outTarget;
 
             Assert.Throws<ArgumentException>(() =>
             {

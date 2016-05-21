@@ -18,9 +18,9 @@ namespace UnnamedStrategyGame.Game.Action.Tests
         [Fact()]
         public void IsValidGenericValueTypeTest()
         {
-            Assert.True(GenericContext.IsValidGenericValueType(typeof(UnitType)));
-            Assert.True(GenericContext.IsValidGenericValueType(typeof(UnitTypes.Infantry)));
-            Assert.False(GenericContext.IsValidGenericValueType(typeof(object)));
+            Assert.True(TargetContext.IsValidGenericValueType(typeof(UnitType)));
+            Assert.True(TargetContext.IsValidGenericValueType(typeof(UnitTypes.Infantry)));
+            Assert.False(TargetContext.IsValidGenericValueType(typeof(object)));
         }
 
         [Fact()]

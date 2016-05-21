@@ -41,7 +41,7 @@ namespace UnnamedStrategyGame.Game.Action
             }
         }
 
-        public void AddAction(ActionType type, Context source, Context target)
+        public void AddAction(ActionType type, SourceContext source, TargetContext target)
         {
             Contract.Requires<ArgumentNullException>(null != type);
             Contract.Requires<ArgumentNullException>(null != source);
@@ -84,10 +84,10 @@ namespace UnnamedStrategyGame.Game.Action
         public class Link
         {
             public ActionType Action { get; }
-            public Context Source { get; }
-            public Context Target { get; }
+            public SourceContext Source { get; }
+            public TargetContext Target { get; }
 
-            public Link(ActionType action, Context source, Context target)
+            public Link(ActionType action, SourceContext source, TargetContext target)
             {
                 Contract.Requires<ArgumentNullException>(null != action);
                 Contract.Requires<ArgumentNullException>(null != source);

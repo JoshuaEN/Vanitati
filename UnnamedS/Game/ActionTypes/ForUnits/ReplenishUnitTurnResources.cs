@@ -9,7 +9,7 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
 {
     public sealed class ReplenishUnitTurnResources : UnitTargetOtherAction
     {
-        public override ActionTriggers Triggers { get; } = ActionTriggers.TurnStart;
+        public override ActionTriggers Triggers { get; } = ActionTriggers.OnTurnStart;
 
         public ReplenishUnitTurnResources() : base("replenish_unit_turn_resources") { }
         public static ReplenishUnitTurnResources Instance { get; } = new ReplenishUnitTurnResources();

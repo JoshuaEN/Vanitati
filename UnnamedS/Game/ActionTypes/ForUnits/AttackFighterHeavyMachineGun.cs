@@ -8,7 +8,7 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
 {
     public sealed class AttackFighterHeavyMachineGun : AttackHeavyMachineGun
     {
-        public override IReadOnlyList<MovementType> TargetableMovementTypes { get; } = TARGETABLE_LAND_MOVEMENT_TYPES.Concat(TARGETABLE_AIR_VEHICLE_MOVEMENT_TYPES).ToList();
+        public override IReadOnlyList<MovementType> TargetableMovementTypes { get; } = MovementType.LAND_MOVEMENT_TYPES.Concat(MovementType.AIR_VEHICLE_MOVEMENT_TYPES).ToList();
 
         public override int BaseAccuracy { get; }
         public override double DamagePerSubunit { get; }

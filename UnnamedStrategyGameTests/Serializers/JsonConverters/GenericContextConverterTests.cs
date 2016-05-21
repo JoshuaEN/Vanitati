@@ -31,7 +31,7 @@ namespace UnnamedStrategyGame.Serializers.JsonConverters.Tests
         public void CanConvertTest()
         {
             var converter = new GenericContextConverter();
-            Assert.True(converter.CanConvert(typeof(GenericContext)));
+            Assert.True(converter.CanConvert(typeof(TargetContext)));
             Assert.False(converter.CanConvert(typeof(Context)));
             Assert.False(converter.CanConvert(typeof(OtherContext)));
             Assert.False(converter.CanConvert(typeof(object)));
@@ -47,8 +47,11 @@ namespace UnnamedStrategyGame.Serializers.JsonConverters.Tests
             var sres = s.Serialize(context);
             var dres = s.Deserialize<GenericContext>(sres);
 
-            Assert.Equal(context.Value.GetType(), dres.Value.GetType());
-            Assert.Equal(context.Value, dres.Value);
+            for(var i = 0; i < context.Values.Count; i++)
+            {
+                Assert.Equal(context.Values[i].GetType(), dres.Values[i].GetType());
+                Assert.Equal(context.Values[i], dres.Values[i]);
+            }
         }
 
         [Fact()]
@@ -66,20 +69,20 @@ namespace UnnamedStrategyGame.Serializers.JsonConverters.Tests
 
             var context = new GenericContext(Game.UnitTypes.Infantry.Instance);
             var sres = s.Serialize(context);
-            var tsres = sres.Replace(context.ValueType, typeof(object).FullName);
+            var tsres = sres.Replace(string.Join(",", context.ValueTypes), typeof(object).FullName);
             object pez;
             Assert.Throws<ArgumentException>(() =>
             {
-                pez = s.Deserialize<GenericContext>(tsres);
+                pez = s.Deserialize<TargetContext>(tsres);
 
                 pez.ToString();
             });
 
-            tsres = sres.Replace(context.ValueType, "ThisIsNotAnActualTypeThatCanBeFound");
+            tsres = sres.Replace(string.Join(",", context.ValueTypes), "ThisIsNotAnActualTypeThatCanBeFound");
 
             Assert.Throws<ArgumentException>(() =>
             {
-                s.Deserialize<GenericContext>(tsres);
+                s.Deserialize<TargetContext>(tsres);
             });
         }
     }

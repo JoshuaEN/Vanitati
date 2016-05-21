@@ -12,10 +12,10 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForTerrain
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public abstract class TerrainTargetGenericAction<T> : TerrainAction
     {
-        public sealed override TargetCategory ActionTargetCategory
+        public sealed override Type[] TargetValueTypes { get; } = new Type[]
         {
-            get { return TargetCategory.Generic; }
-        }
+            typeof(T)
+        };
 
         public TerrainTargetGenericAction(string key) : base(key) { }
 
@@ -33,12 +33,12 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForTerrain
         }
         public abstract IReadOnlyList<StateChange> PerformOn(IReadOnlyBattleGameState state, TerrainTargetGenericContext<T> context, Tile sourceTile, T targetValue);
 
-        public sealed override IReadOnlyList<object> AvailableOptions(IReadOnlyBattleGameState state, ActionContext context)
+        public sealed override System.Collections.IEnumerable ValidTargets(IReadOnlyBattleGameState state, ActionContext context)
         {
             var convertedContext = new TerrainTargetGenericContext<T>(state, context, TargetContextBase.Load.Source);
-            return AvailableOptions(state, convertedContext, convertedContext.SourceTile).Cast<object>().ToList();
+            return ValidTargets(state, convertedContext, convertedContext.SourceTile);
         }
-        public abstract IReadOnlyList<T> AvailableOptions(IReadOnlyBattleGameState state, TerrainTargetGenericContext<T> context, Tile sourceTile);
+        public abstract IReadOnlyList<T> ValidTargets(IReadOnlyBattleGameState state, TerrainTargetGenericContext<T> context, Tile sourceTile);
 
         public sealed override IReadOnlyList<Modifier> Modifiers(IReadOnlyBattleGameState state, ActionContext context)
         {
@@ -74,7 +74,7 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForTerrain
             throw new NotSupportedException();
         }
 
-        public override IReadOnlyList<T> AvailableOptions(IReadOnlyBattleGameState state, TerrainTargetGenericContext<T> context, Tile sourceTile)
+        public override IReadOnlyList<T> ValidTargets(IReadOnlyBattleGameState state, TerrainTargetGenericContext<T> context, Tile sourceTile)
         {
             Contract.Requires<ArgumentNullException>(null != state);
             Contract.Requires<ArgumentNullException>(null != context);

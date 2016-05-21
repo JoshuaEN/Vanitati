@@ -12,10 +12,7 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public abstract class UnitTargetOtherAction : UnitAction
     {
-        public sealed override TargetCategory ActionTargetCategory
-        {
-            get { return TargetCategory.Other; }
-        }
+        public sealed override Type[] TargetValueTypes { get; } = new Type[0];
 
         protected UnitTargetOtherAction(string key) : base(key) { }
 
@@ -33,12 +30,23 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
         }
         public abstract IReadOnlyList<StateChange> PerformOn(IReadOnlyBattleGameState state, UnitTargetOtherContext context, Tile sourceTile);
 
+        public sealed override System.Collections.IEnumerable ValidTargets(IReadOnlyBattleGameState state, ActionContext context)
+        {
+            throw new NotSupportedException();
+        }
+
         public sealed override IReadOnlyList<Modifier> Modifiers(IReadOnlyBattleGameState state, ActionContext context)
         {
             var convertedContext = new UnitTargetOtherContext(state, context);
             return Modifiers(state, convertedContext, convertedContext.SourceTile);
         }
         public abstract IReadOnlyList<Modifier> Modifiers(IReadOnlyBattleGameState state, UnitTargetOtherContext context, Tile sourceTile);
+
+
+        protected sealed override bool RangeBasedValidTargetCanPerform(IReadOnlyBattleGameState state, UnitTargetTileContext context, Tile sourceTile, Tile targetTile)
+        {
+            throw new NotSupportedException();
+        }
     }
 
 

@@ -12,10 +12,7 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForTerrain
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public abstract class TerrainTargetOtherAction : TerrainAction
     {
-        public sealed override TargetCategory ActionTargetCategory
-        {
-            get { return TargetCategory.Other; }
-        }
+        public sealed override Type[] TargetValueTypes { get; } = new Type[0];
 
         protected TerrainTargetOtherAction(string key) : base(key) { }
 
@@ -32,6 +29,11 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForTerrain
             return PerformOn(state, convertedContext, convertedContext.SourceTile);
         }
         public abstract IReadOnlyList<StateChange> PerformOn(IReadOnlyBattleGameState state, TerrainTargetOtherContext context, Tile sourceTile);
+
+        public sealed override System.Collections.IEnumerable ValidTargets(IReadOnlyBattleGameState state, ActionContext context)
+        {
+            throw new NotSupportedException();
+        }
 
         public sealed override IReadOnlyList<Modifier> Modifiers(IReadOnlyBattleGameState state, ActionContext context)
         {

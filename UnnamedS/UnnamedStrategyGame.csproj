@@ -25,7 +25,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NETWORK_PREDICTION NETWORK_LAG DEBUG_TEST</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NETWORK_PREDICTION NETWORK_LAG DEBUG_TEST NET_DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
@@ -77,7 +77,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;NETWORK_PREDICTION</DefineConstants>
+    <DefineConstants>TRACE;NETWORK_PREDICTION NET_DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
@@ -161,9 +161,12 @@
     <Compile Include="Game\ActionTypes\ForCommanders\CommanderTargetTileAction.cs" />
     <Compile Include="Game\ActionTypes\ForCommanders\EndTurn.cs" />
     <Compile Include="Game\ActionTypes\ForCommanders\ProvideCommanderEarnings.cs" />
+    <Compile Include="Game\ActionTypes\ForGame\DetectVictoryPointWinConditions.cs" />
+    <Compile Include="Game\ActionTypes\ForGame\GameTargetOtherAction.cs" />
     <Compile Include="Game\ActionTypes\ForTerrain\BuildAirUnit.cs" />
     <Compile Include="Game\ActionTypes\ForTerrain\BuildLandUnit.cs" />
     <Compile Include="Game\ActionTypes\ForTerrain\BuildUnit.cs" />
+    <Compile Include="Game\ActionTypes\ForTerrain\RepairAndResupply.cs" />
     <Compile Include="Game\ActionTypes\ForTerrain\TerrainTargetCommanderAction.cs" />
     <Compile Include="Game\ActionTypes\ForTerrain\TerrainTargetGenericAction.cs" />
     <Compile Include="Game\ActionTypes\ForTerrain\TerrainTargetOtherAction.cs" />
@@ -171,6 +174,7 @@
     <Compile Include="Game\ActionTypes\ForUnits\AttackAntiAircraftCannonBase.cs" />
     <Compile Include="Game\ActionTypes\ForUnits\AttackAntiAircraftCannonVsAir.cs" />
     <Compile Include="Game\ActionTypes\ForUnits\AttackAntiAircraftCannonVsGround.cs" />
+    <Compile Include="Game\ActionTypes\ForUnits\AttackAntiTankCannon.cs" />
     <Compile Include="Game\ActionTypes\ForUnits\AttackAntiTankRocket.cs" />
     <Compile Include="Game\ActionTypes\ForUnits\AttackArtilleryBarrage.cs" />
     <Compile Include="Game\ActionTypes\ForUnits\AttackDiveBomb.cs" />
@@ -187,6 +191,7 @@
     <Compile Include="Game\ActionTypes\ForUnits\ClearRepeatedActionAutomatically.cs" />
     <Compile Include="Game\ActionTypes\ForUnits\ClearRepeatedActionManually.cs" />
     <Compile Include="Game\ActionTypes\ForUnits\DigIn.cs" />
+    <Compile Include="Game\ActionTypes\ForUnits\Embark.cs" />
     <Compile Include="Game\ActionTypes\ForUnits\ICausesMovement.cs" />
     <Compile Include="Game\ActionTypes\ForUnits\Move.cs" />
     <Compile Include="Game\ActionTypes\ForUnits\NullUnitAction.cs" />
@@ -196,33 +201,42 @@
     <Compile Include="Game\ActionTypes\ForUnits\UnitTargetGenericAction.cs" />
     <Compile Include="Game\ActionTypes\ForUnits\UnitTargetOtherAction.cs" />
     <Compile Include="Game\ActionTypes\ForUnits\UnitTargetTileAction.cs" />
+    <Compile Include="Game\ActionTypes\ForUnits\UnloadEmbarkedUnit.cs" />
     <Compile Include="Game\ActionTypes\GameAction.cs" />
     <Compile Include="Game\ActionTypes\TerrainAction.cs" />
     <Compile Include="Game\ActionTypes\TileAction.cs" />
     <Compile Include="Game\ActionTypes\UnitAction.cs" />
     <Compile Include="Game\Action\ActionChain.cs" />
+    <Compile Include="Game\Action\Contexts\EmptyContext.cs" />
+    <Compile Include="Game\Action\Contexts\GenericContext.cs" />
+    <Compile Include="Game\Action\GameTargetOtherContext.cs" />
+    <Compile Include="Game\Action\TargetContextTwoArgs.cs" />
+    <Compile Include="Game\Action\Wrapper\CommanderID.cs" />
     <Compile Include="Game\Action\CommanderTargetCommanderContext.cs" />
     <Compile Include="Game\Action\CommanderTargetGenericContext.cs" />
     <Compile Include="Game\Action\CommanderTargetOtherContext.cs" />
     <Compile Include="Game\Action\CommanderTargetTileContext.cs" />
-    <Compile Include="Game\Action\Context.cs" />
-    <Compile Include="Game\Action\CommanderContext.cs" />
-    <Compile Include="Game\Action\GameContext.cs" />
-    <Compile Include="Game\Action\GenericContext.cs" />
-    <Compile Include="Game\Action\NullContext.cs" />
-    <Compile Include="Game\Action\OtherContext.cs" />
+    <Compile Include="Game\Action\Contexts\Context.cs" />
+    <Compile Include="Game\Action\Contexts\CommanderContext.cs" />
+    <Compile Include="Game\Action\Contexts\GameContext.cs" />
+    <Compile Include="Game\Action\Contexts\TargetContext.cs" />
+    <Compile Include="Game\Action\Contexts\NullContext.cs" />
+    <Compile Include="Game\Action\Contexts\OtherContext.cs" />
+    <Compile Include="Game\Action\Contexts\SourceContext.cs" />
     <Compile Include="Game\Action\TargetContextBase.cs" />
-    <Compile Include="Game\Action\TerrainContext.cs" />
+    <Compile Include="Game\Action\TargetContextOneArg.cs" />
+    <Compile Include="Game\Action\TargetContextZeroArgs.cs" />
+    <Compile Include="Game\Action\Contexts\TerrainContext.cs" />
     <Compile Include="Game\Action\TerrainTargetCommanderContext.cs" />
     <Compile Include="Game\Action\TerrainTargetGenericContext.cs" />
     <Compile Include="Game\Action\TerrainTargetOtherContext.cs" />
     <Compile Include="Game\Action\TerrainTargetTileContext.cs" />
-    <Compile Include="Game\Action\TileContext.cs" />
+    <Compile Include="Game\Action\Contexts\TileContext.cs" />
     <Compile Include="Game\Action\TileTargetCommanderContext.cs" />
     <Compile Include="Game\Action\TileTargetGenericContext.cs" />
     <Compile Include="Game\Action\TileTargetOtherContext.cs" />
     <Compile Include="Game\Action\TileTargetTileContext.cs" />
-    <Compile Include="Game\Action\UnitContext.cs" />
+    <Compile Include="Game\Action\Contexts\UnitContext.cs" />
     <Compile Include="Game\Action\UnitTargetCommanderContext.cs" />
     <Compile Include="Game\Action\UnitTargetGenericContext.cs" />
     <Compile Include="Game\Action\UnitTargetOtherContext.cs" />
@@ -230,15 +244,19 @@
     <Compile Include="Game\CommanderType.cs" />
     <Compile Include="Game\CommanderTypes\BasicCommander.cs" />
     <Compile Include="Game\Event\GameStartEventArgs.cs" />
+    <Compile Include="Game\Event\IActionTriggeredEvent.cs" />
     <Compile Include="Game\Event\ITurnAwareEvent.cs" />
+    <Compile Include="Game\Event\ExceptionEventArgs.cs" />
     <Compile Include="Game\Event\SyncEventArgs.cs" />
     <Compile Include="Game\Event\TurnChangedEventArgs.cs" />
     <Compile Include="Game\Event\UserAddedEventArgs.cs" />
     <Compile Include="Game\Event\UserAssignedToCommanderEventArgs.cs" />
     <Compile Include="Game\Event\UserRemovedEventArgs.cs" />
+    <Compile Include="Game\Event\VictoryConditionAchievedEventArgs.cs" />
     <Compile Include="Game\Exceptions\IllegalExternalActionCall.cs" />
     <Compile Include="Game\Exceptions\NotHostException.cs" />
     <Compile Include="Game\Exceptions\NotYourTurnException.cs" />
+    <Compile Include="Game\Exceptions\ServerTooFarBehindException.cs" />
     <Compile Include="Game\Exceptions\StateMismatchException.cs" />
     <Compile Include="Game\Exceptions\UnknownCommanderException.cs" />
     <Compile Include="Game\Exceptions\UnknownPlayerException.cs" />
@@ -255,6 +273,7 @@
     <Compile Include="Game\StateChanges\TurnChanged.cs" />
     <Compile Include="Game\StateChanges\TurnEnd.cs" />
     <Compile Include="Game\StateChanges\UpdateStateChange.cs" />
+    <Compile Include="Game\StateChanges\VictoryConditionAchieved.cs" />
     <Compile Include="Game\SupplyTypes\Bombs.cs" />
     <Compile Include="Game\SupplyTypes\Diesel.cs" />
     <Compile Include="Game\SupplyTypes\Kerosene.cs" />
@@ -263,11 +282,15 @@
     <Compile Include="Game\TerrainTypes\Airfield.cs" />
     <Compile Include="Game\TerrainTypes\City.cs" />
     <Compile Include="Game\TerrainTypes\Factory.cs" />
+    <Compile Include="Game\TerrainTypes\Forest.cs" />
     <Compile Include="Game\TerrainTypes\Hill.cs" />
     <Compile Include="Game\TerrainTypes\Land.cs" />
     <Compile Include="Game\TerrainTypes\Mountain.cs" />
     <Compile Include="Game\TerrainTypes\LandStructure.cs" />
+    <Compile Include="Game\TerrainTypes\Road.cs" />
     <Compile Include="Game\TerrainTypes\Runway.cs" />
+    <Compile Include="Game\TerrainTypes\VictoryPoint.cs" />
+    <Compile Include="Game\UnitTypes\HalfTracks\AntiTankHalfTrack.cs" />
     <Compile Include="Game\UnitTypes\Bombers\AirTransport.cs" />
     <Compile Include="Game\UnitTypes\Bombers\Bomber.cs" />
     <Compile Include="Game\UnitTypes\Chassis\BomberChassis.cs" />
@@ -298,6 +321,8 @@
     <Compile Include="Network\IProtocolLogic.cs" />
     <Compile Include="Network\IServerProtocolLogic.cs" />
     <Compile Include="Network\MessageWrappers\AssignUserToCommanderCallWrapper.cs" />
+    <Compile Include="Network\MessageWrappers\AuthInterfaces\ICommanderAuth.cs" />
+    <Compile Include="Network\MessageWrappers\AuthInterfaces\IUserAuth.cs" />
     <Compile Include="Network\MessageWrappers\CallMessageWrapper.cs" />
     <Compile Include="Network\MessageWrappers\ClientHelloProtocolWrapper.cs" />
     <Compile Include="Network\MessageWrappers\ClientInfoPacketProtocolWrapper.cs" />
@@ -307,6 +332,7 @@
     <Compile Include="Network\MessageWrappers\MessageWrapper.cs" />
     <Compile Include="Network\MessageWrappers\NotifyMessageWrapper.cs" />
     <Compile Include="Network\MessageWrappers\OnActionsTakenNotifyWrapper.cs" />
+    <Compile Include="Network\MessageWrappers\OnExceptionNotifyWrapper.cs" />
     <Compile Include="Network\MessageWrappers\OnGameStartNotifyWrapper.cs" />
     <Compile Include="Network\MessageWrappers\OnGameStateChangedNotifyWrapper.cs" />
     <Compile Include="Network\MessageWrappers\OnCommanderChangedNotifyWrapper.cs" />
@@ -317,6 +343,7 @@
     <Compile Include="Network\MessageWrappers\OnUserAddedNotifyWrapper.cs" />
     <Compile Include="Network\MessageWrappers\OnUserAssignedToCommanderNotifyWrapper.cs" />
     <Compile Include="Network\MessageWrappers\OnUserRemovedNotifyWrapper.cs" />
+    <Compile Include="Network\MessageWrappers\OnVictoryConditionAchievedNotifyWrapper.cs" />
     <Compile Include="Network\MessageWrappers\ProtocolMessageWrapper.cs" />
     <Compile Include="Network\MessageWrappers\RemoveUserCallWrapper.cs" />
     <Compile Include="Network\MessageWrappers\ServerToClientProtocolMessageWrapper.cs" />
@@ -324,43 +351,143 @@
     <Compile Include="Game\Properties\PropertyContainerHelper.cs" />
     <Compile Include="Network\MessageWrappers\StartGameCallWrapper.cs" />
     <Compile Include="Network\MessageWrappers\SyncCallWrapper.cs" />
+    <Compile Include="Network\MessageWrappers\SyncToCallWrapper.cs" />
     <Compile Include="Network\Protocol\ClientHelloData.cs" />
+    <Compile Include="Network\QueuedLock.cs" />
+    <Compile Include="Saving\Wrappers\BaseWrapper.cs" />
+    <Compile Include="Saving\Wrappers\Map.cs" />
+    <Compile Include="Saving\Wrappers\SaveGame.cs" />
     <Compile Include="Serializers\JsonConverters\ActionTriggerEnumConverter.cs" />
     <Compile Include="Serializers\JsonConverters\ContextConverter.cs" />
     <Compile Include="Serializers\JsonConverters\DynamicProperitesConverter.cs" />
     <Compile Include="Serializers\JsonConverters\GenericContextConverter.cs" />
     <Compile Include="Serializers\JsonConverters\MessageWrapperConverter.cs" />
+    <Compile Include="Serializers\JsonConverters\SavingWrapperConverter.cs" />
     <Compile Include="Serializers\JsonConverters\XTypeDictionaryConverter.cs" />
     <Compile Include="Serializers\Serializer.cs" />
-    <Compile Include="UI\ActionDetails.xaml.cs">
+    <Compile Include="UI\BattleView\BattleMenu.xaml.cs">
+      <DependentUpon>BattleMenu.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Saving\BattleSaving.cs" />
+    <Compile Include="UI\BattleView\ActionDetails.xaml.cs">
       <DependentUpon>ActionDetails.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\ActionView.xaml.cs">
-      <DependentUpon>ActionView.xaml</DependentUpon>
+    <Compile Include="UI\BattleView\ActionViewV2.xaml.cs">
+      <DependentUpon>ActionViewV2.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\BattleView.xaml.cs">
-      <DependentUpon>BattleView.xaml</DependentUpon>
+    <Compile Include="UI\BattleView\BattleViewV2.xaml.cs">
+      <DependentUpon>BattleViewV2.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\BattleView\CommandersView.xaml.cs">
+      <DependentUpon>CommandersView.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\DamageTable.xaml.cs">
       <DependentUpon>DamageTable.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\BattleView\InputPrompt.xaml.cs">
+      <DependentUpon>InputPrompt.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\GameTypeViews\ActionTypeView.xaml.cs">
+      <DependentUpon>ActionTypeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\GameTypeViews\MovementTypeView.xaml.cs">
+      <DependentUpon>MovementTypeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\GameTypeViews\TerrainTypeView.xaml.cs">
+      <DependentUpon>TerrainTypeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\GameTypeViews\UnitTypeView.xaml.cs">
+      <DependentUpon>UnitTypeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Help\ArticleGameplayBasics.xaml.cs">
+      <DependentUpon>ArticleGameplayBasics.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Help\ArticleGettingToBattle.xaml.cs">
+      <DependentUpon>ArticleGettingToBattle.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Help\ArticleInterfaceAndControls.xaml.cs">
+      <DependentUpon>ArticleInterfaceAndControls.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Help\ArticleTroubleshootingNetworkGames.xaml.cs">
+      <DependentUpon>ArticleTroubleshootingNetworkGames.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Help\BaseHelpArticle.cs" />
+    <Compile Include="UI\Help\DynamicGameTypeDetails.xaml.cs">
+      <DependentUpon>DynamicGameTypeDetails.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Help\DynamicGameTypesHelp.xaml.cs">
+      <DependentUpon>DynamicGameTypesHelp.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Help\HelpView.xaml.cs">
+      <DependentUpon>HelpView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Help\RtfSection.xaml.cs">
+      <DependentUpon>RtfSection.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\JoinGame.xaml.cs">
+      <DependentUpon>JoinGame.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\LogView.xaml.cs">
       <DependentUpon>LogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\MainMenu.xaml.cs">
+      <DependentUpon>MainMenu.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\MapEditor\MapEditorPlacementModeEditor.xaml.cs">
+      <DependentUpon>MapEditorPlacementModeEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\MapEditor\MapEditor.xaml.cs">
+      <DependentUpon>MapEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\MapEditor\MapSizeEditor.xaml.cs">
+      <DependentUpon>MapSizeEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\NetworkLogViewer.xaml.cs">
       <DependentUpon>NetworkLogViewer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\PropView.xaml.cs">
+    <Compile Include="UI\BattleView\PropView.xaml.cs">
       <DependentUpon>PropView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\NewGame.xaml.cs">
+      <DependentUpon>NewGame.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\Resource.cs" />
+    <Compile Include="UI\SettingsView.xaml.cs">
+      <DependentUpon>SettingsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\Settings\Input.cs" />
     <Compile Include="UI\Settings\InputBindings.cs" />
+    <Compile Include="UI\Settings\IUsesSettings.cs" />
     <Compile Include="UI\Settings\KeyInput.cs" />
     <Compile Include="UI\Settings\MouseInput.cs" />
     <Compile Include="UI\Settings\Settings.cs" />
-    <Compile Include="UI\TileView.xaml.cs">
-      <DependentUpon>TileView.xaml</DependentUpon>
+    <Compile Include="UI\BattleView\TerrainView.xaml.cs">
+      <DependentUpon>TerrainView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\SingleTileView.xaml.cs">
+      <DependentUpon>SingleTileView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Tile.cs" />
+    <Compile Include="UI\TileUI\BaseUI.cs" />
+    <Compile Include="UI\TileUI\TerrainBase.cs" />
+    <Compile Include="UI\TileUI\Terrain\Airfield.cs" />
+    <Compile Include="UI\TileUI\Terrain\City.cs" />
+    <Compile Include="UI\TileUI\Terrain\Factory.cs" />
+    <Compile Include="UI\TileUI\Terrain\Forest.cs" />
+    <Compile Include="UI\TileUI\Terrain\Hill.cs" />
+    <Compile Include="UI\TileUI\Terrain\Mountain.cs" />
+    <Compile Include="UI\TileUI\Terrain\Plain.cs" />
+    <Compile Include="UI\TileUI\Terrain\Road.cs" />
+    <Compile Include="UI\TileUI\Terrain\Runway.cs" />
+    <Compile Include="UI\TileUI\Terrain\TerrainUI.cs" />
+    <Compile Include="UI\BattleView\UnitView.xaml.cs">
+      <DependentUpon>UnitView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\TileUI\Terrain\VictoryPoint.cs" />
+    <Compile Include="UI\TileUI\Terrain\Void.cs" />
+    <Compile Include="UI\TileUI\UnitBase.cs" />
+    <Compile Include="UI\BattleView\UserToCommanderAssignment.xaml.cs">
+      <DependentUpon>UserToCommanderAssignment.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -416,15 +543,23 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="UI\ActionDetails.xaml">
+    <Page Include="UI\BattleView\BattleMenu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\ActionView.xaml">
+    <Page Include="UI\BattleView\ActionDetails.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\BattleView.xaml">
+    <Page Include="UI\BattleView\ActionViewV2.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\BattleView\BattleViewV2.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\BattleView\CommandersView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -432,7 +567,79 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UI\BattleView\InputPrompt.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\GameTypeViews\ActionTypeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\GameTypeViews\MovementTypeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\GameTypeViews\TerrainTypeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\GameTypeViews\UnitTypeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Help\ArticleGameplayBasics.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Help\ArticleGettingToBattle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Help\ArticleInterfaceAndControls.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Help\ArticleTroubleshootingNetworkGames.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Help\DynamicGameTypeDetails.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Help\DynamicGameTypesHelp.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Help\HelpView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Help\RtfSection.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\JoinGame.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UI\LogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\MainMenu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\MapEditor\MapEditorPlacementModeEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\MapEditor\MapEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\MapEditor\MapSizeEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -440,11 +647,31 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\PropView.xaml">
+    <Page Include="UI\BattleView\PropView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\TileView.xaml">
+    <Page Include="UI\BattleView\TerrainView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\NewGame.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\BattleView\UnitView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\SettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\SingleTileView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\BattleView\UserToCommanderAssignment.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -491,13 +718,55 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <Content Include="UI\Help\RtfSections\GettingStarted_Intro.rtf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UI\Help\RtfSections\GettingStarted_CreatingAGame.rtf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UI\Help\RtfSections\GettingStarted_GettingIntoABattle.rtf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UI\Help\RtfSections\GettingStarted_JoiningAGame.rtf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UI\Help\RtfSections\GettingStarted_HostingDetails.rtf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UI\Help\RtfSections\GettingStarted_ControlRundown.rtf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UI\Help\RtfSections\GettingStarted_InterfaceOverview.rtf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UI\Help\RtfSections\GettingStarted_InterfaceTileDetails.rtf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UI\Help\RtfSections\GettingStarted_InterfaceTileHighlights.rtf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UI\Help\RtfSections\GettingStarted_Game-playBasics.rtf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UI\Help\RtfSections\GettingStarted_Game-playCombat.rtf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UI\Help\RtfSections\GettingStarted_Game-playWinning.rtf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UI\Help\RtfSections\Troubleshooting_NetworkedGames.rtf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="UI\Help\RtfSections\Troubleshooting_NetworkedGames_OpeningPorts.rtf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Game\ActionTypes\ForGame\" />
     <Folder Include="Game\Helpers\" />
+    <Folder Include="UI\TileUI\Unit\" />
     <Folder Include="vendor\Newtonsoft.Json\" />
   </ItemGroup>
   <ItemGroup>

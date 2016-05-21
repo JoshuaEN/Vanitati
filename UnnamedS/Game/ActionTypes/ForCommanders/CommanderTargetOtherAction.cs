@@ -12,10 +12,7 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForCommanders
     [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public abstract class CommanderTargetOtherAction : CommanderAction
     {
-        public sealed override TargetCategory ActionTargetCategory
-        {
-            get { return TargetCategory.Other; }
-        }
+        public sealed override Type[] TargetValueTypes { get; } = new Type[0];
 
         protected CommanderTargetOtherAction(string key) : base(key) { }
 
@@ -32,6 +29,11 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForCommanders
             return PerformOn(state, convertedContext, convertedContext.SourceCommander);
         }
         public abstract IReadOnlyList<StateChange> PerformOn(IReadOnlyBattleGameState state, CommanderTargetOtherContext context, Commander sourceCommander);
+
+        public sealed override System.Collections.IEnumerable ValidTargets(IReadOnlyBattleGameState state, ActionContext context)
+        {
+            throw new NotSupportedException();
+        }
 
         public sealed override IReadOnlyList<Modifier> Modifiers(IReadOnlyBattleGameState state, ActionContext context)
         {

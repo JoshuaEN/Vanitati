@@ -8,6 +8,6 @@ namespace UnnamedStrategyGame.UI.Settings
 {
     public abstract class Input
     {
-
+        public abstract bool IsActive();
     }
 }
