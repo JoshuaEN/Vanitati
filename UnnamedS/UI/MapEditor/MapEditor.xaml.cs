@@ -241,6 +241,11 @@ namespace UnnamedStrategyGame.UI
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
+            if(State == null)
+            {
+                MessageBox.Show("Nothing to save", "Nothing to save", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
             Saving.BattleSaving.SaveBattleGameState(new Saving.Wrappers.Map(State.ToFields(), optAuthor.Text));
         }
 

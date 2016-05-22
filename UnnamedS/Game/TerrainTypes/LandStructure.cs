@@ -15,7 +15,9 @@ namespace UnnamedStrategyGame.Game.TerrainTypes
         public override bool CanBePillage { get; } = true;
         public override bool CanRepair { get; } = true;
         public override bool CanSupply { get; } = true;
-        
+
+        public override int MaxHealth { get; } = 50;
+
         protected LandStructure(string key) : base(key) { }
     }
 }

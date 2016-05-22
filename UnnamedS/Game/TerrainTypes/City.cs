@@ -14,7 +14,8 @@ namespace UnnamedStrategyGame.Game.TerrainTypes
 
         public override IReadOnlyList<TerrainAction> Actions { get; } = new List<TerrainAction>()
             {
-                ActionTypes.ForTerrain.RepairAndResupply.Instance
+                ActionTypes.ForTerrain.RepairAndResupply.Instance,
+                ActionTypes.ForTerrain.OnTerrainHealthChanged.Instance
             };
 
         public override IReadOnlyDictionary<SupplyType, int> ResuppliesPerTurn { get; } = new Dictionary<SupplyType, int>()
@@ -25,6 +26,8 @@ namespace UnnamedStrategyGame.Game.TerrainTypes
         };
 
         public override bool CanRepair { get; } = false;
+
+        public override TerrainType BecomesWhenDestroyed { get; } = DestroyedCity.Instance;
         //public override IReadOnlyDictionary<MovementType, int> RepairsPerTurn { get; } = MovementType.LAND_MOVEMENT_TYPES.ToDictionary(mv => mv, mv => 2);
     }
 }

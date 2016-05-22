@@ -453,6 +453,18 @@ namespace UnnamedStrategyGame.Game
                     {
                         l.OnTerrainChanged(this, args);
                     }
+
+                    var terrain = State.GetTerrain(castedChange.Location);
+                    
+
+                    var actions = terrain.TerrainType.Actions.
+                            Where(a => a.Triggers.HasFlag(TerrainAction.ActionTriggers.OnPropertyChanged)).
+                            Select(a =>
+                                new ActionInfo(a, new ActionContext(null, TerrainAction.ActionTriggers.OnPropertyChanged, new TerrainContext(terrain.Location), new GenericContext(castedChange.UpdatedProperties)))
+                            );
+
+                    if (actions.Count() > 0)
+                        DoActions(actionIdentifyingInfo, actions.ToList(), false);
                 }
                 else if(change is TurnEnd)
                 {

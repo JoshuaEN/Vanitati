@@ -22,6 +22,7 @@ namespace UnnamedStrategyGame.UI
         public BattleViewV2 View { get; set; }
 
         public Geometry Clip { get; private set; }
+        public Geometry UnitClip { get; private set; }
 
         public double Scale { get; set; }
 
@@ -213,7 +214,7 @@ namespace UnnamedStrategyGame.UI
 
             if (TerrainBase.TYPES.TryGetValue(terrain.TerrainType, out baseUI))
             {
-                TerrainDrawing = baseUI.GetVisualization(Height, Width, Brushes.Gray, brush, new Pen(Brushes.Black, 1));
+                TerrainDrawing = baseUI.GetVisualization(terrain, Height, Width, Brushes.Gray, brush, new Pen(Brushes.Black, 1));
             }
             else
             {
@@ -300,6 +301,8 @@ namespace UnnamedStrategyGame.UI
                 newPoints.Add(new Point(Left + point.X, Top + point.Y));
             }
             Clip = new PathGeometry(new List<PathFigure>() { new PathFigure(newPoints[0], new List<PathSegment>(1) { new PolyLineSegment(newPoints, false) }, true) });
+            var clipGeo = UnitBase.GetUnitClip(Height, Width);
+            UnitClip = new RectangleGeometry(new Rect(clipGeo.Bounds.Left + Left + 1.0, clipGeo.Bounds.Top + Top + 1.0, clipGeo.Bounds.Width - 2.0, clipGeo.Bounds.Height - 2.0));
 
             CurrentUnitHasScaleChanged = true;
             CurrentTerrainHasScaleChanged = true;
@@ -627,6 +630,10 @@ namespace UnnamedStrategyGame.UI
                 sb.Append("|");
                 sb.Append(terrain.CommanderID);
                 sb.Append("|");
+                sb.Append(terrain.DigIn);
+                sb.Append("|");
+                sb.Append(terrain.Health);
+                sb.Append("|");
                 sb.Append(terrain.TerrainType.Key);
                 sb.Append("|");
                 sb.Append(unit?.Health.ToString() ?? "null");
@@ -777,7 +784,7 @@ namespace UnnamedStrategyGame.UI
                 TerrainBase baseUI;
                 if (TerrainBase.TYPES.TryGetValue(terrain.TerrainType, out baseUI))
                 {
-                    drawing = baseUI.GetVisualization(height, width, Brushes.Gray, brush, new Pen(Brushes.Black, 1));
+                    drawing = baseUI.GetVisualization(terrain, height, width, Brushes.Gray, brush, new Pen(Brushes.Black, 1));
                 }
 
                 return drawing;

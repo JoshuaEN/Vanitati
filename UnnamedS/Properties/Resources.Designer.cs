@@ -791,6 +791,15 @@ namespace UnnamedStrategyGame.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A Commander has achieved victory by Victory Points.
+        /// </summary>
+        internal static string game_victory_condition_victory_points {
+            get {
+                return ResourceManager.GetString("game_victory_condition_victory_points", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Boots.
         /// </summary>
         internal static string movement_boots {
@@ -1111,6 +1120,96 @@ namespace UnnamedStrategyGame.Properties {
         internal static string terrain_city_desc {
             get {
                 return ResourceManager.GetString("terrain_city_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Airfield (Destroyed).
+        /// </summary>
+        internal static string terrain_destroyed_airfield {
+            get {
+                return ResourceManager.GetString("terrain_destroyed_airfield", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Once a functional airfield, capable of building and maintaining an air force, has been reduced to burning rubble. Useless for anything but the concealment the rubble offers..
+        /// </summary>
+        internal static string terrain_destroyed_airfield_desc {
+            get {
+                return ResourceManager.GetString("terrain_destroyed_airfield_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to City (Destroyed).
+        /// </summary>
+        internal static string terrain_destroyed_city {
+            get {
+                return ResourceManager.GetString("terrain_destroyed_city", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Once a bustling city, this area is now a stark reminder of the cost of war..
+        /// </summary>
+        internal static string terrain_destroyed_city_desc {
+            get {
+                return ResourceManager.GetString("terrain_destroyed_city_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Factory (Destroyed).
+        /// </summary>
+        internal static string terrain_destroyed_factory {
+            get {
+                return ResourceManager.GetString("terrain_destroyed_factory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Once a functional factory, able to produce man and machine alike for the purposes of war, is silent but for the crackling of fires that still burn..
+        /// </summary>
+        internal static string terrain_destroyed_factory_desc {
+            get {
+                return ResourceManager.GetString("terrain_destroyed_factory_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Road (Destroyed).
+        /// </summary>
+        internal static string terrain_destroyed_road {
+            get {
+                return ResourceManager.GetString("terrain_destroyed_road", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TODO: Write something interesting here..
+        /// </summary>
+        internal static string terrain_destroyed_road_desc {
+            get {
+                return ResourceManager.GetString("terrain_destroyed_road_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Runway (Destroyed).
+        /// </summary>
+        internal static string terrain_destroyed_runway {
+            get {
+                return ResourceManager.GetString("terrain_destroyed_runway", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Once able to provide harbor to aircraft, the craters that pockmark the area prevent any aircraft from landing..
+        /// </summary>
+        internal static string terrain_destroyed_runway_desc {
+            get {
+                return ResourceManager.GetString("terrain_destroyed_runway_desc", resourceCulture);
             }
         }
         

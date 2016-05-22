@@ -36,6 +36,7 @@ namespace UnnamedStrategyGame.Game.ActionTypes
             OnOwnerTurnEnd = 32,
             OnOccupyingUnitTurnStart = 64,
             OnOccupyingUnitTurnEnd = 128,
+            OnPropertyChanged = 256,
             None = 0         
         }
 

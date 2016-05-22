@@ -114,30 +114,41 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
 
             #region Damage to Target Terrain
 
-            if (CanDamageTerrain && targetTile.Terrain.Health > 0)
+            if (CanDamageTerrain)
             {
-                double damageCaused = CalculateDamage(
-                    state,
-                    context,
-                    sourceTile,
-                    targetTile,
-                    GetAccuracy(state, context, sourceTile, targetTile),
-                    GetTerrainConcealment(state, context, sourceTile, targetTile),
-                    GetTerrainDamage(state, context, sourceTile, targetTile),
-                    GetTerrainDefense(state, context, sourceTile, targetTile)
-                );
-                int roundedDamageCaused = RoundDamage(damageCaused);
-                int newHealth = targetTile.Terrain.Health - roundedDamageCaused;
+                var terrainDic = new Dictionary<string, object>();
 
-                newHealth = Math.Max(0, newHealth);
-
-                if(roundedDamageCaused > 0)
+                if (targetTile.Terrain.Health > 0)
                 {
-                    changes.Add(new StateChanges.TerrainStateChange(targetTile.Location, new Dictionary<string, object>()
+                    double damageCaused = CalculateDamage(
+                        state,
+                        context,
+                        sourceTile,
+                        targetTile,
+                        GetAccuracy(state, context, sourceTile, targetTile),
+                        GetTerrainConcealment(state, context, sourceTile, targetTile),
+                        GetTerrainDamage(state, context, sourceTile, targetTile),
+                        GetTerrainDefense(state, context, sourceTile, targetTile)
+                    );
+                    int roundedDamageCaused = RoundDamage(damageCaused);
+                    int newHealth = targetTile.Terrain.Health - roundedDamageCaused;
+
+                    newHealth = Math.Max(0, newHealth);
+
+                    if (roundedDamageCaused > 0)
                     {
-                        { "Health", newHealth }
-                    }));
+                        terrainDic.Add("Health", newHealth);
+                        
+                    }
                 }
+
+                if(targetTile.Terrain.DigIn > 0)
+                {
+                    terrainDic.Add("DigIn", targetTile.Terrain.DigIn - 1);
+                }
+
+                if(terrainDic.Count > 0)
+                    changes.Add(new StateChanges.TerrainStateChange(targetTile.Location, terrainDic));
             }
 
             #endregion
@@ -343,7 +354,7 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
 
         private bool CanTargetTerrain(Tile targetTile)
         {
-            return (CanDamageTerrain == true && targetTile.Terrain.TerrainType.CanBePillage && targetTile.Terrain.Health > 0);
+            return (CanDamageTerrain == true && ((targetTile.Terrain.TerrainType.CanBePillage && targetTile.Terrain.Health > 0) || targetTile.Terrain.DigIn > 0));
         }
 
         /// <summary>

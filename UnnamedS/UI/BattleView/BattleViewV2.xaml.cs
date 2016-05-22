@@ -359,6 +359,7 @@ namespace UnnamedStrategyGame.UI
             var enemyClip = new GeometryGroup();
             var neutralClip = new GeometryGroup();
             var selectionUnavaiableClip = new GeometryGroup();
+            var unitExpendedClip = new GeometryGroup();
 
             if (Mode == ViewMode.Normal)
             {
@@ -381,12 +382,10 @@ namespace UnnamedStrategyGame.UI
 
                 foreach(var tile in Tiles.Values)
                 {
-
+                    var t = State.GetTile(tile.Location);
                     List<ActionChain> actionChains;
                     if (SelectedActionList.TryGetValue(tile.Location, out actionChains))
                     {
-                        var t = State.GetTile(tile.Location);
-
                         if (t.Unit != null)
                         {
                             if (sourceCommanderID != null && State.IsCommanderFriendly(sourceCommanderID.Value, t.Unit.CommanderID))
@@ -407,9 +406,50 @@ namespace UnnamedStrategyGame.UI
 
                         //clip.Children.Add(tile.Clip);
                     }
-                    else
+                    if (t.Unit != null)
                     {
-                        //tile.Highlight = Tile.HighlightMode.None;
+                        if (t.Unit.CommanderID != State.CurrentCommander.CommanderID)
+                        {
+                            unitExpendedClip.Children.Add(tile.UnitClip);
+                        }
+                        else if(Settings.Settings.Current.UnitExpendedHighlighting)
+                        {
+                            var hasAnyTargets = false;
+                            foreach (var action in t.Unit.UnitType.Actions)
+                            {
+
+                                if (action.CanUserTrigger == false)
+                                    continue;
+
+                                if (action == Game.ActionTypes.ForUnits.ClearRepeatedActionManually.Instance || action == Game.ActionTypes.ForUnits.DigIn.Instance)
+                                    continue;
+
+                                var targets = action.ValidTargets(
+                                     State,
+                                     new ActionContext(
+                                         State.CurrentCommander.CommanderID,
+                                         ActionContext.TriggerAutoDetermineMode.ManuallyByUser,
+                                         new UnitContext(t.Location),
+                                         new NullContext()
+                                    )
+                                );
+
+                                
+                                foreach (var target in targets)
+                                {
+                                    hasAnyTargets = true;
+                                    break;
+                                }
+
+                                if (hasAnyTargets == true)
+                                    break;
+                            }
+
+                            if (hasAnyTargets == false)
+                            {
+                                unitExpendedClip.Children.Add(tile.UnitClip);
+                            }
+                        }
                     }
                 }
             }
@@ -436,11 +476,13 @@ namespace UnnamedStrategyGame.UI
             enemyClip.Freeze();
             neutralClip.Freeze();
             selectionUnavaiableClip.Freeze();
+            unitExpendedClip.Freeze();
 
             AllyOverlayCanvas.Clip = allyClip;
             EnemyOverlayCanvas.Clip = enemyClip;
             NeutralOverlayCanvas.Clip = neutralClip;
             SelectionUnavailableOverlayCanvas.Clip = selectionUnavaiableClip;
+            UnitExpendedOverlayCanvas.Clip = unitExpendedClip;
         }
 
         private void UpdateSelectedActionList()
@@ -775,7 +817,7 @@ namespace UnnamedStrategyGame.UI
                 }
             }
 
-            freeformInputPromptGrid.Children.Add(wrapPanel);
+            freeformInputPromptGrid.Children.Add(new ScrollViewer() { Content = wrapPanel, HorizontalScrollBarVisibility = ScrollBarVisibility.Auto, VerticalScrollBarVisibility = ScrollBarVisibility.Disabled });
         }
 
         private void FreeformButtonClick(object sender, RoutedEventArgs e)
@@ -867,6 +909,7 @@ namespace UnnamedStrategyGame.UI
                     tile.Value.UpdateTerrain();
                     tile.Value.UpdateUnit();
                 }
+                UpdateHighlights();
             }
 
             if(bindings.CancelSelection.Active(ActiveInput))

@@ -129,6 +129,11 @@ namespace UnnamedStrategyGame
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            if(MessageBox.Show("Are you sure you want to exit?", "Confirm Exit", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) != MessageBoxResult.Yes)
+            {
+                e.Cancel = true;
+                return;
+            }
             UI.Settings.Settings.SaveSettings();
         }
 

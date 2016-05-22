@@ -13,7 +13,7 @@ namespace UnnamedStrategyGame.UI.TileUI.Terrain
     {
         public override BaseType Type { get; } = Game.TerrainTypes.Road.Instance;
 
-        private Road() { }
+        protected Road() { }
         public static Road Instance { get; } = new Road();
 
         protected override Drawing RenderVisualization(double height, double width, Brush background, Brush highlight, Pen outline)

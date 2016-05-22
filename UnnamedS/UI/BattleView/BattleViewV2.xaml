@@ -36,7 +36,7 @@
                     <BitmapCache/>
                 </Canvas.CacheMode>
             </Canvas>
-            <Canvas x:Name="UnitExpendedOverlayCanvas" RenderOptions.EdgeMode="Unspecified" UseLayoutRounding="True" IsHitTestVisible="False" Visibility="Collapsed">
+            <Canvas x:Name="UnitExpendedOverlayCanvas" RenderOptions.EdgeMode="Unspecified" UseLayoutRounding="True" IsHitTestVisible="False" >
                 <Canvas.CacheMode>
                     <BitmapCache/>
                 </Canvas.CacheMode>
@@ -68,19 +68,6 @@
             </StackPanel>
         </Border>
 
-        <Grid x:Name="inputPromptGrid" Visibility="Collapsed" Background="#CC000000" >
-            <local:InputPrompt x:Name="inputPrompt" VerticalAlignment="Center" HorizontalAlignment="Center" Background="White" OptionSelected="inputPrompt_OptionSelected" ></local:InputPrompt>
-
-            <Button VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="inputPrompt_CancelButton_Click">Cancel</Button>
-        </Grid>
-
-        <Grid x:Name="freeformInputPromptContainer" Visibility="Collapsed" Background="#CC000000" >
-            <Grid x:Name="freeformInputPromptGrid" Background="White">
-                
-            </Grid>
-
-            <Button VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="FreeformInputPromptCancelButton_Click">Cancel</Button>
-        </Grid>
 
         <Border BorderBrush="#FF858585" BorderThickness="2,0,0,2" HorizontalAlignment="Right" VerticalAlignment="Top" Background="White">
             <StackPanel Orientation="Horizontal">
@@ -90,6 +77,22 @@
                 </local:CommandersView>
             </StackPanel>
         </Border>
+
+        <Grid x:Name="inputPromptGrid" Visibility="Collapsed" Background="#CC000000" >
+            <ScrollViewer VerticalAlignment="Center" HorizontalAlignment="Center" Background="White">
+                <local:InputPrompt x:Name="inputPrompt"  OptionSelected="inputPrompt_OptionSelected" ></local:InputPrompt>
+            </ScrollViewer>
+
+            <Button VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="inputPrompt_CancelButton_Click">Cancel</Button>
+        </Grid>
+
+        <Grid x:Name="freeformInputPromptContainer" Visibility="Collapsed" Background="#CC000000" >
+            <Grid x:Name="freeformInputPromptGrid" Background="White">
+
+            </Grid>
+
+            <Button VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="FreeformInputPromptCancelButton_Click">Cancel</Button>
+        </Grid>
 
         <Border x:Name="userToCommanderAssignmentGrid" Visibility="Collapsed" Background="#7F000000">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">

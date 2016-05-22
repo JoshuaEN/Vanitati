@@ -9,7 +9,7 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
 {
     public sealed class TriggerRepeatedActionAutomatically : UnitTargetOtherAction
     {
-        public override ActionTriggers Triggers { get; } = ActionTriggers.OnTurnEnd;
+        public override ActionTriggers Triggers { get; } = ActionTriggers.OnTurnStart | ActionTriggers.OnTurnEnd;
 
         private TriggerRepeatedActionAutomatically() : base("trigger_repeated_action_automatically") { }
         public static TriggerRepeatedActionAutomatically Instance { get; } = new TriggerRepeatedActionAutomatically();
@@ -31,14 +31,27 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
 
             var action = sourceTile.Unit.RepeatedAction;
 
-            if(action.Type.CanPerformOn(state, action.Context) == false)
+            var unitAction = (action.Type as UnitAction);
+
+            if (unitAction == null)
+                throw new ArgumentException($"Cannot repeat non-unit action of {action.Type}");
+
+            if (unitAction.RepeatOn == RepeatFlags.None)
+                throw new ArgumentException($"Repeat On flag must be set");
+
+            if (context.Trigger != ActionTriggers.OnTurnStart && context.Trigger != ActionTriggers.OnTurnEnd)
+                throw new ArgumentException($"Invalid Trigger of {context.Trigger}");
+
+            if (
+                (context.Trigger == ActionTriggers.OnTurnStart && unitAction.RepeatOn.HasFlag(RepeatFlags.OnTurnStart) == false) ||
+                (context.Trigger == ActionTriggers.OnTurnEnd && unitAction.RepeatOn.HasFlag(RepeatFlags.OnTurnEnd) == false))
+                return new List<StateChange>(0);
+
+            if (action.Type.CanPerformOn(state, action.Context) == false)
             {
                 return new List<StateChange>()
                 {
-                    new StateChanges.UnitStateChange(sourceTile.Unit.UnitID, new Dictionary<string, object>()
-                    {
-                        { "RepeatedAction", NullUnitAction.ActionInfoInstance }
-                    }, sourceTile.Unit.Location)
+                    GetClearRepeatedActionChange(sourceTile)
                 };
             }
 

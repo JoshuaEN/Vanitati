@@ -70,6 +70,17 @@ namespace UnnamedStrategyGame.UI.Settings
             }
         }
 
+        private bool _unitExpendedHighlighting = false;
+        public bool UnitExpendedHighlighting
+        {
+            get { return _unitExpendedHighlighting; }
+            set
+            {
+                _unitExpendedHighlighting = value;
+                NotifyPropertyChanged("UnitExpendedHighlighting");
+            }
+        }
+
         public static void LoadSettings()
         {
             if (System.IO.File.Exists(SettingsPath))

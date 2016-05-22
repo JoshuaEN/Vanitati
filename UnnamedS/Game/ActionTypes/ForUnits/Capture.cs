@@ -9,7 +9,8 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
 {
     public sealed class Capture : UnitTargetTileAction
     {
-        public override ActionTriggers Triggers { get; } = ActionTriggers.ManuallyByUser;
+        public override ActionTriggers Triggers { get; } = ActionTriggers.ManuallyByUser | ActionTriggers.DirectlyByGameLogic;
+        public override RepeatFlags RepeatOn { get; } = RepeatFlags.OnTurnEnd;
 
         private Capture() : base("capture") { }
         public static Capture Instance { get; } = new Capture();
@@ -30,11 +31,24 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
             if (sourceTile.Unit.Actions < ACTIONS_NEEDED)
                 return false;
 
+            if (context.Trigger == ActionTriggers.ManuallyByUser && sourceTile.Unit.RepeatedAction.Type == Instance)
+                return false;
+
             return true;
         }
 
         public override IReadOnlyList<StateChange> PerformOn(IReadOnlyBattleGameState state, UnitTargetTileContext context, Tile sourceTile, Tile targetTile)
         {
+
+            if (context.Trigger == ActionTriggers.ManuallyByUser)
+            {
+                return new List<StateChange>()
+                {
+                    GetRepeatedActionChange(state, sourceTile, new GenericContext(targetTile.Location))
+                };
+            }
+
+            var list = new List<StateChange>();
             var changeList = new Dictionary<string, object>();
 
             var captureProgress = targetTile.Terrain.CaptureProgress.ToDictionary(kp => kp.Key, kp => kp.Value);
@@ -65,6 +79,7 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
                 changeList.Add("IsOwned", true);
                 changeList.Add("CommanderID", ourCommanderID);
                 captureProgress.Remove(ourCommanderID);
+                list.Add(GetClearRepeatedActionChange(sourceTile));
             }
             else
             {
@@ -88,14 +103,15 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
 
             changeList.Add("CaptureProgress", captureProgress);
 
-            return new List<StateChange>()
-            {
-                new StateChanges.TerrainStateChange(targetTile.Location, changeList),
-                new StateChanges.UnitStateChange(sourceTile.Unit.UnitID, new Dictionary<string, object>()
+
+            list.Add(new StateChanges.TerrainStateChange(targetTile.Location, changeList));
+            list.Add(new StateChanges.UnitStateChange(sourceTile.Unit.UnitID, new Dictionary<string, object>()
                 {
                     { "Actions", sourceTile.Unit.Actions - ACTIONS_NEEDED }
                 }, sourceTile.Location)
-            };
+            );
+
+            return list;
         }
 
         protected override bool RangeBasedValidTargetCanPerform(IReadOnlyBattleGameState state, UnitTargetTileContext context, Tile sourceTile, Tile targetTile)

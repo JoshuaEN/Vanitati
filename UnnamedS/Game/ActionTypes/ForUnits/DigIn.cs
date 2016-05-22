@@ -11,6 +11,8 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
     {
         public override ActionTriggers Triggers { get; } = ActionTriggers.ManuallyByUser | ActionTriggers.DirectlyByGameLogic;
 
+        public override RepeatFlags RepeatOn { get; } = RepeatFlags.OnTurnStart;
+
         private DigIn() : base("dig_in") { }
         public static DigIn Instance { get; } = new DigIn();
 
@@ -40,25 +42,26 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
             {
                 return new List<StateChange>()
                 {
-                    new StateChanges.UnitStateChange(sourceTile.Unit.UnitID, new Dictionary<string, object>()
-                    {
-                        {"RepeatedAction", new ActionInfo(this, new ActionContext(null, ActionTriggers.DirectlyByGameLogic, new UnitContext(sourceTile.Location), new GenericContext(targetTile.Location))) }
-                    }, sourceTile.Unit.Location)
+                    GetRepeatedActionChange(state, sourceTile, new GenericContext(targetTile.Location))
                 };
             }
             else
             {
-                return new List<StateChange>()
-                {
-                    new StateChanges.UnitStateChange(sourceTile.Unit.UnitID, new Dictionary<string, object>()
+                var list = new List<StateChange>();
+
+                list.Add(new StateChanges.UnitStateChange(sourceTile.Unit.UnitID, new Dictionary<string, object>()
                     {
                         { "Actions", sourceTile.Unit.Actions - ACTIONS_REQUIRED }
-                    }, sourceTile.Location),
-                    new StateChanges.TerrainStateChange(targetTile.Location, new Dictionary<string, object>()
+                    }, sourceTile.Location));
+                list.Add(new StateChanges.TerrainStateChange(targetTile.Location, new Dictionary<string, object>()
                     {
                         { "DigIn", targetTile.Terrain.DigIn + 1 }
-                    })
-                };
+                    }));
+
+                if (targetTile.Terrain.DigIn + 1 >= targetTile.Terrain.TerrainType.DigInCap)
+                    list.Add(GetClearRepeatedActionChange(sourceTile));
+
+                return list;
             }
         }
 

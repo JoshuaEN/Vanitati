@@ -46,6 +46,17 @@ namespace UnnamedStrategyGame.UI
             SourceContext = sourceContext;
             Actions = actions;
 
+            Unit unit = null;
+
+            {
+                var unitContext = (sourceContext as UnitContext);
+
+                if (unitContext != null)
+                {
+                    unit = State.GetUnit(unitContext.Location);
+                }
+            }
+
             actionListStackPanel.Children.Clear();
 
             for (var i = 0; i < actions.Count; i++)
@@ -55,7 +66,20 @@ namespace UnnamedStrategyGame.UI
                 if (action.TargetValueTypes.Length == 0 && action.CanPerformOn(State, new ActionContext(CommanderID, ActionContext.TriggerAutoDetermineMode.ManuallyByUser, sourceContext, new OtherContext())) == false)
                     continue;
 
-                actionListStackPanel.Children.Add(CreateActionButton(i));
+                var button = CreateActionButton(i);
+
+
+                if(action == Game.ActionTypes.ForUnits.ClearRepeatedActionManually.Instance)
+                {
+                    var repeatedActionKey = unit?.RepeatedAction?.Type.Key;
+
+                    if(repeatedActionKey != null)
+                    {
+                        button.Content = $"Cancel Action: {Globals.GetResource(repeatedActionKey)}";
+                    }
+                }
+
+                actionListStackPanel.Children.Add(button);
             }
         }
 

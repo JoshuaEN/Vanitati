@@ -25,7 +25,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;NETWORK_PREDICTION NETWORK_LAG DEBUG_TEST NET_DEBUG</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NETWORK_PREDICTION DEBUG_TEST NET_DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
@@ -166,6 +166,7 @@
     <Compile Include="Game\ActionTypes\ForTerrain\BuildAirUnit.cs" />
     <Compile Include="Game\ActionTypes\ForTerrain\BuildLandUnit.cs" />
     <Compile Include="Game\ActionTypes\ForTerrain\BuildUnit.cs" />
+    <Compile Include="Game\ActionTypes\ForTerrain\OnTerrainHealthChanged.cs" />
     <Compile Include="Game\ActionTypes\ForTerrain\RepairAndResupply.cs" />
     <Compile Include="Game\ActionTypes\ForTerrain\TerrainTargetCommanderAction.cs" />
     <Compile Include="Game\ActionTypes\ForTerrain\TerrainTargetGenericAction.cs" />
@@ -281,10 +282,16 @@
     <Compile Include="Game\SupplyTypes\Shells.cs" />
     <Compile Include="Game\TerrainTypes\Airfield.cs" />
     <Compile Include="Game\TerrainTypes\City.cs" />
+    <Compile Include="Game\TerrainTypes\DestroyedAirfield.cs" />
+    <Compile Include="Game\TerrainTypes\DestroyedCity.cs" />
+    <Compile Include="Game\TerrainTypes\DestroyedFactory.cs" />
+    <Compile Include="Game\TerrainTypes\DestroyedRoad.cs" />
+    <Compile Include="Game\TerrainTypes\DestroyedRunway.cs" />
     <Compile Include="Game\TerrainTypes\Factory.cs" />
     <Compile Include="Game\TerrainTypes\Forest.cs" />
     <Compile Include="Game\TerrainTypes\Hill.cs" />
     <Compile Include="Game\TerrainTypes\Land.cs" />
+    <Compile Include="Game\TerrainTypes\DestroyedLandStructure.cs" />
     <Compile Include="Game\TerrainTypes\Mountain.cs" />
     <Compile Include="Game\TerrainTypes\LandStructure.cs" />
     <Compile Include="Game\TerrainTypes\Road.cs" />
@@ -472,6 +479,11 @@
     <Compile Include="UI\TileUI\TerrainBase.cs" />
     <Compile Include="UI\TileUI\Terrain\Airfield.cs" />
     <Compile Include="UI\TileUI\Terrain\City.cs" />
+    <Compile Include="UI\TileUI\Terrain\DestroyedAirfield.cs" />
+    <Compile Include="UI\TileUI\Terrain\DestroyedCity.cs" />
+    <Compile Include="UI\TileUI\Terrain\DestroyedFactory.cs" />
+    <Compile Include="UI\TileUI\Terrain\DestroyedRoad.cs" />
+    <Compile Include="UI\TileUI\Terrain\DestroyedRunway.cs" />
     <Compile Include="UI\TileUI\Terrain\Factory.cs" />
     <Compile Include="UI\TileUI\Terrain\Forest.cs" />
     <Compile Include="UI\TileUI\Terrain\Hill.cs" />

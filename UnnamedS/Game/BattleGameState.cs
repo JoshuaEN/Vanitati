@@ -68,6 +68,9 @@ namespace UnnamedStrategyGame.Game
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
         protected Dictionary<int, Unit> _units { get; set; } = new Dictionary<int, Unit>();
 
+        [JsonIgnore]
+        protected Dictionary<Location, Unit> _unitsByLocation { get; set; } = new Dictionary<Location, Unit>();
+
         /// <summary>
         /// Listing of all units on the map, the int being the unique ID of the unit.
         /// </summary>
@@ -126,6 +129,7 @@ namespace UnnamedStrategyGame.Game
 
             _terrain = fields.Terrain;
             _units.Clear();
+            _unitsByLocation.Clear();
             foreach (var unit in fields.Units)
             {
                 AddUnit(unit);
@@ -156,6 +160,7 @@ namespace UnnamedStrategyGame.Game
 
         public override Unit GetUnit(int x, int y)
         {
+            return GetUnit(new Location(x, y));
             // TODO Improve performance?
             foreach(var unit in _units)
             {
@@ -166,6 +171,15 @@ namespace UnnamedStrategyGame.Game
                 }
             }
             return null;
+        }
+
+        public override Unit GetUnit(Location loc)
+        {
+            Unit unit;
+            if (_unitsByLocation.TryGetValue(loc, out unit) == false)
+                return null;
+
+            return unit;
         }
 
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
@@ -241,6 +255,7 @@ namespace UnnamedStrategyGame.Game
                 NextUnitID = unit.UnitID + 1;
 
             _units.Add(unit.UnitID, unit);
+            _unitsByLocation[unit.Location] = unit;
         }
 
         public override void DeleteUnit(int x, int y)
@@ -253,7 +268,13 @@ namespace UnnamedStrategyGame.Game
 
         public void DeleteUnit(int unitID)
         {
-            _units.Remove(unitID);
+            Unit unit;
+
+            if (_units.TryGetValue(unitID, out unit))
+            {
+                _units.Remove(unitID);
+                _unitsByLocation.Remove(unit.Location);
+            }
         }
 
         public Commander GetCommander(int commanderID)
@@ -358,6 +379,16 @@ namespace UnnamedStrategyGame.Game
                         throw new Exceptions.StateMismatchException(string.Format("Expected Unit with ID of {0} to exist, it did not", changeInfo.UnitID));
                     }
                     unit.SetProperties(changeInfo.UpdatedProperties);
+
+                    if(changeInfo.LocationChanged)
+                    {
+                        Unit unitAtPrev;
+                        if (_unitsByLocation.TryGetValue(changeInfo.PreviousLocation, out unitAtPrev) && unitAtPrev.UnitID == unit.UnitID)
+                            _unitsByLocation.Remove(changeInfo.PreviousLocation);
+
+                        _unitsByLocation[changeInfo.Location] = unit;
+                    }
+
                     return;
             }
         }

@@ -15,7 +15,8 @@ namespace UnnamedStrategyGame.Game
     {
         public virtual IReadOnlyList<TerrainAction> Actions { get; } = new List<TerrainAction>(0);
         public virtual bool CanCapture { get; } = false;
-        public virtual bool CanBePillage { get; } = false; 
+        public virtual bool CanBePillage { get; } = false;
+        public virtual TerrainType BecomesWhenDestroyed { get; } = null;
         public virtual int MaxCapturePoints { get; } = 20;
         public virtual int MaxHealth { get; } = 100;
 
@@ -161,9 +162,9 @@ namespace UnnamedStrategyGame.Game
                 switch (Difficultly)
                 {
                     case TerrainDifficulty.Treacherous:
-                        return 5;
-                    case TerrainDifficulty.Rough:
                         return 4;
+                    case TerrainDifficulty.Rough:
+                        return 3;
                     case TerrainDifficulty.Tamed:
                     case TerrainDifficulty.Natural:
                         return 1;
@@ -208,6 +209,8 @@ namespace UnnamedStrategyGame.Game
             Contract.Invariant(null != ResuppliesPerTurn);
             Contract.Invariant(CanRepair == true || RepairsPerTurn.Count == 0);
             Contract.Invariant(CanSupply == true || ResuppliesPerTurn.Count == 0);
+            Contract.Invariant(BecomesWhenDestroyed == null || CanBePillage == true);
+            Contract.Invariant(BecomesWhenDestroyed != null || CanBePillage == false);
         }
     }
 }

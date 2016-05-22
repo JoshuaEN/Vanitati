@@ -13,7 +13,7 @@ namespace UnnamedStrategyGame.UI.TileUI.Terrain
     {
         public override BaseType Type { get; } = Game.TerrainTypes.City.Instance;
 
-        private City() { }
+        protected City() { }
         public static City Instance { get; } = new City();
 
         protected override Drawing RenderVisualization(double height, double width, Brush background, Brush highlight, Pen outline)

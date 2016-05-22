@@ -26,6 +26,8 @@ namespace UnnamedStrategyGame.Game.ActionTypes
             get { return Category.Unit; }
         }
 
+        public virtual RepeatFlags RepeatOn { get; } = RepeatFlags.None;
+
         protected UnitAction(string key) : base("unit_" + key) { }
 
         [Flags]
@@ -39,6 +41,14 @@ namespace UnnamedStrategyGame.Game.ActionTypes
             OnPropertyChanged = 64,
             OnActionPerformedByUser = 128,
             AttackRetaliation = 256,
+            None = 0
+        }
+
+        [Flags]
+        public enum RepeatFlags
+        {
+            OnTurnStart = 1,
+            OnTurnEnd = 2,
             None = 0
         }
 
@@ -125,6 +135,24 @@ namespace UnnamedStrategyGame.Game.ActionTypes
             }
 
             return dic;
+        }
+
+        protected StateChange GetRepeatedActionChange(IReadOnlyBattleGameState state, Tile sourceTile, TargetContext targetContext)
+        {
+            return 
+                new StateChanges.UnitStateChange(sourceTile.Unit.UnitID, new Dictionary<string, object>()
+                {
+                    {"RepeatedAction", new ActionInfo(this, new ActionContext(null, ActionTriggers.DirectlyByGameLogic, new UnitContext(sourceTile.Location), targetContext)) }
+                }, sourceTile.Unit.Location);
+        }
+
+        protected StateChange GetClearRepeatedActionChange(Tile sourceTile)
+        {
+            return 
+                new StateChanges.UnitStateChange(sourceTile.Unit.UnitID, new Dictionary<string, object>()
+                {
+                    { "RepeatedAction", NullUnitAction.ActionInfoInstance }
+                }, sourceTile.Unit.Location);
         }
 
         protected abstract bool RangeBasedValidTargetCanPerform(IReadOnlyBattleGameState state, UnitTargetTileContext context, Tile sourceTile, Tile targetTile);

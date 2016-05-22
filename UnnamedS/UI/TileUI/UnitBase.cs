@@ -38,17 +38,31 @@ namespace UnnamedStrategyGame.UI.TileUI
             new UnitBase(TransportTruck.Instance, Units.Transportation, Modifiers.Wheeled);
         }
 
-        private Pen Line { get; } = new Pen(Brushes.Black, 1.0);
-        private Brush Fill { get; } = Brushes.Black;
-        private Brush NoFill { get; } = Brushes.Transparent;
+        private static Pen Line { get; } = new Pen(Brushes.Black, 1.0);
+        private static Brush Fill { get; } = Brushes.Black;
+        private static Brush NoFill { get; } = Brushes.Transparent;
 
-        private Brush FontForeground { get; } = Brushes.AntiqueWhite;
-        private Brush FontBackground { get; } = Brushes.Black;
+        private static Brush FontForeground { get; } = Brushes.AntiqueWhite;
+        private static Brush FontBackground { get; } = Brushes.Black;
 
 
         public override BaseType Type { get; }
         private Units UnitSymbols { get; }
         private Modifiers UnitModifiers { get; }
+
+        public static Geometry GetUnitClip(double maxHeight, double maxWidth)
+        {
+            double top = 0;
+            double left = 0;
+            double width = maxWidth;
+            double height = maxHeight;
+
+            var geoGroup = new GeometryGroup();
+            //geoGroup.Children.Add(new LineGeometry(new Point(0, 0), new Point(maxWidth, maxHeight)));
+            geoGroup.Children.Add(IdentifierFriendlyGeo(ref top, ref left, ref height, ref width));
+            geoGroup.Freeze();
+            return geoGroup;
+        }
 
 
         public static Dictionary<UnitType, UnitBase> TYPES { get; } = new Dictionary<Game.UnitType, UnitBase>();
@@ -163,20 +177,26 @@ namespace UnnamedStrategyGame.UI.TileUI
 
         #region Identifier
 
-        private Drawing IdentifierFriendly(ref double top, ref double left, ref double height, ref double width, Brush highlight)
+        private static Geometry IdentifierFriendlyGeo(ref double top, ref double left, ref double height, ref double width)
         {
-            //height = 150;
-            //width = 200;
             var tw = (width / 6) * 4;
             var th = width * 0.30;
             left = (width - tw) / 2;
             top = (height - th) / 2;
             width = tw;
             height = th;
-            return new GeometryDrawing(highlight, Line, new RectangleGeometry(new Rect(left, top, width, height)));
+            return new RectangleGeometry(new Rect(left, top, width, height));
         }
 
-        private Drawing IdentifierEnemy(ref double top, ref double left, ref double height, ref double width, Brush highlight)
+        private static Drawing IdentifierFriendly(ref double top, ref double left, ref double height, ref double width, Brush highlight)
+        {
+            //height = 150;
+            //width = 200;
+            
+            return new GeometryDrawing(highlight, Line, IdentifierFriendlyGeo(ref top, ref left, ref height, ref width));
+        }
+
+        private static Drawing IdentifierEnemy(ref double top, ref double left, ref double height, ref double width, Brush highlight)
         {
             height = 150;
             width = 150;

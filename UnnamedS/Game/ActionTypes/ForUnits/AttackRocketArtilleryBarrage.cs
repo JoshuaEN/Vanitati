@@ -14,7 +14,7 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
         public override int MaximumRange { get; } = 6;
         public override double ArmorPenetration { get; } = UnitType.ArmorProtectionFrom.LandRocketArtillery;
         public override double DamagePerSubunit { get; } = 8;
-        public override double TerrainDamagePerSubunit { get; } = 8;
+        public override double TerrainDamagePerSubunit { get; } = 16;
         public override Dictionary<SupplyType, int> SuppliesNeeded { get; } = new Dictionary<SupplyType, int>()
         {
             { SupplyTypes.Rockets.Instance, 1 }

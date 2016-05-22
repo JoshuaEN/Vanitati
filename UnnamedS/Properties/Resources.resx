@@ -645,4 +645,37 @@
   <data name="unit_anti_tank_half_track_short" xml:space="preserve">
     <value>Half-Track</value>
   </data>
+  <data name="game_victory_condition_victory_points" xml:space="preserve">
+    <value>A Commander has achieved victory by Victory Points</value>
+  </data>
+  <data name="terrain_destroyed_airfield" xml:space="preserve">
+    <value>Airfield (Destroyed)</value>
+  </data>
+  <data name="terrain_destroyed_airfield_desc" xml:space="preserve">
+    <value>Once a functional airfield, capable of building and maintaining an air force, has been reduced to burning rubble. Useless for anything but the concealment the rubble offers.</value>
+  </data>
+  <data name="terrain_destroyed_city" xml:space="preserve">
+    <value>City (Destroyed)</value>
+  </data>
+  <data name="terrain_destroyed_city_desc" xml:space="preserve">
+    <value>Once a bustling city, this area is now a stark reminder of the cost of war.</value>
+  </data>
+  <data name="terrain_destroyed_factory" xml:space="preserve">
+    <value>Factory (Destroyed)</value>
+  </data>
+  <data name="terrain_destroyed_factory_desc" xml:space="preserve">
+    <value>Once a functional factory, able to produce man and machine alike for the purposes of war, is silent but for the crackling of fires that still burn.</value>
+  </data>
+  <data name="terrain_destroyed_road" xml:space="preserve">
+    <value>Road (Destroyed)</value>
+  </data>
+  <data name="terrain_destroyed_road_desc" xml:space="preserve">
+    <value>TODO: Write something interesting here.</value>
+  </data>
+  <data name="terrain_destroyed_runway" xml:space="preserve">
+    <value>Runway (Destroyed)</value>
+  </data>
+  <data name="terrain_destroyed_runway_desc" xml:space="preserve">
+    <value>Once able to provide harbor to aircraft, the craters that pockmark the area prevent any aircraft from landing.</value>
+  </data>
 </root>

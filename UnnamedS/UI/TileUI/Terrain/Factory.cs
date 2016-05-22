@@ -13,7 +13,7 @@ namespace UnnamedStrategyGame.UI.TileUI.Terrain
     {
         public override BaseType Type { get; } = Game.TerrainTypes.Factory.Instance;
 
-        private Factory() { }
+        protected Factory() { }
         public static Factory Instance { get; } = new Factory();
 
         protected override Drawing RenderVisualization(double height, double width, Brush background, Brush highlight, Pen outline)

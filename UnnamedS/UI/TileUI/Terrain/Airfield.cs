@@ -13,7 +13,7 @@ namespace UnnamedStrategyGame.UI.TileUI.Terrain
     {
         public override BaseType Type { get; } = Game.TerrainTypes.Airfield.Instance;
 
-        private Airfield() { }
+        protected Airfield() { }
         public static Airfield Instance { get; } = new Airfield();
 
         protected override Drawing RenderVisualization(double height, double width, Brush background, Brush highlight, Pen outline)

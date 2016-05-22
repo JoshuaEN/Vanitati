@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnnamedStrategyGame.Game.ActionTypes;
 
 namespace UnnamedStrategyGame.Game.TerrainTypes
 {
@@ -14,5 +15,12 @@ namespace UnnamedStrategyGame.Game.TerrainTypes
         public override TerrainDifficulty Difficultly { get; } = TerrainDifficulty.Paved;
 
         public override TerrainHeight Height { get; } = TerrainHeight.Normal;
+
+        public override TerrainType BecomesWhenDestroyed { get; } = DestroyedRoad.Instance;
+
+        public override IReadOnlyList<TerrainAction> Actions { get; } = new List<TerrainAction>()
+            {
+                ActionTypes.ForTerrain.OnTerrainHealthChanged.Instance
+            };
     }
 }
