@@ -36,6 +36,8 @@ namespace UnnamedStrategyGame
             }
         }
 
+        public bool NoClosingCancelPrompt { get; set; } = false;
+
         private void Server_Exception(object sender, Network.ExceptionEventArgs e)
         {
 
@@ -58,7 +60,7 @@ namespace UnnamedStrategyGame
             UI.Settings.Settings.Current.DisplayStateChanged += Current_DisplayDataChanged;
             UI.Settings.Settings.Current.DisplaySizeChanged += Current_DisplayDataChanged;
 
-            //viewer = new UI.NetworkLogViewer();
+            viewer = new UI.NetworkLogViewer();
             //viewer.Show();
             //if(false)
             //    Content = new UI.DamageTable();
@@ -131,7 +133,7 @@ namespace UnnamedStrategyGame
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if(MessageBox.Show("Are you sure you want to exit?", "Confirm Exit", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) != MessageBoxResult.Yes)
+            if(NoClosingCancelPrompt == true || MessageBox.Show("Are you sure you want to exit?", "Confirm Exit", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) != MessageBoxResult.Yes)
             {
                 e.Cancel = true;
                 return;

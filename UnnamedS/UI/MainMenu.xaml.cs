@@ -37,6 +37,7 @@ namespace UnnamedStrategyGame.UI
 
         private void ExitToDesktopButton_Click(object sender, RoutedEventArgs e)
         {
+            Resource.MainWindow.NoClosingCancelPrompt = true;
             Application.Current.Shutdown();
         }
 

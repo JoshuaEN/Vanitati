@@ -1100,8 +1100,11 @@ namespace UnnamedStrategyGame.UI
 
         private void battleMenu_ExitToDesktop(object sender, EventArgs e)
         {
-            if(MessageBox.Show("Are you sure you want to exit to desktop? All unsaved progress will be lost.", "Confirm Exit", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No) == MessageBoxResult.Yes)
+            if (MessageBox.Show("Are you sure you want to exit to desktop? All unsaved progress will be lost.", "Confirm Exit", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No) == MessageBoxResult.Yes)
+            {
+                Resource.MainWindow.NoClosingCancelPrompt = true;
                 Application.Current.Shutdown();
+            }
         }
 
         private void battleMenu_ReturnToBattle(object sender, EventArgs e)
@@ -1457,6 +1460,7 @@ namespace UnnamedStrategyGame.UI
             UpdateTurnInfo();
             UpdateGame();
             commandersListing.Update();
+            userToCommanderAssignment.Update();
         }
 
         public void OnTurnChanged(object sender, TurnChangedEventArgs args)
