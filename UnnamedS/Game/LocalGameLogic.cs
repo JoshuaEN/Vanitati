@@ -406,7 +406,7 @@ namespace UnnamedStrategyGame.Game
                         var actions = unit.UnitType.Actions.
                             Where(a => a.Triggers.HasFlag(UnitAction.ActionTriggers.OnPropertyChanged)).
                             Select(a =>
-                                new ActionInfo(a, new ActionContext(null, UnitAction.ActionTriggers.OnPropertyChanged, new UnitContext(unit.Location), new GenericContext(castedChange.UpdatedProperties)))
+                                new ActionInfo(a, new ActionContext(null, UnitAction.ActionTriggers.OnPropertyChanged, new UnitContext(unit.Location), new GenericContext(castedChange.UpdatedProperties.Keys.ToArray())))
                             );
 
                         if (actions.Count() > 0)
@@ -460,7 +460,7 @@ namespace UnnamedStrategyGame.Game
                     var actions = terrain.TerrainType.Actions.
                             Where(a => a.Triggers.HasFlag(TerrainAction.ActionTriggers.OnPropertyChanged)).
                             Select(a =>
-                                new ActionInfo(a, new ActionContext(null, TerrainAction.ActionTriggers.OnPropertyChanged, new TerrainContext(terrain.Location), new GenericContext(castedChange.UpdatedProperties)))
+                                new ActionInfo(a, new ActionContext(null, TerrainAction.ActionTriggers.OnPropertyChanged, new TerrainContext(terrain.Location), new GenericContext(castedChange.UpdatedProperties.Keys.ToArray())))
                             );
 
                     if (actions.Count() > 0)

@@ -7,26 +7,26 @@ using UnnamedStrategyGame.Game.Action;
 
 namespace UnnamedStrategyGame.Game.ActionTypes.ForTerrain
 {
-    public class OnTerrainHealthChanged : TerrainTargetGenericAction<IDictionary<string, object>>
+    public class OnTerrainHealthChanged : TerrainTargetGenericAction<string[]>
     {
         private OnTerrainHealthChanged() : base("on_terrain_health_changed") { }
         public static OnTerrainHealthChanged Instance { get; } = new OnTerrainHealthChanged();
 
         public override ActionTriggers Triggers { get; } = ActionTriggers.OnPropertyChanged;
 
-        public override bool CanPerformOn(IReadOnlyBattleGameState state, TerrainTargetGenericContext<IDictionary<string, object>> context, Tile sourceTile, IDictionary<string, object> targetValue)
+        public override bool CanPerformOn(IReadOnlyBattleGameState state, TerrainTargetGenericContext<string[]> context, Tile sourceTile, string[] targetValue)
         {
             return true;
         }
 
-        public override IReadOnlyList<Modifier> Modifiers(IReadOnlyBattleGameState state, TerrainTargetGenericContext<IDictionary<string, object>> context, Tile sourceTile, IDictionary<string, object> targetValue)
+        public override IReadOnlyList<Modifier> Modifiers(IReadOnlyBattleGameState state, TerrainTargetGenericContext<string[]> context, Tile sourceTile, string[] targetValue)
         {
             throw new NotImplementedException();
         }
 
-        public override IReadOnlyList<StateChange> PerformOn(IReadOnlyBattleGameState state, TerrainTargetGenericContext<IDictionary<string, object>> context, Tile sourceTile, IDictionary<string, object> targetValue)
+        public override IReadOnlyList<StateChange> PerformOn(IReadOnlyBattleGameState state, TerrainTargetGenericContext<string[]> context, Tile sourceTile, string[] targetValue)
         {
-            if (sourceTile.Terrain.TerrainType.CanBePillage == false || sourceTile.Terrain.Health > 0 || targetValue.ContainsKey("Health") == false)
+            if (sourceTile.Terrain.TerrainType.CanBePillage == false || sourceTile.Terrain.Health > 0 || targetValue.Contains("Health") == false)
                 return new List<StateChange>(0);
 
             return new List<StateChange>()
@@ -42,7 +42,7 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForTerrain
             };
         }
 
-        public override IReadOnlyList<IDictionary<string, object>> ValidTargets(IReadOnlyBattleGameState state, TerrainTargetGenericContext<IDictionary<string, object>> context, Tile sourceTile)
+        public override IReadOnlyList<string[]> ValidTargets(IReadOnlyBattleGameState state, TerrainTargetGenericContext<string[]> context, Tile sourceTile)
         {
             throw new NotImplementedException();
         }

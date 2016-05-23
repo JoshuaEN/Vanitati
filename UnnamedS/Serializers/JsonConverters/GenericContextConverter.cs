@@ -39,7 +39,7 @@ namespace UnnamedStrategyGame.Serializers.JsonConverters
                 var typeStr = valueTypes[i].ToObject<string>();
                 var value = values[i];
 
-                Type canidateType = Assembly.GetEntryAssembly().GetType(typeStr, false);
+                Type canidateType = Type.GetType(typeStr, false);
 
                 if (canidateType == null)
                 {
