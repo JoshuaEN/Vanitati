@@ -17,7 +17,7 @@
             <Button Click="SettingsButton_Click">Settings</Button>
             <Separator Background="Transparent" />
             <Button Click="LoadMapEditorButton_Click">Map Editor</Button>
-            <Button Click="DamageTableButton_Click">Damage Table</Button>
+            <Button Click="DamageTableButton_Click" Visibility="Collapsed">Damage Table</Button>
             <Separator Background="Transparent" />
             <Button Click="ExitToDesktopButton_Click">Exit to Desktop</Button>
         </StackPanel>

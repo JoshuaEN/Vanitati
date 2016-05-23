@@ -73,11 +73,11 @@
     <CodeContractsAnalysisWarningLevel>1</CodeContractsAnalysisWarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;NETWORK_PREDICTION NET_DEBUG</DefineConstants>
+    <DefineConstants>NETWORK_PREDICTION NET_DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
@@ -123,6 +123,7 @@
     <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
     <CodeContractsReferenceAssembly>%28none%29</CodeContractsReferenceAssembly>
     <CodeContractsAnalysisWarningLevel>0</CodeContractsAnalysisWarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -270,7 +271,6 @@
     <Compile Include="Game\NetworkedGameLogic.cs" />
     <Compile Include="Game\Preloader.cs" />
     <Compile Include="Game\Properties\PropData.cs" />
-    <Compile Include="Game\StateChanges\GameStarted.cs" />
     <Compile Include="Game\StateChanges\TurnChanged.cs" />
     <Compile Include="Game\StateChanges\TurnEnd.cs" />
     <Compile Include="Game\StateChanges\UpdateStateChange.cs" />

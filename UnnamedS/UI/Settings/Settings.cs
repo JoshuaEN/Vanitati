@@ -88,6 +88,7 @@ namespace UnnamedStrategyGame.UI.Settings
                 try
                 {
                     Current = Serializers.Serializer.Deserialize<Settings>(System.IO.File.ReadAllText(SettingsPath));
+                    Current.UnitExpendedHighlighting = false;
                 }
                 catch (Exception ex)
                 {

@@ -231,13 +231,14 @@ namespace UnnamedStrategyGame.UI
             BattleCanvas.Children.Clear();
             AllyOverlayCanvas.Children.Clear();
             EnemyOverlayCanvas.Children.Clear();
+            TerrainOverlayCanvas.Children.Clear();
             NeutralOverlayCanvas.Children.Clear();
             SelectionUnavailableOverlayCanvas.Children.Clear();
             UnitExpendedOverlayCanvas.Children.Clear();
             Tiles.Clear();
             foreach (var terrain in State.Terrain)
             {
-                var tile = new Tile(new Tile.CanvasSet(BattleCanvas, AllyOverlayCanvas, EnemyOverlayCanvas, NeutralOverlayCanvas, SelectionUnavailableOverlayCanvas, UnitExpendedOverlayCanvas), State, terrain.Location, Scale) { View = this };
+                var tile = new Tile(new Tile.CanvasSet(BattleCanvas, AllyOverlayCanvas, EnemyOverlayCanvas, TerrainOverlayCanvas, NeutralOverlayCanvas, SelectionUnavailableOverlayCanvas, UnitExpendedOverlayCanvas), State, terrain.Location, Scale) { View = this };
                 tile.MouseDown += Tile_MouseDown;
                 tile.MouseUp += Tile_MouseUp;
                 tile.MouseEnter += Tile_MouseEnter;
@@ -357,6 +358,7 @@ namespace UnnamedStrategyGame.UI
         {
             var allyClip = new GeometryGroup();
             var enemyClip = new GeometryGroup();
+            var terrainClip = new GeometryGroup();
             var neutralClip = new GeometryGroup();
             var selectionUnavaiableClip = new GeometryGroup();
             var unitExpendedClip = new GeometryGroup();
@@ -398,10 +400,14 @@ namespace UnnamedStrategyGame.UI
                                 enemyClip.Children.Add(tile.Clip);
                             }
                         }
-                        else
+                        else if(actionChains[0].GetActions().Last() == Game.ActionTypes.ForUnits.Move.Instance)
                         {
                             //tile.Highlight = Tile.HighlightMode.Neutral;
                             neutralClip.Children.Add(tile.Clip);
+                        }
+                        else
+                        {
+                            terrainClip.Children.Add(tile.Clip);
                         }
 
                         //clip.Children.Add(tile.Clip);
@@ -474,12 +480,14 @@ namespace UnnamedStrategyGame.UI
 
             allyClip.Freeze();
             enemyClip.Freeze();
+            terrainClip.Freeze();
             neutralClip.Freeze();
             selectionUnavaiableClip.Freeze();
             unitExpendedClip.Freeze();
 
             AllyOverlayCanvas.Clip = allyClip;
             EnemyOverlayCanvas.Clip = enemyClip;
+            TerrainOverlayCanvas.Clip = terrainClip;
             NeutralOverlayCanvas.Clip = neutralClip;
             SelectionUnavailableOverlayCanvas.Clip = selectionUnavaiableClip;
             UnitExpendedOverlayCanvas.Clip = unitExpendedClip;

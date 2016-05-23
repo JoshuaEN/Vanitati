@@ -21,9 +21,9 @@ namespace UnnamedStrategyGame.Game
         {
             Embark.Instance,
             ClearRepeatedActionManually.Instance,
+            ReplenishUnitTurnResources.Instance,
             TriggerRepeatedActionAutomatically.Instance,
-            ClearRepeatedActionAutomatically.Instance,
-            ReplenishUnitTurnResources.Instance
+            ClearRepeatedActionAutomatically.Instance
         };
 
         #endregion

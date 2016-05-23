@@ -10,5 +10,7 @@ namespace UnnamedStrategyGame.Game.TerrainTypes
     {
         private DestroyedRunway() : base("destroyed_runway") { }
         public static DestroyedRunway Instance { get; } = new DestroyedRunway();
+        public override int ConcealmentModifier { get; } = -15;
+        public override int DigInCap { get; } = 0;
     }
 }

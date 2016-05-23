@@ -41,10 +41,17 @@ namespace UnnamedStrategyGame.UI
 
         private void SelectMapButton_Click(object sender, RoutedEventArgs e)
         {
-            var wrapper = Saving.BattleSaving.LoadBattleGameState(null);
-            LoadedFields = wrapper?.Fields;
-            SaveType = wrapper?.Type;
-            UpdateWrapper(wrapper);
+            try
+            {
+                var wrapper = Saving.BattleSaving.LoadBattleGameState(null);
+                LoadedFields = wrapper?.Fields;
+                SaveType = wrapper?.Type;
+                UpdateWrapper(wrapper);
+            }
+            catch (Exception ex)
+            {
+                Resource.MainWindow.ShowMessage(ex);
+            }
         }
 
         private void UpdateWrapper(Saving.Wrappers.BaseWrapper wrapper)

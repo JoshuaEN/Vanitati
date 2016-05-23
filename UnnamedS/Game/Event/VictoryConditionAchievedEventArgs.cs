@@ -14,7 +14,6 @@ namespace UnnamedStrategyGame.Game.Event
 
         public VictoryConditionAchievedEventArgs(ActionIdentifyingInfo actionIdentifyingInfo, StateChanges.VictoryConditionAchieved changeInfo)
         {
-            Contract.Requires<ArgumentNullException>(null != actionIdentifyingInfo);
             Contract.Requires<ArgumentNullException>(null != changeInfo);
 
             ActionIdentifyingInfo = actionIdentifyingInfo;
@@ -24,7 +23,6 @@ namespace UnnamedStrategyGame.Game.Event
         [ContractInvariantMethod]
         private void Invariants()
         {
-            Contract.Invariant(null != ActionIdentifyingInfo);
             Contract.Invariant(null != ChangeInfo);
         }
     }

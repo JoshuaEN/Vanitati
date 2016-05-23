@@ -88,6 +88,7 @@ namespace UnnamedStrategyGame.UI
         private Rectangle DirectCanvas { get; } = new Rectangle() { Fill = Brushes.Transparent };
         private Rectangle NeutralOverlayCanvas { get; } = new Rectangle() { Fill = new SolidColorBrush(Color.FromArgb(50, 0, 0, 255)) };
         private Rectangle EnemyOverlayCanvas { get; } = new Rectangle() { Fill = new SolidColorBrush(Color.FromArgb(50, 255, 0, 0)) };
+        private Rectangle TerrainOverlayCanvas { get; } = new Rectangle() { Fill = new SolidColorBrush(Color.FromArgb(50, 255, 165, 0)) };
         private Rectangle AllyOverlayCanvas { get; } = new Rectangle() { Fill = new SolidColorBrush(Color.FromArgb(50, 0, 255, 0)) };
         private Rectangle SelectionUnavailableCanvas { get; } = new Rectangle() { Fill = new SolidColorBrush(Color.FromArgb(150, 0, 0, 0)) };
         private Rectangle UnitExpendedCanvas { get; } = new Rectangle() { Fill = new SolidColorBrush(Color.FromArgb(100, 0, 0, 0)) };
@@ -97,16 +98,18 @@ namespace UnnamedStrategyGame.UI
             public Canvas View { get; }
             public Canvas OverlayAlly { get; }
             public Canvas OverlayEnemy { get; }
+            public Canvas OverlayTerrain { get; }
             public Canvas OverlayNeutral { get; }
             public Canvas SelectionUnavailable { get; }
             public Canvas UnitExpended { get; }
 
-            public CanvasSet(Canvas view, Canvas overlayAlly = null, Canvas overlayEnemy = null, Canvas overlayNeutral = null, Canvas selectionUnavailable = null, Canvas unitExpended = null)
+            public CanvasSet(Canvas view, Canvas overlayAlly = null, Canvas overlayEnemy = null, Canvas overlayTerrain = null, Canvas overlayNeutral = null, Canvas selectionUnavailable = null, Canvas unitExpended = null)
             {
                 Contract.Requires<ArgumentNullException>(null != view);
                 View = view;
                 OverlayAlly = overlayAlly;
                 OverlayEnemy = overlayEnemy;
+                OverlayTerrain = overlayTerrain;
                 OverlayNeutral = overlayNeutral;
                 SelectionUnavailable = selectionUnavailable;
                 UnitExpended = unitExpended;
@@ -135,11 +138,12 @@ namespace UnnamedStrategyGame.UI
             canvasSet.View.Children.Add( DirectCanvas);
             canvasSet.OverlayAlly?.Children.Add(AllyOverlayCanvas);
             canvasSet.OverlayEnemy?.Children.Add(EnemyOverlayCanvas);
+            canvasSet.OverlayTerrain?.Children.Add(TerrainOverlayCanvas);
             canvasSet.OverlayNeutral?.Children.Add(NeutralOverlayCanvas);
             canvasSet.SelectionUnavailable?.Children.Add(SelectionUnavailableCanvas);
             canvasSet.UnitExpended?.Children.Add(UnitExpendedCanvas);
 
-            DirectCanvas.ClipToBounds = false;
+            DirectCanvas.ClipToBounds = true;
             //DirectCanvas.CacheMode = new BitmapCache() { EnableClearType = false, SnapsToDevicePixels = false };
             
 
@@ -278,6 +282,8 @@ namespace UnnamedStrategyGame.UI
             AllyOverlayCanvas.Width = Width;
             EnemyOverlayCanvas.Height = Height;
             EnemyOverlayCanvas.Width = Width;
+            TerrainOverlayCanvas.Height = Height;
+            TerrainOverlayCanvas.Width = Width;
             NeutralOverlayCanvas.Height = Height;
             NeutralOverlayCanvas.Width = Width;
             SelectionUnavailableCanvas.Height = Height;
@@ -289,6 +295,7 @@ namespace UnnamedStrategyGame.UI
             DirectCanvas.Clip = new PathGeometry(new List<PathFigure>() { new PathFigure(points[0], new List<PathSegment>(1) { new PolyLineSegment(points, false) }, true) });
             AllyOverlayCanvas.Clip = DirectCanvas.Clip;
             EnemyOverlayCanvas.Clip = DirectCanvas.Clip;
+            TerrainOverlayCanvas.Clip = DirectCanvas.Clip;
             NeutralOverlayCanvas.Clip = DirectCanvas.Clip;
             SelectionUnavailableCanvas.Clip = DirectCanvas.Clip;
             UnitExpendedCanvas.Clip = DirectCanvas.Clip;
@@ -338,6 +345,8 @@ namespace UnnamedStrategyGame.UI
             Canvas.SetLeft(AllyOverlayCanvas, Left);
             Canvas.SetTop(EnemyOverlayCanvas, Top);
             Canvas.SetLeft(EnemyOverlayCanvas, Left);
+            Canvas.SetTop(TerrainOverlayCanvas, Top);
+            Canvas.SetLeft(TerrainOverlayCanvas, Left);
             Canvas.SetTop(NeutralOverlayCanvas, Top);
             Canvas.SetLeft(NeutralOverlayCanvas, Left);
             Canvas.SetTop(SelectionUnavailableCanvas, Top);

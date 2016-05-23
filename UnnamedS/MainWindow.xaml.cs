@@ -32,7 +32,7 @@ namespace UnnamedStrategyGame
             set
             {
                 _server = value;
-                viewer.AddSource("Server", _server);
+                viewer?.AddSource("Server", _server);
             }
         }
 
@@ -58,8 +58,8 @@ namespace UnnamedStrategyGame
             UI.Settings.Settings.Current.DisplayStateChanged += Current_DisplayDataChanged;
             UI.Settings.Settings.Current.DisplaySizeChanged += Current_DisplayDataChanged;
 
-            viewer = new UI.NetworkLogViewer();
-            viewer.Show();
+            //viewer = new UI.NetworkLogViewer();
+            //viewer.Show();
             //if(false)
             //    Content = new UI.DamageTable();
             //else
@@ -113,17 +113,19 @@ namespace UnnamedStrategyGame
             }
             else
             {
+                var height = UI.Settings.Settings.Current.DisplaySize.Height;
+                var width = UI.Settings.Settings.Current.DisplaySize.Width;
                 WindowStyle = WindowStyle.SingleBorderWindow;
                 WindowState = UI.Settings.Settings.Current.DisplayState;
                 ResizeMode = ResizeMode.CanResize;
-                Height = UI.Settings.Settings.Current.DisplaySize.Height;
-                Width = UI.Settings.Settings.Current.DisplaySize.Width;
+                Height = height;
+                Width = width;
             }
         }
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if(WindowState == WindowState.Normal)
+            if(UI.Settings.Settings.Current.DisplayMode == UI.Settings.Settings.WindowDisplayMode.Windowed && IsLoaded)
                 UI.Settings.Settings.Current.DisplaySize = new Size(Width, Height);
         }
 
@@ -208,6 +210,12 @@ namespace UnnamedStrategyGame
         private void msgCloseButton_Click(object sender, RoutedEventArgs e)
         {
             msgContainer.Visibility = Visibility.Collapsed;
+        }
+
+        private void Window_StateChanged(object sender, EventArgs e)
+        {
+            if (UI.Settings.Settings.Current.DisplayMode == UI.Settings.Settings.WindowDisplayMode.Windowed && IsLoaded)
+                UI.Settings.Settings.Current.DisplayState = WindowState;
         }
     }
 }

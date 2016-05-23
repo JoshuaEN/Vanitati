@@ -26,6 +26,11 @@
                     <BitmapCache/>
                 </Canvas.CacheMode>
             </Canvas>
+            <Canvas x:Name="TerrainOverlayCanvas" RenderOptions.EdgeMode="Unspecified" UseLayoutRounding="True" IsHitTestVisible="False">
+                <Canvas.CacheMode>
+                    <BitmapCache/>
+                </Canvas.CacheMode>
+            </Canvas>
             <Canvas x:Name="NeutralOverlayCanvas" RenderOptions.EdgeMode="Unspecified" UseLayoutRounding="True" IsHitTestVisible="False">
                 <Canvas.CacheMode>
                     <BitmapCache/>
