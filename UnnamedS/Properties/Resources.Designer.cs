@@ -70,6 +70,15 @@ namespace UnnamedStrategyGame.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ends the current commander&apos;s turn..
+        /// </summary>
+        internal static string action_commander_end_turn_desc {
+            get {
+                return ResourceManager.GetString("action_commander_end_turn_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to End Turn.
         /// </summary>
         internal static string action_commander_end_turn_short {
@@ -359,6 +368,15 @@ namespace UnnamedStrategyGame.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Allows for the creation of Air based units..
+        /// </summary>
+        internal static string action_terrain_build_air_unit_desc {
+            get {
+                return ResourceManager.GetString("action_terrain_build_air_unit_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Build.
         /// </summary>
         internal static string action_terrain_build_air_unit_short {
@@ -373,6 +391,15 @@ namespace UnnamedStrategyGame.Properties {
         internal static string action_terrain_build_land_unit {
             get {
                 return ResourceManager.GetString("action_terrain_build_land_unit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Allows for the creation of Land based units..
+        /// </summary>
+        internal static string action_terrain_build_land_unit_desc {
+            get {
+                return ResourceManager.GetString("action_terrain_build_land_unit_desc", resourceCulture);
             }
         }
         
@@ -397,6 +424,15 @@ namespace UnnamedStrategyGame.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Attack.
         /// </summary>
+        internal static string action_unit_attack_anti_aircraft_cannon_vs_air_desc {
+            get {
+                return ResourceManager.GetString("action_unit_attack_anti_aircraft_cannon_vs_air_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attack.
+        /// </summary>
         internal static string action_unit_attack_anti_aircraft_cannon_vs_air_short {
             get {
                 return ResourceManager.GetString("action_unit_attack_anti_aircraft_cannon_vs_air_short", resourceCulture);
@@ -409,6 +445,15 @@ namespace UnnamedStrategyGame.Properties {
         internal static string action_unit_attack_anti_aircraft_cannon_vs_ground {
             get {
                 return ResourceManager.GetString("action_unit_attack_anti_aircraft_cannon_vs_ground", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attack.
+        /// </summary>
+        internal static string action_unit_attack_anti_aircraft_cannon_vs_ground_desc {
+            get {
+                return ResourceManager.GetString("action_unit_attack_anti_aircraft_cannon_vs_ground_desc", resourceCulture);
             }
         }
         
@@ -433,6 +478,15 @@ namespace UnnamedStrategyGame.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Attack.
         /// </summary>
+        internal static string action_unit_attack_anti_tank_cannon_desc {
+            get {
+                return ResourceManager.GetString("action_unit_attack_anti_tank_cannon_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attack.
+        /// </summary>
         internal static string action_unit_attack_anti_tank_cannon_short {
             get {
                 return ResourceManager.GetString("action_unit_attack_anti_tank_cannon_short", resourceCulture);
@@ -445,6 +499,15 @@ namespace UnnamedStrategyGame.Properties {
         internal static string action_unit_attack_anti_tank_rocket {
             get {
                 return ResourceManager.GetString("action_unit_attack_anti_tank_rocket", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attack.
+        /// </summary>
+        internal static string action_unit_attack_anti_tank_rocket_desc {
+            get {
+                return ResourceManager.GetString("action_unit_attack_anti_tank_rocket_desc", resourceCulture);
             }
         }
         
@@ -469,6 +532,15 @@ namespace UnnamedStrategyGame.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Attack.
         /// </summary>
+        internal static string action_unit_attack_artillery_barrage_desc {
+            get {
+                return ResourceManager.GetString("action_unit_attack_artillery_barrage_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attack.
+        /// </summary>
         internal static string action_unit_attack_artillery_barrage_short {
             get {
                 return ResourceManager.GetString("action_unit_attack_artillery_barrage_short", resourceCulture);
@@ -481,6 +553,15 @@ namespace UnnamedStrategyGame.Properties {
         internal static string action_unit_attack_dive_bomb {
             get {
                 return ResourceManager.GetString("action_unit_attack_dive_bomb", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attack.
+        /// </summary>
+        internal static string action_unit_attack_dive_bomb_desc {
+            get {
+                return ResourceManager.GetString("action_unit_attack_dive_bomb_desc", resourceCulture);
             }
         }
         
@@ -505,6 +586,15 @@ namespace UnnamedStrategyGame.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Attack.
         /// </summary>
+        internal static string action_unit_attack_fighter_heavy_machine_gun_desc {
+            get {
+                return ResourceManager.GetString("action_unit_attack_fighter_heavy_machine_gun_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attack.
+        /// </summary>
         internal static string action_unit_attack_fighter_heavy_machine_gun_short {
             get {
                 return ResourceManager.GetString("action_unit_attack_fighter_heavy_machine_gun_short", resourceCulture);
@@ -517,6 +607,15 @@ namespace UnnamedStrategyGame.Properties {
         internal static string action_unit_attack_heavy_machine_gun {
             get {
                 return ResourceManager.GetString("action_unit_attack_heavy_machine_gun", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attack.
+        /// </summary>
+        internal static string action_unit_attack_heavy_machine_gun_desc {
+            get {
+                return ResourceManager.GetString("action_unit_attack_heavy_machine_gun_desc", resourceCulture);
             }
         }
         
@@ -541,6 +640,15 @@ namespace UnnamedStrategyGame.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Attack.
         /// </summary>
+        internal static string action_unit_attack_light_machine_gun_desc {
+            get {
+                return ResourceManager.GetString("action_unit_attack_light_machine_gun_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attack.
+        /// </summary>
         internal static string action_unit_attack_light_machine_gun_short {
             get {
                 return ResourceManager.GetString("action_unit_attack_light_machine_gun_short", resourceCulture);
@@ -553,6 +661,15 @@ namespace UnnamedStrategyGame.Properties {
         internal static string action_unit_attack_quad_hmg_vs_air {
             get {
                 return ResourceManager.GetString("action_unit_attack_quad_hmg_vs_air", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attack.
+        /// </summary>
+        internal static string action_unit_attack_quad_hmg_vs_air_desc {
+            get {
+                return ResourceManager.GetString("action_unit_attack_quad_hmg_vs_air_desc", resourceCulture);
             }
         }
         
@@ -577,6 +694,15 @@ namespace UnnamedStrategyGame.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Attack.
         /// </summary>
+        internal static string action_unit_attack_quad_hmg_vs_ground_desc {
+            get {
+                return ResourceManager.GetString("action_unit_attack_quad_hmg_vs_ground_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attack.
+        /// </summary>
         internal static string action_unit_attack_quad_hmg_vs_ground_short {
             get {
                 return ResourceManager.GetString("action_unit_attack_quad_hmg_vs_ground_short", resourceCulture);
@@ -589,6 +715,15 @@ namespace UnnamedStrategyGame.Properties {
         internal static string action_unit_attack_rifle {
             get {
                 return ResourceManager.GetString("action_unit_attack_rifle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attack.
+        /// </summary>
+        internal static string action_unit_attack_rifle_desc {
+            get {
+                return ResourceManager.GetString("action_unit_attack_rifle_desc", resourceCulture);
             }
         }
         
@@ -613,6 +748,15 @@ namespace UnnamedStrategyGame.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Attack.
         /// </summary>
+        internal static string action_unit_attack_rocket_artillery_barrage_desc {
+            get {
+                return ResourceManager.GetString("action_unit_attack_rocket_artillery_barrage_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attack.
+        /// </summary>
         internal static string action_unit_attack_rocket_artillery_barrage_short {
             get {
                 return ResourceManager.GetString("action_unit_attack_rocket_artillery_barrage_short", resourceCulture);
@@ -625,6 +769,15 @@ namespace UnnamedStrategyGame.Properties {
         internal static string action_unit_attack_saturation_bombing {
             get {
                 return ResourceManager.GetString("action_unit_attack_saturation_bombing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attack.
+        /// </summary>
+        internal static string action_unit_attack_saturation_bombing_desc {
+            get {
+                return ResourceManager.GetString("action_unit_attack_saturation_bombing_desc", resourceCulture);
             }
         }
         
@@ -649,6 +802,15 @@ namespace UnnamedStrategyGame.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Attack.
         /// </summary>
+        internal static string action_unit_attack_tank_main_gun_desc {
+            get {
+                return ResourceManager.GetString("action_unit_attack_tank_main_gun_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attack.
+        /// </summary>
         internal static string action_unit_attack_tank_main_gun_short {
             get {
                 return ResourceManager.GetString("action_unit_attack_tank_main_gun_short", resourceCulture);
@@ -661,6 +823,15 @@ namespace UnnamedStrategyGame.Properties {
         internal static string action_unit_capture {
             get {
                 return ResourceManager.GetString("action_unit_capture", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Process capturing the terrain the unit is currently on..
+        /// </summary>
+        internal static string action_unit_capture_desc {
+            get {
+                return ResourceManager.GetString("action_unit_capture_desc", resourceCulture);
             }
         }
         
@@ -701,6 +872,15 @@ namespace UnnamedStrategyGame.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clears the unit&apos;s current repeated action, such as digging in..
+        /// </summary>
+        internal static string action_unit_clear_repeated_action_manually_desc {
+            get {
+                return ResourceManager.GetString("action_unit_clear_repeated_action_manually_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Clear Action.
         /// </summary>
         internal static string action_unit_clear_repeated_action_manually_short {
@@ -715,6 +895,15 @@ namespace UnnamedStrategyGame.Properties {
         internal static string action_unit_dig_in {
             get {
                 return ResourceManager.GetString("action_unit_dig_in", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dig Into the terrain for cover; digging in expends the remainder of the unit&apos;s current turn and their action from the next turn..
+        /// </summary>
+        internal static string action_unit_dig_in_desc {
+            get {
+                return ResourceManager.GetString("action_unit_dig_in_desc", resourceCulture);
             }
         }
         
@@ -737,6 +926,15 @@ namespace UnnamedStrategyGame.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Loads the unit onto a transport..
+        /// </summary>
+        internal static string action_unit_embark_desc {
+            get {
+                return ResourceManager.GetString("action_unit_embark_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Embark.
         /// </summary>
         internal static string action_unit_embark_short {
@@ -751,6 +949,15 @@ namespace UnnamedStrategyGame.Properties {
         internal static string action_unit_move {
             get {
                 return ResourceManager.GetString("action_unit_move", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Move the unit from it&apos;s current position to a new position..
+        /// </summary>
+        internal static string action_unit_move_desc {
+            get {
+                return ResourceManager.GetString("action_unit_move_desc", resourceCulture);
             }
         }
         
@@ -778,6 +985,15 @@ namespace UnnamedStrategyGame.Properties {
         internal static string action_unit_unload_embarked_unit {
             get {
                 return ResourceManager.GetString("action_unit_unload_embarked_unit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unloads a unit who is currented loaded onto the transport..
+        /// </summary>
+        internal static string action_unit_unload_embarked_unit_desc {
+            get {
+                return ResourceManager.GetString("action_unit_unload_embarked_unit_desc", resourceCulture);
             }
         }
         

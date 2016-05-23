@@ -11,12 +11,11 @@
     <ScrollViewer Background="Transparent">
         <StackPanel>
             <Label FontSize="20" Tag="header1" FontWeight="Bold">Interface &amp; Controls</Label>
-            <Label FontSize="16" Tag="header2" FontWeight="Bold">Interface</Label>
-            <TextBlock>&lt;Placeholder: Image of main battle UI&gt;</TextBlock>
+            <Label FontSize="16" Tag="header2" FontWeight="Bold">Main Battle View</Label>
             <local:RtfSection Path="GettingStarted_InterfaceOverview.rtf"/>
-            <TextBlock>&lt;Placeholder: Image of tile &gt;</TextBlock>
+            <Label FontSize="16" Tag="header2" FontWeight="Bold">Tile Details</Label>
             <local:RtfSection Path="GettingStarted_InterfaceTileDetails.rtf"/>
-            <TextBlock>&lt;Placeholder: Image of different tile highlights &gt;</TextBlock>
+            <Label FontSize="16" Tag="header2" FontWeight="Bold">Tile Highlights</Label>
             <local:RtfSection Path="GettingStarted_InterfaceTileHighlights.rtf"/>
             <Label FontSize="16" Tag="header2" FontWeight="Bold">Controls</Label>
             <local:RtfSection Path="GettingStarted_ControlRundown.rtf"/>

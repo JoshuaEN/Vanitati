@@ -678,4 +678,76 @@
   <data name="terrain_destroyed_runway_desc" xml:space="preserve">
     <value>Once able to provide harbor to aircraft, the craters that pockmark the area prevent any aircraft from landing.</value>
   </data>
+  <data name="action_commander_end_turn_desc" xml:space="preserve">
+    <value>Ends the current commander's turn.</value>
+  </data>
+  <data name="action_terrain_build_air_unit_desc" xml:space="preserve">
+    <value>Allows for the creation of Air based units.</value>
+  </data>
+  <data name="action_terrain_build_land_unit_desc" xml:space="preserve">
+    <value>Allows for the creation of Land based units.</value>
+  </data>
+  <data name="action_unit_attack_anti_aircraft_cannon_vs_air_desc" xml:space="preserve">
+    <value>Attack</value>
+  </data>
+  <data name="action_unit_attack_anti_aircraft_cannon_vs_ground_desc" xml:space="preserve">
+    <value>Attack</value>
+  </data>
+  <data name="action_unit_attack_anti_tank_cannon_desc" xml:space="preserve">
+    <value>Attack</value>
+  </data>
+  <data name="action_unit_attack_anti_tank_rocket_desc" xml:space="preserve">
+    <value>Attack</value>
+  </data>
+  <data name="action_unit_attack_artillery_barrage_desc" xml:space="preserve">
+    <value>Attack</value>
+  </data>
+  <data name="action_unit_attack_dive_bomb_desc" xml:space="preserve">
+    <value>Attack</value>
+  </data>
+  <data name="action_unit_attack_fighter_heavy_machine_gun_desc" xml:space="preserve">
+    <value>Attack</value>
+  </data>
+  <data name="action_unit_attack_heavy_machine_gun_desc" xml:space="preserve">
+    <value>Attack</value>
+  </data>
+  <data name="action_unit_attack_light_machine_gun_desc" xml:space="preserve">
+    <value>Attack</value>
+  </data>
+  <data name="action_unit_attack_quad_hmg_vs_air_desc" xml:space="preserve">
+    <value>Attack</value>
+  </data>
+  <data name="action_unit_attack_quad_hmg_vs_ground_desc" xml:space="preserve">
+    <value>Attack</value>
+  </data>
+  <data name="action_unit_attack_rifle_desc" xml:space="preserve">
+    <value>Attack</value>
+  </data>
+  <data name="action_unit_attack_rocket_artillery_barrage_desc" xml:space="preserve">
+    <value>Attack</value>
+  </data>
+  <data name="action_unit_attack_saturation_bombing_desc" xml:space="preserve">
+    <value>Attack</value>
+  </data>
+  <data name="action_unit_attack_tank_main_gun_desc" xml:space="preserve">
+    <value>Attack</value>
+  </data>
+  <data name="action_unit_capture_desc" xml:space="preserve">
+    <value>Process capturing the terrain the unit is currently on.</value>
+  </data>
+  <data name="action_unit_clear_repeated_action_manually_desc" xml:space="preserve">
+    <value>Clears the unit's current repeated action, such as digging in.</value>
+  </data>
+  <data name="action_unit_dig_in_desc" xml:space="preserve">
+    <value>Dig Into the terrain for cover; digging in expends the remainder of the unit's current turn and their action from the next turn.</value>
+  </data>
+  <data name="action_unit_embark_desc" xml:space="preserve">
+    <value>Loads the unit onto a transport.</value>
+  </data>
+  <data name="action_unit_move_desc" xml:space="preserve">
+    <value>Move the unit from it's current position to a new position.</value>
+  </data>
+  <data name="action_unit_unload_embarked_unit_desc" xml:space="preserve">
+    <value>Unloads a unit who is currented loaded onto the transport.</value>
+  </data>
 </root>
