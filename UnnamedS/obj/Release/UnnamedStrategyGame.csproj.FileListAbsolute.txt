@@ -107,4 +107,3 @@ e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\Unname
 e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedS\obj\Release\UnnamedSstrategyGame.rewritten
 e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedS\obj\Release\UnnamedSstrategyGame.exe
 e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedS\obj\Release\UnnamedSstrategyGame.pdb
-e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedS\obj\Release\UnnamedStrategyGame.csprojResolveAssemblyReference.cache

@@ -69,6 +69,7 @@ namespace UnnamedStrategyGame.Game.ActionTypes.ForUnits
             unitParams["Movement"] = 0;
             unitParams["Embarked"] = false;
             unitParams["Location"] = location;
+            unitParams["RepeatedAction"] = NullUnitAction.ActionInfoInstance;
 
             var newEmbarkedUnitList = sourceTile.Unit.EmbarkedUnits.ToList();
 
