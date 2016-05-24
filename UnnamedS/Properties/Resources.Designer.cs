@@ -1556,6 +1556,24 @@ namespace UnnamedStrategyGame.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Victory Point.
+        /// </summary>
+        internal static string terrain_victory_point {
+            get {
+                return ResourceManager.GetString("terrain_victory_point", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A victory point, gives 1 victory point per a round..
+        /// </summary>
+        internal static string terrain_victory_point_desc {
+            get {
+                return ResourceManager.GetString("terrain_victory_point_desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Air Transport.
         /// </summary>
         internal static string unit_air_transport {

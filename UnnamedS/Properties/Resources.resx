@@ -750,4 +750,10 @@
   <data name="action_unit_unload_embarked_unit_desc" xml:space="preserve">
     <value>Unloads a unit who is currented loaded onto the transport.</value>
   </data>
+  <data name="terrain_victory_point" xml:space="preserve">
+    <value>Victory Point</value>
+  </data>
+  <data name="terrain_victory_point_desc" xml:space="preserve">
+    <value>A victory point, gives 1 victory point per a round.</value>
+  </data>
 </root>
