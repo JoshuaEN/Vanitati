@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedS\obj\Release\
+E:\Users\Joshua\Documents\GitHub\Vanitati\UnnamedS\obj\Release\
 UnnamedStrategyGame
 none
 false
 CONTRACTS_FULL;CODE_ANALYSIS;NETWORK_PREDICTION NET_DEBUG
-e:\users\joshua\documents\visual studio 2015\Projects\UnnamedStrategyGame\UnnamedS\App.xaml
+E:\Users\Joshua\Documents\GitHub\Vanitati\UnnamedS\App.xaml
 34923383830
-2556707341
+251472049782
 343-186070780
-18761058941
+18-517568337
 MainWindow.xaml;UI\BattleView\BattleMenu.xaml;UI\BattleView\ActionDetails.xaml;UI\BattleView\ActionViewV2.xaml;UI\BattleView\BattleViewV2.xaml;UI\BattleView\CommandersView.xaml;UI\DamageTable.xaml;UI\BattleView\InputPrompt.xaml;UI\GameTypeViews\ActionTypeView.xaml;UI\GameTypeViews\MovementTypeView.xaml;UI\GameTypeViews\TerrainTypeView.xaml;UI\GameTypeViews\UnitTypeView.xaml;UI\Help\ArticleGameplayBasics.xaml;UI\Help\ArticleGettingToBattle.xaml;UI\Help\ArticleInterfaceAndControls.xaml;UI\Help\ArticleTroubleshootingNetworkGames.xaml;UI\Help\DynamicGameTypeDetails.xaml;UI\Help\DynamicGameTypesHelp.xaml;UI\Help\HelpView.xaml;UI\Help\RtfSection.xaml;UI\JoinGame.xaml;UI\LogView.xaml;UI\MainMenu.xaml;UI\MapEditor\MapEditorPlacementModeEditor.xaml;UI\MapEditor\MapEditor.xaml;UI\MapEditor\MapSizeEditor.xaml;UI\NetworkLogViewer.xaml;UI\BattleView\PropView.xaml;UI\BattleView\TerrainView.xaml;UI\NewGame.xaml;UI\BattleView\UnitView.xaml;UI\SettingsView.xaml;UI\SingleTileView.xaml;UI\BattleView\UserToCommanderAssignment.xaml;
 
 False
